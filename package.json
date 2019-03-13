@@ -1,0 +1,30 @@
+{
+  "name": "iztapp",
+  "version": "1.0.0",
+  "description": "Desktop application of IZTECH CENG website.",
+  "main": "index.js",
+  "scripts": {
+    "commit": "git-cz",
+    "start": "node -r esm index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abdullah-eryuzlu/iztapp.git"
+  },
+  "author": "DEBAK",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/abdullah-eryuzlu/iztapp/issues"
+  },
+  "homepage": "https://github.com/abdullah-eryuzlu/iztapp#readme",
+  "devDependencies": {
+    "commitizen": "^3.0.7",
+    "cz-conventional-changelog": "^2.1.0",
+    "esm": "^3.2.16"
+  },
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-conventional-changelog"
+    }
+  }
+}
