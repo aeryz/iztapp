@@ -2,10 +2,9 @@
   "name": "iztapp",
   "version": "1.0.0",
   "description": "Desktop application of IZTECH CENG website.",
-  "main": "index.js",
   "scripts": {
     "commit": "git-cz",
-    "start": "node -r esm index.js"
+    "start": "node --require esm scripts/start && node --require esm src/server.js"
   },
   "repository": {
     "type": "git",
@@ -20,11 +19,20 @@
   "devDependencies": {
     "commitizen": "^3.0.7",
     "cz-conventional-changelog": "^2.1.0",
+    "eslint": "^5.15.1",
     "esm": "^3.2.16"
   },
   "config": {
     "commitizen": {
       "path": "node_modules/cz-conventional-changelog"
     }
+  },
+  "dependencies": {
+    "bluebird": "^3.5.3",
+    "chalk": "^2.4.2",
+    "crypto": "^1.0.1",
+    "dotenv": "^7.0.0",
+    "koa": "^2.7.0",
+    "mongoose": "^5.4.19"
   }
 }
