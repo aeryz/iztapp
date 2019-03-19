@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const CourseSchema = new Schema({
@@ -11,8 +11,9 @@ const CourseSchema = new Schema({
     required: true
   },
   prerequisites: {
-    type: [Object.Id],
-    required: false
+    type: Schema.Types.ObjectId,
+    required: false,
+    ref: "course"
   },
   pagePath: {
     type: String,
@@ -31,12 +32,14 @@ const CourseSchema = new Schema({
     required: true
   },
   instructors: {
-    type: [Object.Id],
-    required: false
+    type: Schema.Types.ObjectId,
+    required: false,
+    ref: "worker"
   },
   assistants: {
-    type: [Object.Id],
-    required: false
+    type: Schema.Types.ObjectId,
+    required: false,
+    ref: "worker"
   },
   lectureHours: {
     type: Number,
@@ -71,5 +74,5 @@ const CourseSchema = new Schema({
   }
 })
 
-const CourseModel = mongoose.model('courseModel', CourseSchema);
+const CourseModel = mongoose.model('course', CourseSchema);
 module.exports = CourseModel;

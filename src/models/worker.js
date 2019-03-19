@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const WorkerSchema = new Schema({
@@ -74,5 +74,5 @@ const WorkerSchema = new Schema({
   }
 })
 
-const WorkerModel = mongoose.model('workerModel', WorkerSchema);
+const WorkerModel = mongoose.model('worker', WorkerSchema);
 module.exports = WorkerModel;

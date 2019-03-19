@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const ScheduleSchema = new Schema({
@@ -11,7 +11,11 @@ const ScheduleSchema = new Schema({
     required: true
   },
   courses: {
-    type: [Object.Id],
+    type: [{
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: "course"
+    }],
     required: true
   },
   creationDate: {
@@ -21,5 +25,5 @@ const ScheduleSchema = new Schema({
   }
 })
 
-const ScheduleModel = mongoose.model('scheduleModel', ScheduleSchema);
+const ScheduleModel = mongoose.model('schedule', ScheduleSchema);
 module.exports = ScheduleModel;
