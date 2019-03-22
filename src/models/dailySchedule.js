@@ -1,12 +1,8 @@
 import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
-const ScheduleSchema = new Schema({
+const DailyScheduleSchema = new Schema({
   day: {
-    type: Number,
-    required: true
-  },
-  year: {
     type: Number,
     required: true
   },
@@ -25,5 +21,5 @@ const ScheduleSchema = new Schema({
   }
 })
 
-const ScheduleModel = mongoose.model('schedule', ScheduleSchema);
-module.exports = ScheduleModel;
+const DailyScheduleModel = mongoose.model('dailySchedule', DailyScheduleModel);
+module.exports = DailyScheduleModel;
