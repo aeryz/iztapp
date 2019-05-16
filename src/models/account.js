@@ -21,7 +21,7 @@ const AccountSchema = new Schema({
 		required: true,
 		default: 10
 	},
-	badLoginCount: {
+	passwordTry: {
 		type: Number,
 		required: true
 	},
