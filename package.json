@@ -28,12 +28,14 @@
     }
   },
   "dependencies": {
+    "bcrypt": "^3.0.6",
     "bluebird": "^3.5.3",
     "chalk": "^2.4.2",
     "crypto": "^1.0.1",
     "dotenv": "^7.0.0",
     "koa": "^2.7.0",
     "mongoose": "^5.4.19",
-    "mongoose-auto-increment": "^5.0.1"
+    "mongoose-auto-increment": "^5.0.1",
+    "validator": "^10.11.0"
   }
 }
