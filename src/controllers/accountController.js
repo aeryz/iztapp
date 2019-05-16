@@ -93,8 +93,9 @@ const AccountController = (() => ({
 		entity.password += "";
 		if (entity.password.length < config.limits.account.minPasswordLength || entity.password.length > config.limits.account.maxPasswordLength) throw new Error(config.errors.PASSWORD_VALIDATION);
 
-		// ! Issue : How to get account by just email ?
-		const wantedEntity = {};
+		const wantedEntity = await DatabaseController.findOneByQuery("account", {
+			email: entity.email
+		});
 
 		if (wantedEntity.isLocked) throw new Error(config.errors.LOCKED_ACCOUNT);
 
@@ -133,7 +134,9 @@ const AccountController = (() => ({
 	},
 
 	async unlockAccount(hash) {
-		const wantedEntity = {}
+		const wantedEntity = await DatabaseController.findOneByQuery("account", {
+			unlockHash: hash
+		});
 
 		if (!wantedEntity.isLocked) throw new Error(config.errors.ALREADY_UNLOCKED);
 
