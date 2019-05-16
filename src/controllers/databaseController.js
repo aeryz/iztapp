@@ -39,6 +39,36 @@ const DatabaseController = (() => ({
 		const newEntity = new model(query);
 		await newEntity.save();
 		return newEntity;
+	},
+
+	async update(model, query) {
+		// validate model parameter
+		if (typeof model === "undefined" || model === null || !Object.keys(config.models).includes(model)) throw new Error(config.errors.INVALID_MODEL);
+		model = config.models[model];
+		// validate query
+		if (typeof query !== "object") throw new Error(config.errors.INVALID_QUERY);
+
+		try {
+			const updatedEntity = await model.findOneAndUpdate(
+				{ _id: query._id },
+				{ $set: query },
+				{ returnNewDocument: true }
+			);
+			return updatedEntity;
+		} catch {
+			throw new Error(config.errors.UNDONE_UPDATE);
+		}
+	},
+
+	async delete(model, query) {
+		// validate model parameter
+		if (typeof model === "undefined" || model === null || !Object.keys(config.models).includes(model)) throw new Error(config.errors.INVALID_MODEL);
+		model = config.models[model];
+		// validate query
+		if (typeof query !== "object") throw new Error(config.errors.INVALID_QUERY);
+
+		const deleteResult = await model.deleteOne(query);
+		return deleteResult;
 	}
 
 }))();
