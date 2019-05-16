@@ -3,11 +3,11 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const EmailSchema = new Schema({
-  email: {
-    type: String,
-    required: true,
-    unique: true
-  }
+	email: {
+		type: String,
+		required: true,
+		unique: true
+	}
 });
 
-module.exports = mongoose.model('email', EmailSchema);
+export default mongoose.model("email", EmailSchema);
