@@ -1,13 +1,14 @@
 import mongoose from "mongoose"
+
 const Schema = mongoose.Schema
 
 const EmailListSchema = new Schema({
   emails: {
-    type: [{
-      type: Schema.Types.ObjectId,
+    type: {
+      type: [Schema.Types.ObjectId],
       required: true,
-      ref: 'email'
-    }],
+      ref: "email"
+    },
     required: true,
     default: []
   },
@@ -20,7 +21,6 @@ const EmailListSchema = new Schema({
     required: true,
     default: Date.now()
   }
-})
+});
 
-const EmailListModel = mongoose.model('emailList', EmailListSchema);
-module.exports = EmailListModel;
+module.exports = mongoose.model('emailList', EmailListSchema);;

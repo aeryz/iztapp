@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+
 const Schema = mongoose.Schema;
 
 const DailyScheduleSchema = new Schema({
@@ -7,11 +8,11 @@ const DailyScheduleSchema = new Schema({
     required: true
   },
   courses: {
-    type: [{
-      type: Schema.Types.ObjectId,
+    type: {
+      type: [Schema.Types.ObjectId],
       required: true,
       ref: "course"
-    }],
+    },
     required: true
   },
   creationDate: {
@@ -19,7 +20,6 @@ const DailyScheduleSchema = new Schema({
     required: true,
     default: Date.now()
   }
-})
+});
 
-const DailyScheduleModel = mongoose.model('dailySchedule', DailyScheduleModel);
-module.exports = DailyScheduleModel;
+module.exports = mongoose.model('dailySchedule', DailyScheduleSchema);;

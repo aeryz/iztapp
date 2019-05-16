@@ -1,27 +1,35 @@
 import mongoose from "mongoose";
+
 const Schema = mongoose.Schema;
 
 const WeeklyScheduleSchema = new Schema({
-  year: {
-    type: Number,
+  days: {
+    type: {
+      type: [Schema.Types.ObjectId],
+      required: true,
+      ref: "dailySchedule"
+    },
     required: true
   },
-  days: {
-    type: Schema.Types.ObjectId,
-    required: false,
-    ref: "dailySchedule"
-  },
-  creationDate: {
-    type: Date,
+  semester: {
+    type: Number,
     required: true,
-    default: Date.now()
+    min: 1,
   },
   isPending: {
     type: Boolean,
     required: true,
     default: true
+  },
+  type: {
+    type: Number,
+    required: true
+  },
+  creationDate: {
+    type: Date,
+    required: true,
+    default: Date.now()
   }
 })
 
-const WeeklyScheduleModel = mongoose.model('weeklySchedule', WeeklyScheduleSchema);
-module.exports = WeeklyScheduleModel;
+module.exports = mongoose.model('weeklySchedule', WeeklyScheduleSchema);

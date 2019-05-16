@@ -1,11 +1,8 @@
 import mongoose from "mongoose";
+
 const Schema = mongoose.Schema;
 
 const AccountSchema = new Schema({
-  name: {
-    type: String,
-    required: true
-  },
   email: {
     type: String,
     required: true,
@@ -19,6 +16,19 @@ const AccountSchema = new Schema({
     type: String,
     required: true
   },
+  isLocked: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
+  unlockHash: {
+    type: String,
+    required: true
+  },
+  lastLoginDate: {
+    type: Date,
+    required: true
+  },
   creationDate: {
     type: Date,
     required: true,
@@ -26,5 +36,4 @@ const AccountSchema = new Schema({
   }
 });
 
-const AccountModel = mongoose.model('account', AccountSchema);
-module.exports = AccountModel;
+module.exports = mongoose.model('account', AccountSchema);

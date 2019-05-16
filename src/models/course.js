@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+
 const Schema = mongoose.Schema;
 
 const CourseSchema = new Schema({
@@ -11,9 +12,11 @@ const CourseSchema = new Schema({
     required: true
   },
   prerequisites: {
-    type: Schema.Types.ObjectId,
-    required: false,
-    ref: "course"
+    type: {
+      type: [Schema.Types.ObjectId],
+      ref: "course"
+    },
+    required: false
   },
   pagePath: {
     type: String,
@@ -31,15 +34,16 @@ const CourseSchema = new Schema({
     type: [String],
     required: true
   },
-  instructors: {
-    type: Schema.Types.ObjectId,
-    required: false,
-    ref: "worker"
+  type: {
+    type: Number,
+    required: true
   },
-  assistants: {
-    type: Schema.Types.ObjectId,
-    required: false,
-    ref: "worker"
+  workers: {
+    type: {
+      type: [Schema.Types.ObjectId],
+      ref: "worker"
+    },
+    required: true
   },
   lectureHours: {
     type: Number,
@@ -62,17 +66,11 @@ const CourseSchema = new Schema({
     default: false,
     required: true
   },
-  isPending: {
-    type: Boolean,
-    default: true,
-    required: true
-  },
   creationDate: {
     type: Date,
     required: true,
     default: Date.now()
   }
-})
+});
 
-const CourseModel = mongoose.model('course', CourseSchema);
-module.exports = CourseModel;
+module.exports = mongoose.model('course', CourseSchema);
