@@ -15,12 +15,16 @@ function parseIntFromEnvOr(name, defaultValue) {
 // Define limits
 const limits = {
 	account: {
-		minEMailLength: parseIntFromEnvOr("LIMITS_ACCOUNT_MIN_EMAIL_LENGTH", 1),
-		maxEMailLength: parseIntFromEnvOr("LIMITS_ACCOUNT_MAX_EMAIL_LENGTH", 254),
-		minPasswordLength: parseIntFromEnvOr("LIMITS_ADMIN_MIN_PASSWORD_LENGTH", 5),
-		maxPasswordLength: parseIntFromEnvOr("LIMITS_ADMIN_MAX_PASSWORD_LENGTH", 64),
-		maxPasswordTry: parseIntFromEnvOr("LIMITS_ADMIN_MAX_PASSWORD_TRY", 10)
+		minEmailLength: parseIntFromEnvOr("LIMITS_ACCOUNT_MIN_EMAIL_LENGTH", 1),
+		maxEmailLength: parseIntFromEnvOr("LIMITS_ACCOUNT_MAX_EMAIL_LENGTH", 254),
+		minPasswordLength: parseIntFromEnvOr("LIMITS_ACCOUNT_MIN_PASSWORD_LENGTH", 5),
+		maxPasswordLength: parseIntFromEnvOr("LIMITS_ACCOUNT_MAX_PASSWORD_LENGTH", 64),
+		maxPasswordTry: parseIntFromEnvOr("LIMITS_ACCOUNT_MAX_PASSWORD_TRY", 10)
 	},
+	email: {
+		minEmailLength: parseIntFromEnvOr("LIMITS_EMAIL_MIN_EMAIL_LENGTH", 1),
+		maxEmailLength: parseIntFromEnvOr("LIMITS_EMAIL_MAX_EMAIL_LENGTH", 254),
+	}
 };
 
 // Export limits
