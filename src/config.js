@@ -64,6 +64,11 @@ const config = {
 		1, // Content managers
 		2 // Admins
 	],
+	scheduleTypes: [
+		0, // Lisans
+		1, // Yüksek
+		2 // Doktora
+	],
 	errors: {
 		UNKNOWN: "1",
 		INVALID_LIMIT: "2",
@@ -81,7 +86,9 @@ const config = {
 		NOT_PERMITTED: "14",
 		EMAIL_LIST_NAME_VALIDATION: "15",
 		EMAIL_ALREADY_ADDED: "16",
-		EMAIL_NOT_IN_LIST: "17"
+		EMAIL_NOT_IN_LIST: "17",
+		INVALID_SEMESTER: "18",
+		INVALID_SCHEDULE_TYPE: "19"
 	}
 };
 
