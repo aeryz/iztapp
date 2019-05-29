@@ -90,7 +90,7 @@ const EmailListController = (() => ({
 		return updatedEntity;
 	},
 
-	async deleteEmailFromList(emailId, emailListId) {
+	async removeEmailFromList(emailId, emailListId) {
 		// validate email id
 		if (typeof emailId === "undefined" || emailId === null) throw new Error(config.errors.UNFILLED_REQUIREMENTS);
 		emailId += "";
