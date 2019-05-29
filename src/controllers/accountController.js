@@ -1,4 +1,3 @@
-import Account from "../models/account";
 import DatabaseController from "./databaseController";
 import config from "../config";
 import helpers from "../helpers";
