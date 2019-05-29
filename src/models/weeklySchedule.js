@@ -16,11 +16,6 @@ const WeeklyScheduleSchema = new Schema({
 		required: true,
 		min: 1,
 	},
-	isPending: {
-		type: Boolean,
-		required: true,
-		default: true
-	},
 	type: {
 		type: Number,
 		required: true
