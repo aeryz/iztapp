@@ -25,7 +25,7 @@ const DatabaseController = (() => ({
 		// validate query
 		if (typeof query !== "object") throw new Error(config.errors.INVALID_QUERY);
 
-		return model.findOne(query);
+		return model.findOne(query).exec();
 	},
 
 	async add(model, query) {
