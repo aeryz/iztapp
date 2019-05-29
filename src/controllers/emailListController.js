@@ -39,20 +39,20 @@ const EmailListController = (() => ({
 		return newEntity;
 	},
 
-	async update(entity) {
+	async update(id, entity) {
 		// validate entity
-		if (typeof entity === "undefined" || entity === null || typeof entity.id === "undefined" || entity.id === null || typeof entity.name === "undefined" || entity.name === null) throw new Error(config.errors.UNFILLED_REQUIREMENTS);
+		if (typeof entity === "undefined" || entity === null || typeof id === "undefined" || id === null || typeof entity.name === "undefined" || entity.name === null) throw new Error(config.errors.UNFILLED_REQUIREMENTS);
 
 		// validate id
-		if (typeof entity.id === "undefined" || entity.id === null) throw new Error(config.errors.UNFILLED_REQUIREMENTS);
-		entity.id += "";
-		await helpers.validate(entity.id, "id");
+		if (typeof id === "undefined" || id === null) throw new Error(config.errors.UNFILLED_REQUIREMENTS);
+		id += "";
+		await helpers.validate(id, "id");
 
 		// validate name
 		entity.name += "";
 		if (entity.name.length < config.limits.emailList.minNameLength || entity.name.length > config.limits.emailList.maxNameLength) throw new Error(config.errors.EMAIL_LIST_NAME_VALIDATION);
 
-		const wantedEntity = await this.getEmailListById(entity.id);
+		const wantedEntity = await this.getEmailListById(id);
 
 		wantedEntity.name = entity.name;
 
