@@ -21,9 +21,10 @@ const AccountController = (() => ({
 		await helpers.validate(id, "id");
 
 		// get wanted entity
-		const wantedEntity = await DatabaseController.findOne({ _id: id }).exec();
+		const wantedEntity = await DatabaseController.findOneByQuery("account", { _id: id });
 
 		if (typeof wantedEntity === "undefined" || wantedEntity === null) throw new Error(config.errors.RECORD_NOT_FOUND);
+
 		return wantedEntity;
 	},
 
