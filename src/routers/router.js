@@ -4,6 +4,23 @@ import AccountController from '../controllers/accountController.js';
 
 var router = Router();
 
+router.use('/api',
+  async(ctx) => {
+    const { token } = ctx.cookie;
+
+    if (typeof token === "undefined" || token === null)
+      throw new Error(config.errors.PERMISSION_DENIED);
+
+    if (exp - Math.floor(Date.now() / 1000) < config.jwtOptions.expiresIn / 2) {
+
+      ctx.cookies.set("token", await authenticate(wantedAdmin._id, ctx.userAgent), {
+        expires: new Date(Date.now() + ((config.jwtOptions.expiresIn * 1000) * 2)),
+        overwrite: true
+      });
+    }
+  }
+)
+
 // ACCOUNT CONTROLLER >>
 
 router.get('/api/get/accounts/:limit/:skip/:accountType',
@@ -353,32 +370,22 @@ router.get('/api/delete/dailySchedule/:id',
   }
 )
 
-router.get('/api/assign/dailyToWeekly/:dailyScheduleId/:weeklyScheduleId/:day',
+router.get('/api/assign/dailyToWeekly/:dailyScheduleId/:weeklyScheduleId/',
   async(ctx) => {
-
-    if (Number.isNaN(ctx.params.day) || ctx.params.day < 0 || ctx.params.day > 4) {
-      throw new Error(config.errors.PARAMETER_ERROR);
-    }
 
     ctx.body = await ScheduleController.assignDailyToWeekly(
       ctx.params.weeklyScheduleId,
-      ctx.params.dailyScheduleId,
-      ctx.params.day
+      ctx.params.dailyScheduleId
     )
   }
 )
 
-router.get('/api/remove/dailyFromWeekly/:dailyScheduleId/:weeklyScheduleId/:day',
+router.get('/api/remove/dailyFromWeekly/:dailyScheduleId/:weeklyScheduleId/',
   async(ctx) => {
-
-    if (Number.isNaN(ctx.params.day) || ctx.params.day < 0 || ctx.params.day > 4) {
-      throw new Error(config.errors.PARAMETER_ERROR);
-    }
 
     ctx.body = await ScheduleController.removeDailyFromWeekly(
       ctx.params.weeklyScheduleId,
-      ctx.params.dailyScheduleId,
-      ctx.params.day
+      ctx.params.dailyScheduleId
     )
   }
 )
