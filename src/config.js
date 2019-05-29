@@ -78,6 +78,7 @@ const config = {
 		LOCKED_ACCOUNT: "11",
 		WRONG_PASSWORD: "12",
 		UNDONE_UPDATE: "13",
+		NOT_PERMITTED: "14"
 	}
 };
 
