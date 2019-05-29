@@ -28,7 +28,13 @@ const limits = {
 	emailList: {
 		minNameLength: parseIntFromEnvOr("LIMITS_EMAIL_LIST_MIN_NAME_LENGTH", 1),
 		maxNameLength: parseIntFromEnvOr("LIMITS_EMAIL_LIST_MAX_NAME_LENGTH", 30),
-	}
+	},
+	weeklyScheule: {
+		minSemesterNumber: parseIntFromEnvOr("LIMITS_WEEKLY_SCHEDULE_MIN_SEMESTER", 1),
+		maxSemesterNumber: parseIntFromEnvOr("LIMITS_WEEKLY_SCHEDULE_MAX_SEMESTER", 12),
+		minDayNumber: parseIntFromEnvOr("LIMITS_DAILY_SCHEDULE_MIN_DAY_NUMBER", 0),
+		maxDayNumber: parseIntFromEnvOr("LIMITS_DAILY_SCHEDULE_MAX_DAY_NUMBER", 4),
+	},
 };
 
 // Export limits
