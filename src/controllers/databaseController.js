@@ -25,7 +25,11 @@ const DatabaseController = (() => ({
 		// validate query
 		if (typeof query !== "object") throw new Error(config.errors.INVALID_QUERY);
 
-		return model.findOne(query).exec();
+		const wantedEntity = model.findOne(query).exec()
+
+		if (typeof wantedEntity === "undefined" || wantedEntity === null) throw new Error(config.errors.RECORD_NOT_FOUND);
+
+		return wantedEntity;
 	},
 
 	async add(model, query) {
