@@ -24,6 +24,10 @@ const limits = {
 	email: {
 		minEmailLength: parseIntFromEnvOr("LIMITS_EMAIL_MIN_EMAIL_LENGTH", 1),
 		maxEmailLength: parseIntFromEnvOr("LIMITS_EMAIL_MAX_EMAIL_LENGTH", 254),
+	},
+	emailList: {
+		minNameLength: parseIntFromEnvOr("LIMITS_EMAIL_LIST_MIN_NAME_LENGTH", 1),
+		maxNameLength: parseIntFromEnvOr("LIMITS_EMAIL_LIST_MAX_NAME_LENGTH", 30),
 	}
 };
 
