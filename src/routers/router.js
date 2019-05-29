@@ -344,7 +344,7 @@ router.post('/api/update/dailySchedule/:id',
   }
 )
 
-router.post('/api/delete/dailySchedule/:id',
+router.get('/api/delete/dailySchedule/:id',
   async(ctx) => {
 
     ctx.body = await ScheduleController.deleteDailySchedule(
@@ -353,7 +353,7 @@ router.post('/api/delete/dailySchedule/:id',
   }
 )
 
-router.post('/api/assign/dailyToWeekly/:dailyScheduleId/:weeklyScheduleId/:day',
+router.get('/api/assign/dailyToWeekly/:dailyScheduleId/:weeklyScheduleId/:day',
   async(ctx) => {
 
     if (Number.isNaN(ctx.params.day) || ctx.params.day < 0 || ctx.params.day > 4) {
@@ -368,17 +368,142 @@ router.post('/api/assign/dailyToWeekly/:dailyScheduleId/:weeklyScheduleId/:day',
   }
 )
 
-router.post('/api/remove/dailyFromWeekly/:dailyScheduleId/:weeklyScheduleId/:day',
+router.get('/api/remove/dailyFromWeekly/:dailyScheduleId/:weeklyScheduleId/:day',
   async(ctx) => {
 
     if (Number.isNaN(ctx.params.day) || ctx.params.day < 0 || ctx.params.day > 4) {
       throw new Error(config.errors.PARAMETER_ERROR);
     }
 
-    ctx.body = await ScheduleController.assignDailyToWeekly(
+    ctx.body = await ScheduleController.removeDailyFromWeekly(
       ctx.params.weeklyScheduleId,
       ctx.params.dailyScheduleId,
       ctx.params.day
+    )
+  }
+)
+
+// << SCHEDULECONTROLLER
+// REQUESTCONTROLLER >>
+
+router.get('/api/get/requests/:limit/:skip',
+  async(ctx) => {
+    helper.authenticateAdmin(ctx);
+    if (!helpers.validate(ctx.param.limit, "paramNumber")
+     || !helpers.validate(ctx.param.skip, "paramNumber")) {
+       throw new Error(config.errors.PARAMETER_ERROR);
+     }
+
+    ctx.body = await RequestController.getRequests(
+      ctx.params.limit,
+      ctx.params.skip
+    )
+  }
+)
+
+router.get('/api/get/request/:id',
+  async(ctx) => {
+
+    helper.authenticateAdmin(ctx);
+    ctx.body = await RequestController.getRequestById(
+      ctx.params.id
+    )
+  }
+)
+
+router.post('/api/add/request',
+  async(ctx) => {
+
+    helper.authenticateAdmin(ctx);
+    ctx.body = await RequestController.add(
+      ctx.body
+    )
+  }
+)
+
+router.get('/api/delete/request/:id',
+  async(ctx) => {
+
+    helper.authenticateAdmin(ctx);
+    ctx.body = await RequestController.delete(
+      ctx.body
+    )
+  }
+)
+
+router.post('/api/handle/request',
+  async(ctx) => {
+
+    helper.authenticateAdmin(ctx);
+    ctx.body = await RequestController.add(
+      ctx.body.id,
+      ctx.body.state
+    )
+  }
+)
+
+// << REQUESTCONTROLLER
+
+// COURSECONTROLLER >>
+
+router.get('/api/get/courses/:limit/:skip',
+  async(ctx) => {
+
+    if (!helpers.validate(ctx.param.limit, "paramNumber")
+     || !helpers.validate(ctx.param.skip, "paramNumber")) {
+       throw new Error(config.errors.PARAMETER_ERROR);
+     }
+
+    ctx.body = await CourseController.getCourses(
+      ctx.params.limit,
+      ctx.params.skip
+    )
+  }
+)
+
+router.get('/api/get/course/:id',
+  async(ctx) => {
+
+    ctx.body = await CourseController.getCourse(
+      ctx.params.id
+    )
+  }
+)
+
+router.post('/api/add/course',
+  async(ctx) => {
+
+    ctx.body = await CourseController.addCourse(
+      ctx.body
+    )
+  }
+)
+
+router.post('/api/update/course/:id',
+  async(ctx) => {
+
+    ctx.body = await CourseController.updateCourse(
+      ctx.params.id,
+      ctx.body
+    )
+  }
+)
+
+router.get('/api/delete/course/:id',
+  async(ctx) => {
+
+    ctx.body = await CourseController.deleteCourse(
+      ctx.params.id
+    )
+  }
+)
+
+router.get('/api/publish/course/:id',
+  async(ctx) => {
+
+    helper.authenticateAdmin(ctx);
+    ctx.body = await CourseController.getCourse(
+      ctx.params.id
     )
   }
 )
