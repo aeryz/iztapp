@@ -69,7 +69,7 @@ router.use(
 
 // ACCOUNT CONTROLLER >>
 
-router.get('/api/get/accounts/:limit/:skip/:accountType',
+router.get('/api/get/accounts/:accountType/:limit?/:skip?',
 	async (ctx) => {
 		helper.authenticateAdmin(ctx);
 		if (!helper.validate(ctx.param.limit, "paramNumber")

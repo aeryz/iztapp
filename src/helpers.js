@@ -141,6 +141,7 @@ async function authenticate(id, userAgent) {
 }
 
 async function authenticateAdmin(ctx) {
+
 	const { token } = ctx.cookie;
 
 	if (typeof token === "undefined" || token === null) throw new Error(config.errors.PERMISSION_DENIED);
