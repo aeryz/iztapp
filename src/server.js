@@ -8,11 +8,15 @@ import config from './config.js';
 
 import bodyParser from 'koa-body'
 
+import userAgentMiddleware from "koa-useragent";
+
 const server = new Koa();
 
 import router from './routers/router.js'
 
 server.use(bodyParser());
+
+server.use(userAgentMiddleware);
 
 server.use(router.routes());
 
