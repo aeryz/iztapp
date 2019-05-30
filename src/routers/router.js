@@ -13,10 +13,67 @@ import config from "../config.js"
 
 var router = new Router();
 
+
+router.use(
+  async (ctx, next) => {
+    try {
+      await next();
+    } catch (err) {
+      console.log(err.message);
+      if (err.message.includes("maxFileSize exceeded")) {
+        ctx.status = 400;
+        ctx.body = {
+          errorCode: config.errors.UPLOAD_LIMIT_EXCEED
+        };
+        return;
+      }
+      if (err.code === "ECONNABORTED") {
+        ctx.status = 406;
+        ctx.body = {
+          errorCode: config.errors.UPLOAD_CANCELED
+        };
+        return;
+      }
+      let errorCode = +err.message;
+      if (Number.isNaN(errorCode)) {
+        helpers.logError("Controllers / Api / Global Api Error Handler", {
+          err,
+          ctx
+        });
+        errorCode = 1;
+      }
+      ctx.body = {
+        errorCode: errorCode
+      };
+      switch (errorCode) {
+        case 1: { // UNKNOWN_ERROR
+          ctx.status = 500;
+          break;
+        }
+        case 2: // UNSUPPORTED_LANGUAGE
+        case 3: { // API_NOT_FOUND
+
+          ctx.status = 404;
+          break;
+        }
+        case 4: // PERMISSON_DENIED
+        case 5: // SESSION_EXPIRED
+        case config.errors.LOCKED_ACCOUNT: { // LOCKED_ACCOUNT
+          ctx.status = 401;
+          break;
+        }
+        default: {
+          ctx.status = 400;
+          break;
+        }
+      }
+    }
+  }
+);
+
 // ACCOUNT CONTROLLER >>
 
 router.get('/api/get/accounts/:limit/:skip/:accountType',
-	helper.authenticateAdmin,
 	async (ctx) => {
 		helper.authenticateAdmin(ctx);
 		if (!helper.validate(ctx.param.limit, "paramNumber")
@@ -47,16 +104,13 @@ router.get('/api/get/account/:id',
 )
 
 router.post("/login",
-
-	helper.notLoggedInFromCookie,
-
 	async (ctx) => {
 
 		// @ts-ignore
 		const loggedInUser = await AccountController.login(ctx.request.body);
 
 		// @ts-ignore
-		ctx.cookies.set("token", await helper.authenticator.authenticate(loggedInUser._id, ctx.userAgent), {
+		ctx.cookies.set("token", await helper.authenticate(loggedInUser._id, ctx.userAgent), {
 
 			// @ts-ignore
 			expires: new Date(Date.now() + ((config.jwtOptions.expiresIn * 1000) * 2))

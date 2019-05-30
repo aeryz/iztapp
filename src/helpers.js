@@ -51,14 +51,6 @@ async function validate(data, type, noError = false) {
 	};
 };
 
-async function notLoggedInFromCookie(ctx, next) {
-
-	if (!(typeof ctx.cookie.token === "undefined" || ctx.cookie.token === null)) await ctx.redirect(`/${ctx.cookie.lang}`);
-
-	else await next();
-
-}
-
 async function verifyToken(token, userAgent) {
 
 	try {
@@ -178,7 +170,6 @@ async function generatePasswordHash(password, salt) {
 export default {
 	authenticate,
 	authenticateAdmin,
-	notLoggedInFromCookie,
 	validate,
 	generateHash,
 	generatePasswordHash,
