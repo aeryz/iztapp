@@ -16,6 +16,14 @@ import localeTR from "./locales/tr";
 
 // Import models
 import Account from "./models/account";
+import Worker from "./models/worker";
+import Course from "./models/course";
+import DailySchedule from "./models/dailySchedule";
+import WeeklySchedule from "./models/weeklySchedule";
+import Email from "./models/email";
+import EmailList from "./models/emailList";
+import Request from "./models/request";
+
 
 // Define env parser helper
 function parseIntFromEnvOr(name, defaultValue) {
@@ -58,6 +66,13 @@ const config = {
 	},
 	models: {
 		"account": Account,
+		"worker": Worker,
+		"course": Course,
+		"email": Email,
+		"emailList": EmailList,
+		"dailySchedule": DailySchedule,
+		"weeklySchedule": WeeklySchedule,
+		"request": Request
 	},
 	accountTypes: [
 		0, // All accounts
