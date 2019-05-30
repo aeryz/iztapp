@@ -107,7 +107,7 @@ helper.authenticateAdmin,
 	}
 )
 
-router.post(' /api/update/password/:id',
+router.post('/api/update/password/:id',
 helper.authenticateAdmin,
 	async (ctx) => {
 		ctx.body = await AccountController.updatePassword(ctx.params.id, ctx.request.body.newPassword);
@@ -139,14 +139,10 @@ router.post('/api/get/workers',
 
 router.get('/api/get/emails/:limit?/:skip?',
 	async (ctx) => {
-		if (!helper.validate(ctx.param.limit, "paramNumber")
-			|| !helper.validate(ctx.param.skip, "paramNumber")) {
-			throw new Error(config.errors.PARAMETER_ERROR);
-		}
 
 		ctx.body = await EmailController.getEmails(
-			ctx.request.body.limit,
-			ctx.request.body.skip
+			ctx.params.limit,
+			ctx.params.skip
 		)
 	}
 )
@@ -174,11 +170,6 @@ router.get('/api/delete/email/:id',
 // EMAIL LIST CONTROLLER >>
 router.get('/api/get/emailLists/:limit?/:skip?',
 	async (ctx) => {
-		if (!helper.validate(ctx.param.limit, "paramNumber")
-			|| !helper.validate(ctx.param.skip, "paramNumber")) {
-			throw new Error(config.errors.PARAMETER_ERROR);
-		}
-
 		ctx.body = await EmailListController.getEmailLists(
 			ctx.params.limit,
 			ctx.params.skip
@@ -186,10 +177,10 @@ router.get('/api/get/emailLists/:limit?/:skip?',
 	}
 )
 
-router.get('/api/get/emailLists/:id',
+router.get('/api/get/emailList/:id',
 	async (ctx) => {
 
-		ctx.body = await EmailListController.geetEmailListById(
+		ctx.body = await EmailListController.getEmailListById(
 			ctx.params.id,
 		)
 	}
@@ -208,7 +199,8 @@ router.post('/api/update/emailList',
 	async (ctx) => {
 
 		ctx.body = await EmailListController.update(
-			ctx.request.body
+			ctx.request.body.id,
+      ctx.request.body
 		)
 	}
 )
@@ -217,7 +209,7 @@ router.get('/api/delete/emailList/:id',
 	async (ctx) => {
 
 		ctx.body = await EmailListController.delete(
-			ctx.request.body
+			ctx.params.id
 		)
 	}
 )
