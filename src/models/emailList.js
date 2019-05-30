@@ -2,6 +2,8 @@ import mongoose from "mongoose"
 
 const Schema = mongoose.Schema
 
+const db = mongoose.createConnection("mongodb://localhost:27017/iztapp")
+
 const EmailListSchema = new Schema({
 	emails: {
 		type: {
@@ -23,4 +25,4 @@ const EmailListSchema = new Schema({
 	}
 });
 
-export default mongoose.model("emailList", EmailListSchema);
+export default db.model("emailList", EmailListSchema);

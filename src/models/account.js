@@ -2,6 +2,8 @@ import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
+const db = mongoose.createConnection("mongodb://localhost:27017/iztapp")
+
 const AccountSchema = new Schema({
 	email: {
 		type: String,
@@ -36,7 +38,7 @@ const AccountSchema = new Schema({
 	},
 	lastLoginDate: {
 		type: Date,
-		required: true
+		required: false
 	},
 	creationDate: {
 		type: Date,
@@ -45,4 +47,4 @@ const AccountSchema = new Schema({
 	}
 });
 
-export default mongoose.model("admin", AccountSchema);
+export default db.model("account", AccountSchema);

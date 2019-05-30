@@ -2,6 +2,8 @@ import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
+const db = mongoose.createConnection("mongodb://localhost:27017/iztapp")
+
 const WorkerSchema = new Schema({
 	name: {
 		type: String,
@@ -30,4 +32,4 @@ const WorkerSchema = new Schema({
 	}
 })
 
-export default mongoose.model("worker", WorkerSchema);
+export default db.model("worker", WorkerSchema);

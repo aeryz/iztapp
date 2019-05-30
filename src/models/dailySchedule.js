@@ -2,6 +2,8 @@ import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
+const db = mongoose.createConnection("mongodb://localhost:27017/iztapp")
+
 const DailyScheduleSchema = new Schema({
 	courses: {
 		type: {
@@ -18,4 +20,4 @@ const DailyScheduleSchema = new Schema({
 	}
 });
 
-export default mongoose.model("dailySchedule", DailyScheduleSchema);
+export default db.model("dailySchedule", DailyScheduleSchema);

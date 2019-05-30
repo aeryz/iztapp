@@ -2,6 +2,8 @@ import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
+const db = mongoose.createConnection("mongodb://localhost:27017/iztapp")
+
 const RequestSchema = new Schema({
 	createdBy: {
 		type: {
@@ -42,4 +44,4 @@ const RequestSchema = new Schema({
 	}
 })
 
-export default mongoose.model("request", RequestSchema);
+export default db.model("request", RequestSchema);

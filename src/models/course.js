@@ -2,6 +2,8 @@ import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
+const db = mongoose.createConnection("mongodb://localhost:27017/iztapp")
+
 const CourseSchema = new Schema({
 	name: {
 		type: String,
@@ -73,4 +75,4 @@ const CourseSchema = new Schema({
 	}
 });
 
-export default mongoose.model("course", CourseSchema);
+export default db.model("course", CourseSchema);
