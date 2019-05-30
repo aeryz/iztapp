@@ -82,7 +82,7 @@ const config = {
 	requestStates: [
 		0, // Accepted
 		1 // Rejected
-	]
+	],
 	errors: {
 		UNKNOWN: "1",
 		INVALID_LIMIT: "2",

@@ -514,3 +514,5 @@ router.get('/api/publish/course/:id',
     )
   }
 )
+
+module.exports = router
