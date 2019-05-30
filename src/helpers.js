@@ -51,6 +51,12 @@ async function validate(data, type, noError = false) {
 	};
 };
 
+async function comparePassword(password, hash) {
+
+	return bcrypt.compare(password, hash);
+
+};
+
 async function verifyToken(token, userAgent) {
 
 	try {
@@ -170,6 +176,7 @@ async function generatePasswordHash(password, salt) {
 export default {
 	authenticate,
 	authenticateAdmin,
+	comparePassword,
 	validate,
 	generateHash,
 	generatePasswordHash,
