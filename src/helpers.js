@@ -2,7 +2,7 @@ import config from "./config";
 import validator from "validator";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
-import Account from "../models/account";
+import Account from "./models/account";
 
 async function validate(data, type, noError = false) {
 	try {
@@ -48,7 +48,7 @@ async function notLoggedInFromCookie(ctx, next) {
 
     else await next();
 
-},
+}
 
 async function authenticateAdmin(ctx) {
 	const { token } = ctx.cookie;
@@ -84,6 +84,8 @@ async function generatePasswordHash(password, salt) {
 }
 
 export default {
+	authenticateAdmin,
+	notLoggedInFromCookie,
 	validate,
 	generateHash,
 	generatePasswordHash,

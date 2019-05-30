@@ -10,6 +10,6 @@ const server = new Koa();
 
 import router from './routers/router.js'
 
-app.use(router);
+server.use(router.routes());
 
 export default server.listen(config.port);

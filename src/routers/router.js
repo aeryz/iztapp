@@ -1,6 +1,7 @@
 import Koa from 'koa';
 import Router from "koa-router";
 import AccountController from '../controllers/accountController.js';
+import helper from '../helpers.js';
 
 var router = Router();
 
@@ -26,8 +27,8 @@ router.use('/api',
 router.get('/api/get/accounts/:limit/:skip/:accountType',
   async(ctx) => {
     helper.authenticateAdmin(ctx);
-    if (!helpers.validate(ctx.param.limit, "paramNumber")
-     || !helpers.validate(ctx.param.skip, "paramNumber")) {
+    if (!helper.validate(ctx.param.limit, "paramNumber")
+     || !helper.validate(ctx.param.skip, "paramNumber")) {
        throw new Error(config.errors.PARAMETER_ERROR);
      }
 
@@ -55,14 +56,14 @@ router.get('/api/get/account/:id',
 
 router.post("/login",
 
-  helpers.notLoggedInFromCookie,
+  helper.notLoggedInFromCookie,
 
   async (ctx) => {
 
     const loggedInUser = await AccountController.login(ctx.request.body);
 
     // @ts-ignore
-    ctx.cookies.set("token", await helpers.authenticator.authenticate(loggedInUser._id, ctx.userAgent), {
+    ctx.cookies.set("token", await helper.authenticator.authenticate(loggedInUser._id, ctx.userAgent), {
 
       // @ts-ignore
       expires: new Date(Date.now() + ((config.jwtOptions.expiresIn * 1000) * 2))
@@ -91,21 +92,21 @@ router.post('/api/add/account',
 
 router.post('/api/delete/account',
   async(ctx) => {
-    helpers.authenticateAdmin(ctx);
+    helper.authenticateAdmin(ctx);
     ctx.body = await AccountController.delete(ctx.params.id);
   }
 )
 
 router.post('/api/unlock/account/:hash',
   async(ctx) => {
-    helpers.authenticateAdmin(ctx);
+    helper.authenticateAdmin(ctx);
     ctx.body = await AccountController.delete(ctx.params.id);
   }
 )
 
 router.post(' /api/update/password/:id',
   async(ctx) => {
-    helpers.authenticateAdmin(ctx);
+    helper.authenticateAdmin(ctx);
     ctx.body = await AccountController.updatePassword(ctx.params.id, ctx.body.newPassword);
   }
 )
@@ -116,8 +117,8 @@ router.post(' /api/update/password/:id',
 
 router.post('/api/get/workers',
   async(ctx) => {
-    if (!helpers.validate(ctx.body.limit, "paramNumber")
-     || !helpers.validate(ctx.body.skip, "paramNumber")) {
+    if (!helper.validate(ctx.body.limit, "paramNumber")
+     || !helper.validate(ctx.body.skip, "paramNumber")) {
        throw new Error(config.errors.PARAMETER_ERROR);
      }
 
@@ -135,8 +136,8 @@ router.post('/api/get/workers',
 
 router.get('/api/get/emails/:limit/:skip',
   async(ctx) => {
-    if (!helpers.validate(ctx.param.limit, "paramNumber")
-     || !helpers.validate(ctx.param.skip, "paramNumber")) {
+    if (!helper.validate(ctx.param.limit, "paramNumber")
+     || !helper.validate(ctx.param.skip, "paramNumber")) {
        throw new Error(config.errors.PARAMETER_ERROR);
      }
 
@@ -170,8 +171,8 @@ router.get('/api/delete/email/:id',
 // EMAIL LIST CONTROLLER >>
 router.get('/api/get/emailLists/:limit/:skip',
   async(ctx) => {
-    if (!helpers.validate(ctx.param.limit, "paramNumber")
-     || !helpers.validate(ctx.param.skip, "paramNumber")) {
+    if (!helper.validate(ctx.param.limit, "paramNumber")
+     || !helper.validate(ctx.param.skip, "paramNumber")) {
        throw new Error(config.errors.PARAMETER_ERROR);
      }
 
@@ -268,8 +269,8 @@ router.post('/api/send/events',
 
 router.post('/api/get/weekly/:limit/:skip',
   async(ctx) => {
-    if (!helpers.validate(ctx.param.limit, "paramNumber")
-     || !helpers.validate(ctx.param.skip, "paramNumber")) {
+    if (!helper.validate(ctx.param.limit, "paramNumber")
+     || !helper.validate(ctx.param.skip, "paramNumber")) {
        throw new Error(config.errors.PARAMETER_ERROR);
      }
 
@@ -292,8 +293,8 @@ router.post('/api/get/weekly',
 
 router.post('/api/get/daily/:limit/:skip',
   async(ctx) => {
-    if (!helpers.validate(ctx.param.limit, "paramNumber")
-     || !helpers.validate(ctx.param.skip, "paramNumber")) {
+    if (!helper.validate(ctx.param.limit, "paramNumber")
+     || !helper.validate(ctx.param.skip, "paramNumber")) {
        throw new Error(config.errors.PARAMETER_ERROR);
      }
 
@@ -396,8 +397,8 @@ router.get('/api/remove/dailyFromWeekly/:dailyScheduleId/:weeklyScheduleId/',
 router.get('/api/get/requests/:limit/:skip',
   async(ctx) => {
     helper.authenticateAdmin(ctx);
-    if (!helpers.validate(ctx.param.limit, "paramNumber")
-     || !helpers.validate(ctx.param.skip, "paramNumber")) {
+    if (!helper.validate(ctx.param.limit, "paramNumber")
+     || !helper.validate(ctx.param.skip, "paramNumber")) {
        throw new Error(config.errors.PARAMETER_ERROR);
      }
 
@@ -456,8 +457,8 @@ router.post('/api/handle/request',
 router.get('/api/get/courses/:limit/:skip',
   async(ctx) => {
 
-    if (!helpers.validate(ctx.param.limit, "paramNumber")
-     || !helpers.validate(ctx.param.skip, "paramNumber")) {
+    if (!helper.validate(ctx.param.limit, "paramNumber")
+     || !helper.validate(ctx.param.skip, "paramNumber")) {
        throw new Error(config.errors.PARAMETER_ERROR);
      }
 
@@ -515,4 +516,4 @@ router.get('/api/publish/course/:id',
   }
 )
 
-module.exports = router
+export default router
