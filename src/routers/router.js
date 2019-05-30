@@ -72,15 +72,11 @@ router.use(
 router.get('/api/get/accounts/:accountType/:limit?/:skip?',
 	async (ctx) => {
 		helper.authenticateAdmin(ctx);
-		if (!helper.validate(ctx.param.limit, "paramNumber")
-			|| !helper.validate(ctx.param.skip, "paramNumber")) {
-			throw new Error(config.errors.PARAMETER_ERROR);
-		}
 
 		ctx.body = await AccountController.getAccounts(
-			ctx.param.limit,
-			ctx.param.skip,
-			ctx.param.accountType
+			ctx.params.limit,
+			ctx.params.skip,
+			ctx.params.accountType
 		)
 	}
 )
@@ -177,7 +173,7 @@ router.post('/api/get/workers',
 
 // EMAIL CONTROLLER >>
 
-router.get('/api/get/emails/:limit/:skip',
+router.get('/api/get/emails/:limit?/:skip?',
 	async (ctx) => {
 		if (!helper.validate(ctx.param.limit, "paramNumber")
 			|| !helper.validate(ctx.param.skip, "paramNumber")) {
@@ -212,7 +208,7 @@ router.get('/api/delete/email/:id',
 // << EMAIL CONTROLLER
 
 // EMAIL LIST CONTROLLER >>
-router.get('/api/get/emailLists/:limit/:skip',
+router.get('/api/get/emailLists/:limit?/:skip?',
 	async (ctx) => {
 		if (!helper.validate(ctx.param.limit, "paramNumber")
 			|| !helper.validate(ctx.param.skip, "paramNumber")) {
@@ -310,7 +306,7 @@ router.post('/api/send/events',
 
 // SCHEDULECONTROLLER >>
 
-router.post('/api/get/weekly/:limit/:skip',
+router.post('/api/get/weekly/:limit?/:skip?',
 	async (ctx) => {
 		if (!helper.validate(ctx.param.limit, "paramNumber")
 			|| !helper.validate(ctx.param.skip, "paramNumber")) {
@@ -334,7 +330,7 @@ router.post('/api/get/weekly',
 	}
 )
 
-router.post('/api/get/daily/:limit/:skip',
+router.post('/api/get/daily/:limit?/:skip?',
 	async (ctx) => {
 		if (!helper.validate(ctx.param.limit, "paramNumber")
 			|| !helper.validate(ctx.param.skip, "paramNumber")) {
@@ -437,7 +433,7 @@ router.get('/api/remove/dailyFromWeekly/:dailyScheduleId/:weeklyScheduleId/',
 // << SCHEDULECONTROLLER
 // REQUESTCONTROLLER >>
 
-router.get('/api/get/requests/:limit/:skip',
+router.get('/api/get/requests/:limit?/:skip?',
 	async (ctx) => {
 		helper.authenticateAdmin(ctx);
 		if (!helper.validate(ctx.param.limit, "paramNumber")
@@ -496,7 +492,7 @@ router.post('/api/handle/request',
 
 // COURSECONTROLLER >>
 
-router.get('/api/get/courses/:limit/:skip',
+router.get('/api/get/courses/:limit?/:skip?',
 	async (ctx) => {
 
 		if (!helper.validate(ctx.param.limit, "paramNumber")
