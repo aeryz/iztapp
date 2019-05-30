@@ -36,10 +36,6 @@ router.use(
 			}
 			let errorCode = +err.message;
 			if (Number.isNaN(errorCode)) {
-				helper.logError("Controllers / Api / Global Api Error Handler", {
-					err,
-					ctx
-				});
 				errorCode = 1;
 			}
 			ctx.body = {
