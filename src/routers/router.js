@@ -33,8 +33,8 @@ router.use(
 // ACCOUNT CONTROLLER >>
 
 router.get('/api/get/accounts/:accountType/:limit?/:skip?',
+  helper.authenticateAdmin,
 	async (ctx) => {
-		helper.authenticateAdmin(ctx);
 
 		ctx.body = await AccountController.getAccounts(
 			ctx.params.limit,
@@ -94,22 +94,22 @@ router.post('/api/add/account',
 )
 
 router.post('/api/delete/account',
+helper.authenticateAdmin,
 	async (ctx) => {
-		helper.authenticateAdmin(ctx);
 		ctx.body = await AccountController.delete(ctx.params.id);
 	}
 )
 
 router.post('/api/unlock/account/:hash',
+helper.authenticateAdmin,
 	async (ctx) => {
-		helper.authenticateAdmin(ctx);
 		ctx.body = await AccountController.delete(ctx.params.id);
 	}
 )
 
 router.post(' /api/update/password/:id',
+helper.authenticateAdmin,
 	async (ctx) => {
-		helper.authenticateAdmin(ctx);
 		ctx.body = await AccountController.updatePassword(ctx.params.id, ctx.request.body.newPassword);
 	}
 )
@@ -398,12 +398,8 @@ router.get('/api/remove/dailyFromWeekly/:dailyScheduleId/:weeklyScheduleId/',
 // REQUESTCONTROLLER >>
 
 router.get('/api/get/requests/:limit?/:skip?',
+helper.authenticateAdmin,
 	async (ctx) => {
-		helper.authenticateAdmin(ctx);
-		if (!helper.validate(ctx.param.limit, "paramNumber")
-			|| !helper.validate(ctx.param.skip, "paramNumber")) {
-			throw new Error(config.errors.PARAMETER_ERROR);
-		}
 
 		ctx.body = await RequestController.getRequests(
 			ctx.params.limit,
@@ -413,9 +409,9 @@ router.get('/api/get/requests/:limit?/:skip?',
 )
 
 router.get('/api/get/request/:id',
+helper.authenticateAdmin,
 	async (ctx) => {
 
-		helper.authenticateAdmin(ctx);
 		ctx.body = await RequestController.getRequestById(
 			ctx.params.id
 		)
@@ -423,9 +419,9 @@ router.get('/api/get/request/:id',
 )
 
 router.post('/api/add/request',
+helper.authenticateAdmin,
 	async (ctx) => {
 
-		helper.authenticateAdmin(ctx);
 		ctx.body = await RequestController.add(
 			ctx.request.body
 		)
@@ -433,9 +429,9 @@ router.post('/api/add/request',
 )
 
 router.get('/api/delete/request/:id',
+helper.authenticateAdmin,
 	async (ctx) => {
 
-		helper.authenticateAdmin(ctx);
 		ctx.body = await RequestController.delete(
 			ctx.request.body
 		)
@@ -443,9 +439,9 @@ router.get('/api/delete/request/:id',
 )
 
 router.post('/api/handle/request',
+helper.authenticateAdmin,
 	async (ctx) => {
 
-		helper.authenticateAdmin(ctx);
 		ctx.body = await RequestController.add(
 			ctx.request.body.id
 		)
@@ -509,9 +505,9 @@ router.get('/api/delete/course/:id',
 )
 
 router.get('/api/publish/course/:id',
+helper.authenticateAdmin,
 	async (ctx) => {
 
-		helper.authenticateAdmin(ctx);
 		ctx.body = await CourseController.getCourse(
 			ctx.params.id
 		)
