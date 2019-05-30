@@ -1,8 +1,17 @@
-import config from "./config";
 import validator from "validator";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
-import Account from "./models/account";
+import AccountController from "./controllers/accountController";
+
+import bluebird from "bluebird";
+import jsonwebtoken from "jsonwebtoken";
+const { promisify } = bluebird;
+const jwt = {
+	sign: promisify(jsonwebtoken.sign),
+	verify: promisify(jsonwebtoken.verify)
+};
+
+import config from "./config";
 
 async function validate(data, type, noError = false) {
 	try {
@@ -44,22 +53,105 @@ async function validate(data, type, noError = false) {
 
 async function notLoggedInFromCookie(ctx, next) {
 
-    if (!(typeof ctx.cookie.token === "undefined" || ctx.cookie.token === null)) await ctx.redirect(`/${ctx.cookie.lang}`);
+	if (!(typeof ctx.cookie.token === "undefined" || ctx.cookie.token === null)) await ctx.redirect(`/${ctx.cookie.lang}`);
 
-    else await next();
+	else await next();
+
+}
+
+async function verifyToken(token, userAgent) {
+
+	try {
+
+		const decodedToken = await jwt.verify(token, config.jwtOptions.secret);
+
+		const userAgentHash = crypto.createHash(config.hashAlgorithm).update(userAgent.toString()).digest("hex");
+
+		let finalUserAgentHash = "";
+
+		for (let i = 0; i < 64; i += 2) finalUserAgentHash += userAgentHash[i];
+
+		if (decodedToken.h.toString() !== finalUserAgentHash) throw new Error(config.errors.PERMISSION_DENIED);
+
+		const encryptedIdBuffer = Buffer.from(decodedToken.t.toString(), "base64");
+
+		const iv = encryptedIdBuffer.slice(0, config.jwtOptions.idEncryptionIvSize);
+
+		const encryptedId = encryptedIdBuffer.slice(config.jwtOptions.idEncryptionIvSize, encryptedIdBuffer.length);
+
+		const decipher = crypto.createDecipheriv(config.encryptionAlgorithm, config.jwtOptions.idEncryptionSecret, iv);
+
+		const decryptedId = Buffer.concat([decipher.update(encryptedId), decipher.final()]).toString("utf8");
+
+		return {
+
+			id: decryptedId,
+
+			exp: decodedToken.exp
+
+		};
+
+	} catch (err) {
+
+		if (err.name === "TokenExpiredError") throw new Error(config.errors.SESSION_EXPIRED);
+
+		throw new Error(config.errors.PERMISSION_DENIED);
+
+	}
+
+}
+
+async function authenticate(id, userAgent) {
+
+	id += "";
+
+	const iv = crypto.randomBytes(config.jwtOptions.idEncryptionIvSize);
+
+	const cipher = crypto.createCipheriv(config.encryptionAlgorithm, config.jwtOptions.idEncryptionSecret, iv);
+
+	const encryptedId = Buffer.concat([iv, cipher.update(id), cipher.final()]).toString("base64");
+
+	const userAgentHash = crypto.createHash(config.hashAlgorithm).update(userAgent.source.toString()).digest("hex");
+
+	let finalUserAgentHash = "";
+
+	for (let i = 0; i < 64; i += 2) finalUserAgentHash += userAgentHash[i];
+
+	// @ts-ignore
+	const token = await jwt.sign(
+
+		{
+
+			t: encryptedId,
+
+			h: finalUserAgentHash
+
+		},
+
+		config.jwtOptions.secret,
+
+		{
+
+			expiresIn: config.jwtOptions.expiresIn
+
+		}
+
+	);
+
+	return token;
 
 }
 
 async function authenticateAdmin(ctx) {
 	const { token } = ctx.cookie;
 
-  if (typeof token === "undefined" || token === null) throw new Error(config.errors.PERMISSION_DENIED);
+	if (typeof token === "undefined" || token === null) throw new Error(config.errors.PERMISSION_DENIED);
 
 	const { id, exp } = await verifyToken(token, ctx.userAgent.source);
 
-  const wantedAdmin = await Accounts.findOneById(id);
+	const wantedAdmin = await AccountController.getAccountById(id)
 
-  if (wantedAdmin.isLocked === true) throw new Error(config.errors.LOCKED_ACCOUNT);
+	if (wantedAdmin.isLocked === true) throw new Error(config.errors.LOCKED_ACCOUNT);
 	if (wantedAdmin.accountType !== config.accountTypes[2])
 		throw new Error(config.errors.NOT_PERMITTED);
 
@@ -67,10 +159,10 @@ async function authenticateAdmin(ctx) {
 
 	if (exp - Math.floor(Date.now() / 1000) < config.jwtOptions.expiresIn / 2) ctx.cookies.set("token", await authenticate(wantedAdmin._id, ctx.userAgent), {
 
-      // @ts-ignore
-    expires: new Date(Date.now() + ((config.jwtOptions.expiresIn * 1000) * 2)),
+		// @ts-ignore
+		expires: new Date(Date.now() + ((config.jwtOptions.expiresIn * 1000) * 2)),
 
-    overwrite: true
+		overwrite: true
 
 	});
 }
@@ -84,6 +176,7 @@ async function generatePasswordHash(password, salt) {
 }
 
 export default {
+	authenticate,
 	authenticateAdmin,
 	notLoggedInFromCookie,
 	validate,
