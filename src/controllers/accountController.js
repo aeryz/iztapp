@@ -9,9 +9,11 @@ const AccountController = (() => ({
 		accountType = +accountType;
 		if (Number.isNaN(accountType) || !config.accountTypes.includes(accountType) || Math.floor(accountType) !== accountType) throw new Error(config.errors.INVALID_ACCOUNT_TYPE);
 
-		return DatabaseController.find("account", limit, skip, {
-			type: accountType
-		});
+		let query = {};
+
+		if (accountType !== 0) query = { type: accountType };
+
+		return DatabaseController.find("account", limit, skip, query);
 	},
 
 	async getAccountById(id) {
