@@ -6,11 +6,11 @@ const db = mongoose.createConnection("mongodb://localhost:27017/iztapp")
 
 const EmailListSchema = new Schema({
 	emails: {
-		type: {
-			type: [Schema.Types.ObjectId],
+		type: [{
+			type: Schema.Types.ObjectId,
 			required: true,
 			ref: "email"
-		},
+		}],
 		required: true,
 		default: []
 	},

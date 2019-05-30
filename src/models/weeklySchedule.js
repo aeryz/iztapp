@@ -6,11 +6,11 @@ const db = mongoose.createConnection("mongodb://localhost:27017/iztapp")
 
 const WeeklyScheduleSchema = new Schema({
 	days: {
-		type: {
-			type: [Schema.Types.ObjectId],
+		type: [{
+			type: Schema.Types.ObjectId,
 			required: true,
 			ref: "dailySchedule"
-		},
+		}],
 		required: true
 	},
 	semester: {

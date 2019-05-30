@@ -6,11 +6,8 @@ const db = mongoose.createConnection("mongodb://localhost:27017/iztapp")
 
 const RequestSchema = new Schema({
 	createdBy: {
-		type: {
-			type: Schema.Types.ObjectId,
-			required: true,
-			ref: "account"
-		},
+		type: Schema.Types.ObjectId,
+		ref: "account",
 		required: true
 	},
 	type: {
@@ -26,11 +23,8 @@ const RequestSchema = new Schema({
 		required: true
 	},
 	handledBy: {
-		type: {
-			type: Schema.Types.ObjectId,
-			required: true,
-			ref: "account"
-		},
+		type: Schema.Types.ObjectId,
+		ref: "account",
 		required: false
 	},
 	creationDate: {

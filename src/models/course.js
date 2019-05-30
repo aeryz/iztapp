@@ -14,11 +14,13 @@ const CourseSchema = new Schema({
 		required: true
 	},
 	prerequisites: {
-		type: {
-			type: [Schema.Types.ObjectId],
-			ref: "course"
-		},
-		required: false
+		type: [{
+			type: Schema.Types.ObjectId,
+			ref: "course",
+			required: false
+		}],
+		required: false,
+		default: []
 	},
 	pagePath: {
 		type: String,
@@ -41,10 +43,11 @@ const CourseSchema = new Schema({
 		required: true
 	},
 	workers: {
-		type: {
-			type: [Schema.Types.ObjectId],
-			ref: "worker"
-		},
+		type: [{
+			type: Schema.Types.ObjectId,
+			ref: "worker",
+			required: true
+		}],
 		required: true
 	},
 	lectureHours: {
