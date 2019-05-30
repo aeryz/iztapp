@@ -133,7 +133,7 @@ router.get('/api/logout',
 
 router.post('/api/add/account',
 	async (ctx) => {
-		ctx.body = await AccountController.add(ctx.body);
+		ctx.body = await AccountController.add(ctx.request.body);
 	}
 )
 
@@ -154,7 +154,7 @@ router.post('/api/unlock/account/:hash',
 router.post(' /api/update/password/:id',
 	async (ctx) => {
 		helper.authenticateAdmin(ctx);
-		ctx.body = await AccountController.updatePassword(ctx.params.id, ctx.body.newPassword);
+		ctx.body = await AccountController.updatePassword(ctx.params.id, ctx.request.body.newPassword);
 	}
 )
 
@@ -164,15 +164,15 @@ router.post(' /api/update/password/:id',
 
 router.post('/api/get/workers',
 	async (ctx) => {
-		if (!helper.validate(ctx.body.limit, "paramNumber")
-			|| !helper.validate(ctx.body.skip, "paramNumber")) {
+		if (!helper.validate(ctx.request.body.limit, "paramNumber")
+			|| !helper.validate(ctx.request.body.skip, "paramNumber")) {
 			throw new Error(config.errors.PARAMETER_ERROR);
 		}
 
 		ctx.body = await WorkerController.getWorkers(
-			ctx.body.limit,
-			ctx.body.skip,
-			ctx.body.query
+			ctx.request.body.limit,
+			ctx.request.body.skip,
+			ctx.request.body.query
 		)
 	}
 )
@@ -189,8 +189,8 @@ router.get('/api/get/emails/:limit/:skip',
 		}
 
 		ctx.body = await EmailController.getEmails(
-			ctx.body.limit,
-			ctx.body.skip
+			ctx.request.body.limit,
+			ctx.request.body.skip
 		)
 	}
 )
@@ -199,7 +199,7 @@ router.post('/api/add/email',
 	async (ctx) => {
 
 		ctx.body = await EmailController.add(
-			ctx.body
+			ctx.request.body
 		)
 	}
 )
@@ -243,7 +243,7 @@ router.post('/api/add/emailList',
 	async (ctx) => {
 
 		ctx.body = await EmailListController.add(
-			ctx.body
+			ctx.request.body
 		)
 	}
 )
@@ -252,7 +252,7 @@ router.post('/api/update/emailList',
 	async (ctx) => {
 
 		ctx.body = await EmailListController.update(
-			ctx.body
+			ctx.request.body
 		)
 	}
 )
@@ -261,7 +261,7 @@ router.get('/api/delete/emailList/:id',
 	async (ctx) => {
 
 		ctx.body = await EmailListController.delete(
-			ctx.body
+			ctx.request.body
 		)
 	}
 )
@@ -270,8 +270,8 @@ router.post('/api/append/emailList',
 	async (ctx) => {
 
 		ctx.body = await EmailListController.addEmailToList(
-			ctx.body.emailId,
-			ctx.body.emailListId
+			ctx.request.body.emailId,
+			ctx.request.body.emailListId
 		)
 	}
 )
@@ -280,8 +280,8 @@ router.post('/api/remove/email',
 	async (ctx) => {
 
 		ctx.body = await EmailListController.deleteEmailFromList(
-			ctx.body.emailId,
-			ctx.body.emailListId
+			ctx.request.body.emailId,
+			ctx.request.body.emailListId
 		)
 	}
 )
@@ -299,13 +299,13 @@ router.post('/api/pull/events',
 router.post('/api/send/events',
 	async (ctx) => {
 
-		if (ctx.body.event === null || ctx.body.event === "") {
+		if (ctx.request.body.event === null || ctx.request.body.event === "") {
 			throw new Error(config.errors.UNFILLED_REQUIREMENTS);
 		}
 
 		ctx.body = await EventController.sendEvent(
-			ctx.body.event,
-			ctx.body.emailListId
+			ctx.request.body.event,
+			ctx.request.body.emailListId
 		)
 	}
 )
@@ -324,7 +324,7 @@ router.post('/api/get/weekly/:limit/:skip',
 		ctx.body = await ScheduleController.getWeeklySchedules(
 			ctx.params.limit,
 			ctx.params.skip,
-			ctx.body
+			ctx.request.body
 		)
 	}
 )
@@ -333,7 +333,7 @@ router.post('/api/get/weekly',
 	async (ctx) => {
 
 		ctx.body = await ScheduleController.getWeeklySchedule(
-			ctx.body
+			ctx.request.body
 		)
 	}
 )
@@ -348,7 +348,7 @@ router.post('/api/get/daily/:limit/:skip',
 		ctx.body = await ScheduleController.getDailySchedules(
 			ctx.params.limit,
 			ctx.params.skip,
-			ctx.body
+			ctx.request.body
 		)
 	}
 )
@@ -357,7 +357,7 @@ router.post('/api/get/daily',
 	async (ctx) => {
 
 		ctx.body = await ScheduleController.getDailySchedule(
-			ctx.body
+			ctx.request.body
 		)
 	}
 )
@@ -366,7 +366,7 @@ router.post('/api/add/weeklySchedule',
 	async (ctx) => {
 
 		ctx.body = await ScheduleController.addWeeklySchedule(
-			ctx.body
+			ctx.request.body
 		)
 	}
 )
@@ -376,7 +376,7 @@ router.post('/api/update/weeklySchedule/:id',
 
 		ctx.body = await ScheduleController.updateWeeklySchedule(
 			ctx.params.id,
-			ctx.body
+			ctx.request.body
 		)
 	}
 )
@@ -394,7 +394,7 @@ router.post('/api/add/dailySchedule',
 	async (ctx) => {
 
 		ctx.body = await ScheduleController.addDailySchedule(
-			ctx.body
+			ctx.request.body
 		)
 	}
 )
@@ -404,7 +404,7 @@ router.post('/api/update/dailySchedule/:id',
 
 		ctx.body = await ScheduleController.updateDailySchedule(
 			ctx.params.id,
-			ctx.body
+			ctx.request.body
 		)
 	}
 )
@@ -471,7 +471,7 @@ router.post('/api/add/request',
 
 		helper.authenticateAdmin(ctx);
 		ctx.body = await RequestController.add(
-			ctx.body
+			ctx.request.body
 		)
 	}
 )
@@ -481,7 +481,7 @@ router.get('/api/delete/request/:id',
 
 		helper.authenticateAdmin(ctx);
 		ctx.body = await RequestController.delete(
-			ctx.body
+			ctx.request.body
 		)
 	}
 )
@@ -491,7 +491,7 @@ router.post('/api/handle/request',
 
 		helper.authenticateAdmin(ctx);
 		ctx.body = await RequestController.add(
-			ctx.body.id
+			ctx.request.body.id
 		)
 	}
 )
@@ -528,7 +528,7 @@ router.post('/api/add/course',
 	async (ctx) => {
 
 		ctx.body = await CourseController.addCourse(
-			ctx.body
+			ctx.request.body
 		)
 	}
 )
@@ -538,7 +538,7 @@ router.post('/api/update/course/:id',
 
 		ctx.body = await CourseController.updateCourse(
 			ctx.params.id,
-			ctx.body
+			ctx.request.body
 		)
 	}
 )
