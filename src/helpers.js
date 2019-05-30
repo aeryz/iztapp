@@ -42,7 +42,7 @@ async function validate(data, type, noError = false) {
 	};
 };
 
-async notLoggedInFromCookie(ctx, next) {
+async function notLoggedInFromCookie(ctx, next) {
 
     if (!(typeof ctx.cookie.token === "undefined" || ctx.cookie.token === null)) await ctx.redirect(`/${ctx.cookie.lang}`);
 
