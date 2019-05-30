@@ -59,7 +59,7 @@ const DatabaseController = (() => ({
 				{ returnNewDocument: true }
 			);
 			return updatedEntity;
-		} catch {
+		} catch (err) {
 			throw new Error(config.errors.UNDONE_UPDATE);
 		}
 	},
