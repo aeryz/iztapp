@@ -69,6 +69,20 @@ const config = {
 		1, // Yüksek
 		2 // Doktora
 	],
+	requestTypes: [
+		0, // Add
+		1, // Update
+		2 // Delete
+	],
+	requestStatus: [
+		0, // Pending
+		1, // Accepted
+		2 // Rejected
+	],
+	requestStates: [
+		0, // Accepted
+		1 // Rejected
+	]
 	errors: {
 		UNKNOWN: "1",
 		INVALID_LIMIT: "2",
@@ -92,7 +106,9 @@ const config = {
 		PARAMETER_ERROR: "20",
 		INVALID_DAY_NUMBER: "21",
 		DAY_IS_EMPTY: "22",
-		UNDONE_DELETE: "23"
+		UNDONE_DELETE: "23",
+		INVALID_REQUEST_TYPE: "24",
+		INVALID_REQUEST_STATE_TYPE: "25"
 	}
 };
 
