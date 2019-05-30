@@ -36,7 +36,7 @@ const ScheduleController = (() => ({
 
 		entity.creationDate = now;
 
-		entity.days = []
+		entity.days = [null, null, null, null, null]
 
 		const newEntity = await DatabaseController.add("weeklySchedule", entity);
 
@@ -111,6 +111,7 @@ const ScheduleController = (() => ({
 		return updatedEntity;
 	},
 
+	// ! TODO: Check if this daily schedule is used in somewhere
 	async deleteDailySchedule(id) {
 		return await DatabaseController.delete("dailySchedule", { _id: id })
 	},
@@ -138,15 +139,38 @@ const ScheduleController = (() => ({
 		if (typeof wantedWeeklySchedule.days[day] === "undefined" || wantedWeeklySchedule.days[day] === null) wantedWeeklySchedule.days[day] = dailyScheduleId;
 
 		else {
-			const deletedDailyScheduleId = wantedWeeklySchedule.days[day];
+			const removedDailyScheduleId = wantedWeeklySchedule.days[day];
 			wantedWeeklySchedule.days[day] = dailyScheduleId;
-			if (deletedDailyScheduleId !== dailyScheduleId) await this.deleteDailySchedule(deletedDailyScheduleId);
+			if (removedDailyScheduleId !== dailyScheduleId) await this.deleteDailySchedule(removedDailyScheduleId);
 		}
 
 		const updatedWeeklySchedule = await DatabaseController.update("weeklySchedule", wantedDailySchedule);
+
+		return updatedWeeklySchedule;
+
 	},
 
-	async removeDailyFromWeekly(weeklyScheduleId, dailyScheduleId, day) { },
+	async removeDailyFromWeekly(weeklyScheduleId, day) {
+		// validate weeklyScheduleId
+		if (typeof weeklyScheduleId === "undefined" || weeklyScheduleId === null) throw new Error(config.errors.UNFILLED_REQUIREMENTS);
+		weeklyScheduleId += "";
+		await helpers.validate(weeklyScheduleId, "id");
+
+		// validate day
+		if (day < config.limits.weeklyScheule.minDayNumber || day > config.limits.weeklyScheule.maxDayNumber) throw new Error(config.errors.INVALID_DAY_NUMBER);
+
+		const wantedEntity = await this.getWeeklySchedule({ _id: weeklyScheduleId });
+
+		if (typeof wantedEntity.days[day] === "undefined" || wantedEntity.days[day] === null) throw new Error(config.errors.DAY_IS_EMPTY);
+
+		const deleteDailyScheduleId = wantedEntity.days[day];
+		wantedEntity.days[day] = null;
+		const deleteResult = await DatabaseController.delete("dailySchedule", { _id: deleteDailyScheduleId });
+
+		if (deleteResult) return wantedEntity;
+		else throw new Error(config.errors.UNDONE_DELETE);
+
+	},
 
 }))();
 
