@@ -140,7 +140,7 @@ async function authenticate(id, userAgent) {
 
 }
 
-async function authenticateAdmin(ctx) {
+async function authenticateAdmin(ctx, next) {
 
 	const { token } = ctx.cookie;
 
@@ -148,13 +148,14 @@ async function authenticateAdmin(ctx) {
 
 	const { id, exp } = await verifyToken(token, ctx.userAgent.source);
 
+
 	const wantedAdmin = await AccountController.getAccountById(id)
 
 	if (wantedAdmin.isLocked === true) throw new Error(config.errors.LOCKED_ACCOUNT);
-	if (wantedAdmin.accountType !== config.accountTypes[2])
-		throw new Error(config.errors.NOT_PERMITTED);
 
-	ctx.state.admin = wantedAdmin;
+console.log(wantedAdmin.type === config.accountTypes[2]);
+
+	if (wantedAdmin.type !== config.accountTypes[2]) throw new Error(config.errors.NOT_PERMITTED);
 
 	if (exp - Math.floor(Date.now() / 1000) < config.jwtOptions.expiresIn / 2) ctx.cookies.set("token", await authenticate(wantedAdmin._id, ctx.userAgent), {
 
@@ -164,6 +165,8 @@ async function authenticateAdmin(ctx) {
 		overwrite: true
 
 	});
+
+	await next();
 }
 
 async function generateHash(data) {
