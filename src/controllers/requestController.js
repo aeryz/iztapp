@@ -1,16 +1,18 @@
 import DatabaseController from "./databaseController";
 import config from "../config";
 import helpers from "../helpers";
+import AccountController from "./accountController";
 
 const RequestController = (() => ({
 
 	async getRequests(limit = 0, skip = 0) {
-		return DatabaseController.find("account", limit, skip);
+		const wantedRequests = await DatabaseController.find("account", limit, skip);
+		return wantedRequests;
 	},
 
 	async getRequestById(id) {
 		// validate id
-		if (typeof id === "undefined" || id === null) throw new Error(config.errors.UNFILLED_REQUIREMENTS);
+		if (typeof id === "undefined" || id === null) throw new Error(config.errors.MISSING_PARAMETER);
 		id += "";
 		await helpers.validate(id, "id");
 
@@ -22,22 +24,20 @@ const RequestController = (() => ({
 
 	async add(entity) {
 		// validate entity
-		if (typeof entity === "undefined" || entity === null || typeof entity.createdBy === "undefined" || entity.createdBy === null || typeof entity.type === "undefined" || entity.type === null || typeof entity.body === "undefined" || entity.body === null) throw new Error(config.errors.UNFILLED_REQUIREMENTS);
+		if (typeof entity === "undefined" || entity === null || typeof entity.createdBy === "undefined" || entity.createdBy === null || typeof entity.type === "undefined" || entity.type === null || typeof entity.body === "undefined" || entity.body === null) throw new Error(config.errors.MISSING_PARAMETER);
 
-		// validate creator id
-		if (typeof entity.createdBy === "undefined" || entity.createdBy === null) throw new Error(config.errors.UNFILLED_REQUIREMENTS);
+		// validate creator
 		entity.createdBy += "";
 		await helpers.validate(entity.createdBy, "id");
+		await AccountController.getAccountById(entity.createdBy);
 
 		// validate type
 		entity.type = +entity.type
-		if (Number.isNaN(entity.type) || !config.requestTypes.includes(entity.type) || Math.floor(entity.type) !== entity.type) throw new Error(config.errors.INVALID_REQUEST_TYPE);
-
-		// ! TODO: Do validation for body
+		if (Number.isNaN(entity.type) || !config.requestTypes.includes(entity.type) || Math.floor(entity.type) !== entity.type) throw new Error(config.errors.REQUEST.VALIDATION.INVALID_TYPE);
 
 		const now = new Date().toISOString();
 
-		entity.status = 0; // Pending
+		entity.status = 0;
 		entity.handledBy = null;
 		entity.handledDate = null;
 		entity.creationDate = now;
@@ -48,19 +48,22 @@ const RequestController = (() => ({
 	},
 
 	async delete(id) {
-		return DatabaseController.delete("request", {
+		if (typeof id === "undefined" || id === null) throw new Error(config.errors.MISSING_PARAMETER);
+		const deleteResult = await DatabaseController.delete("request", {
 			_id: id
 		});
+		return deleteResult;
 	},
 
 	async handleRequest(id, state) {
+		if (typeof id === "undefined" || id === null || typeof state === "undefined" || state === null) throw new Error(config.errors.MISSING_PARAMETER);
+
 		// validate id
-		if (typeof id === "undefined" || id === null) throw new Error(config.errors.UNFILLED_REQUIREMENTS);
 		id += "";
 		await helpers.validate(id, "id");
 
 		// validate state
-		if (Number.isNaN(state) || !config.requestStates.includes(state) || Math.floor(state) !== state) throw new Error(config.errors.INVALID_REQUEST_STATE_TYPE);
+		if (Number.isNaN(state) || !config.requestStates.includes(state) || Math.floor(state) !== state) throw new Error(config.errors.REQUEST.VALIDATION.INVALID_STATE);
 
 		// ! TODO: Do What to do
 	}

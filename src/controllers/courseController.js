@@ -1,6 +1,7 @@
 import DatabaseController from "./databaseController";
 import config from "../config";
 import helpers from "../helpers";
+import AccountController from "./accountController";
 
 const CourseController = (() => ({
 
@@ -14,148 +15,71 @@ const CourseController = (() => ({
 
 	async add(entity) {
 		// validate entity
-		if (typeof entity === "undefined" || entity === null || typeof entity.email === "undefined" || entity.email === null || typeof entity.password === "undefined" || entity.password === null || typeof entity.type === "undefined" || entity.type === null) throw new Error(config.errors.UNFILLED_REQUIREMENTS);
+		if (typeof entity === "undefined" || entity === null || typeof entity.name === "undefined" || entity.name === null || typeof entity.description === "undefined" || entity.description === null || typeof entity.courseCode === "undefined" || entity.courseCode === null || typeof entity.departmentCode === "undefined" || entity.departmentCode === null || typeof entity.topics === "undefined" || entity.topics === null || typeof entity.type === "undefined" || entity.type === null || typeof entity.workers === "undefined" || entity.workers === null || typeof entity.lectureHours === "undefined" || entity.lectureHours === null || typeof entity.labHours === "undefined" || entity.labHours === null || typeof entity.credits === "undefined" || entity.credits === null || typeof entity.ects === "undefined" || entity.ects === null) throw new Error(config.errors.MISSING_PARAMETER);
 
-		// validate email
-		entity.email += "";
-		if (entity.email.length < config.limits.account.minEMailLength || entity.email.length > config.limits.account.maxEMailLength) throw new Error(config.errors.EMAIL_VALIDATION);
-		await helpers.validate(entity.email, "email");
+		// validate name
+		entity.name += "";
+		if (entity.name.length < config.limits.course.minNameLength || entity.name.length > config.limits.course.maxNameLength) throw new Error(config.errors.COURSE.VALIDATION.INVALID_NAME);
 
-		// validate password
-		entity.password += "";
-		if (entity.password.length < config.limits.account.minPasswordLength || entity.password.length > config.limits.account.maxPasswordLength) throw new Error(config.errors.PASSWORD_VALIDATION);
+		// validate description
+		entity.description += "";
+		if (entity.description.length < config.limits.course.minDescriptionLength || entity.description.length > config.limits.course.maxDescriptionLength) throw new Error(config.errors.COURSE.VALIDATION.INVALID_DESCRIPTION);
+
+		// validate course code
+		entity.courseCode += "";
+		if (entity.courseCode.length < config.limits.course.minCourseCodeLength || entity.courseCode.length > config.limits.course.maxCourseCodeLength) throw new Error(config.errors.COURSE.VALIDATION.INVALID_COURSE_CODE);
+
+		// validate department code
+		entity.departmentCode += "";
+		if (entity.departmentCode.length < config.limits.course.minDepartmentCodeLength || entity.departmentCode.length > config.limits.course.maxDepartmentCodeLength) throw new Error(config.errors.COURSE.VALIDATION.INVALID_DEPARTMENT_CODE);
 
 		// validate type
 		entity.type = +entity.type
-		if (Number.isNaN(entity.type) || !config.accountTypes.includes(entity.type) || Math.floor(entity.type) !== entity.type) throw new Error(config.errors.INVALID_ACCOUNT_TYPE);
+		if (Number.isNaN(entity.type) || !config.scheduleTypes.includes(entity.type) || Math.floor(entity.type) !== entity.type) throw new Error(config.errors.COURSE.VALIDATION.INVALID_TYPE);
+
+		// validate lecture hours
+		entity.lectureHours = +entity.lectureHours;
+		if (entity.lectureHours < config.limits.course.minLectureHours || entity.lectureHours > config.limits.course.maxLectureHours) throw new Error(config.errors.COURSE.VALIDATION.INVALID_LECTURE_HOURS);
+
+		// validate lab hours
+		entity.labHours = +entity.labHours;
+		if (entity.labHours < config.limits.course.minLabHours || entity.labHours > config.limits.course.maxLabHours) throw new Error(config.errors.COURSE.VALIDATION.INVALID_LAB_HOURS);
+
+		// validate credits
+		entity.credits = +entity.credits;
+		if (entity.credits < config.limits.course.minCredits || entity.credits > config.limits.course.maxCredits) throw new Error(config.errors.COURSE.VALIDATION.INVALID_CREDITS);
+
+		// validate ects
+		entity.ects = +entity.ects;
+		if (entity.ects < config.limits.course.minEcts || entity.ects > config.limits.course.maxEcts) throw new Error(config.errors.COURSE.VALIDATION.INVALID_ECTS);
+
+		// generate page path
+		entity.pagePath = await helpers.generatePagePath(entity.courseCode);
 
 		const now = new Date().toISOString();
-
-		// generate salt
-		const salt = Math.floor(Math.random() * (config.maxSalt - config.minSalt)) + config.minSalt
-		entity.salt = salt;
-
-		// encrypt password
-		entity.password = await helpers.generatePasswordHash(entity.password, entity.salt);
-
-		// set bad login count
-		entity.passwordTry = 0;
-
-		// set is locked
-		entity.isLocked = false;
-
-		// generate unlock hash
-		entity.unlockHash = await helpers.generateHash(`(${Math.random()})${entity.email}/Unlock@${now}(${Math.random()})`);
-
-		// set last login date
-		entity.lastLoginDate = null;
 
 		// set creation date
 		entity.creationDate = now;
 
-		const newEntity = await DatabaseController.add("account", entity);
+		const courseCreator = await AccountController.getAccountById(entity.courseCreator);
+
+		if (+courseCreator.type === 1) { }
+		else { }
+
+		const newEntity = await DatabaseController.add("course", entity);
 
 		return newEntity;
 	},
 
+	async update(entity) { },
+
 	async delete(id) {
-		return DatabaseController.delete("account", {
+		return DatabaseController.delete("course", {
 			_id: id
 		});
 	},
 
-	async login(entity) {
-		// validate entity
-		if (typeof entity === "undefined" || entity === null || typeof entity.email === "undefined" || entity.email === null || typeof entity.password === "undefined" || entity.password === null) throw new Error(config.errors.UNFILLED_REQUIREMENTS);
-
-		// validate email
-		entity.email += "";
-		if (entity.email.length < config.limits.account.minEmailLength || entity.email.length > config.limits.account.maxEMailLength) throw new Error(config.errors.EMAIL_VALIDATION);
-		await helpers.validate(entity.email, "email");
-
-		// validate password
-		entity.password += "";
-		if (entity.password.length < config.limits.account.minPasswordLength || entity.password.length > config.limits.account.maxPasswordLength) throw new Error(config.errors.PASSWORD_VALIDATION);
-
-		const wantedEntity = await DatabaseController.findOneByQuery("account", {
-			email: entity.email
-		});
-
-		if (wantedEntity.isLocked) throw new Error(config.errors.LOCKED_ACCOUNT);
-
-		const now = new Date().toISOString();
-
-		if (!await helpers.comparePassword(entity.password, wantedEntity.password)) {
-			wantedEntity.passwordTry++;
-
-			await DatabaseController.update("account", wantedEntity);
-
-			if (wantedEntity.passwordTry >= config.limits.account.maxPasswordTry) await this.lockAccount(wantedEntity._id);
-			throw new Error(config.errors.WRONG_PASSWORD);
-		}
-
-		wantedEntity.lastLoginDate = now;
-		wantedEntity.passwordTry = 0;
-
-		await DatabaseController.update("account", wantedEntity);
-
-		return wantedEntity;
-	},
-
-	async lockAccount(id) {
-		const wantedEntity = await this.getAccountById(id);
-
-		if (wantedEntity.isLocked === true) throw new Error(config.errors.ALREADY_LOCKED);
-
-		// set as locked
-		wantedEntity.isLocked = true;
-
-		await DatabaseController.update("account", wantedEntity);
-
-		// send email here
-
-		return wantedEntity;
-	},
-
-	async unlockAccount(hash) {
-		const wantedEntity = await DatabaseController.findOneByQuery("account", {
-			unlockHash: hash
-		});
-
-		if (!wantedEntity.isLocked) throw new Error(config.errors.ALREADY_UNLOCKED);
-
-		const now = new Date().toISOString();
-
-		// generate new unlock hash
-		wantedEntity.unlockHash = await helpers.generateHash(`(${Math.random()})${wantedEntity.email}/Unlock@${now}(${Math.random()})`);
-
-		// reset locked status
-		wantedEntity.isLocked = false;
-
-		// reset password try
-		wantedEntity.passwordTry = 0;
-
-		await DatabaseController.update("account", wantedEntity);
-
-		return wantedEntity;
-	},
-
-	async updatePassword(id, newPassword) {
-		if (typeof newPassword === "undefined" || newPassword === null) throw new Error(config.errors.UNFILLED_REQUIREMENTS);
-
-		// validate password
-		newPassword += "";
-		if (newPassword.length < config.limits.account.minPasswordLength || newPassword.length > config.limits.account.maxPasswordLength) throw new Error(config.errors.PASSWORD_VALIDATION);
-
-		const wantedEntity = await this.getAccountById(id)
-
-		// encrypt password
-		wantedEntity.password = await helpers.generatePasswordHash(newPassword, wantedEntity.salt);
-
-		await DatabaseController.update("account", wantedEntity);
-
-		return wantedEntity;
-	}
+	async publishCourse(id) { }
 
 
 }))();

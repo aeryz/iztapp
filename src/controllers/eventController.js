@@ -6,8 +6,9 @@ const EventController = (() => ({
 	async pullEvents() { },
 
 	async sendEvent(event, emailListId) {
-		// validate id
-		if (typeof emailListId === "undefined" || emailListId === null) throw new Error(config.errors.UNFILLED_REQUIREMENTS);
+		if (typeof event === "undefined" || event === null || typeof emailListId === "undefined" || emailListId === null) throw new Error(config.errors.MISSING_PARAMETER);
+
+		// validate email list id
 		emailListId += "";
 		await helpers.validate(emailListId, "id");
 	},

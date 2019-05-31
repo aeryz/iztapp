@@ -33,7 +33,7 @@ router.use(
 // ACCOUNT CONTROLLER >>
 
 router.get('/api/get/accounts/:accountType/:limit?/:skip?',
-  helper.authenticateAdmin,
+	helper.authenticateAdmin,
 	async (ctx) => {
 
 		ctx.body = await AccountController.getAccounts(
@@ -94,21 +94,21 @@ router.post('/api/add/account',
 )
 
 router.post('/api/delete/account',
-helper.authenticateAdmin,
+	helper.authenticateAdmin,
 	async (ctx) => {
 		ctx.body = await AccountController.delete(ctx.params.id);
 	}
 )
 
 router.post('/api/unlock/account/:hash',
-helper.authenticateAdmin,
+	helper.authenticateAdmin,
 	async (ctx) => {
 		ctx.body = await AccountController.delete(ctx.params.id);
 	}
 )
 
 router.post('/api/update/password/:id',
-helper.authenticateAdmin,
+	helper.authenticateAdmin,
 	async (ctx) => {
 		ctx.body = await AccountController.updatePassword(ctx.params.id, ctx.request.body.newPassword);
 	}
@@ -118,20 +118,15 @@ helper.authenticateAdmin,
 
 // WORKER CONTROLLER >>
 
-router.post('/api/get/workers',
+router.post('/api/get/workers/:limit?/:skip?',
 	async (ctx) => {
-		if (!helper.validate(ctx.request.body.limit, "paramNumber")
-			|| !helper.validate(ctx.request.body.skip, "paramNumber")) {
-			throw new Error(config.errors.PARAMETER_ERROR);
-		}
-
 		ctx.body = await WorkerController.getWorkers(
-			ctx.request.body.limit,
-			ctx.request.body.skip,
+			ctx.params.limit,
+			ctx.params.skip,
 			ctx.request.body.query
 		)
 	}
-)
+);
 
 // << WORKER CONTROLLER
 
@@ -139,7 +134,6 @@ router.post('/api/get/workers',
 
 router.get('/api/get/emails/:limit?/:skip?',
 	async (ctx) => {
-
 		ctx.body = await EmailController.getEmails(
 			ctx.params.limit,
 			ctx.params.skip
@@ -200,7 +194,7 @@ router.post('/api/update/emailList',
 
 		ctx.body = await EmailListController.update(
 			ctx.request.body.id,
-      ctx.request.body
+			ctx.request.body
 		)
 	}
 )
@@ -248,7 +242,7 @@ router.post('/api/send/events',
 	async (ctx) => {
 
 		if (ctx.request.body.event === null || ctx.request.body.event === "") {
-			throw new Error(config.errors.UNFILLED_REQUIREMENTS);
+			throw new Error(config.errors.MISSING_PARAMETER);
 		}
 
 		ctx.body = await EventController.sendEvent(
@@ -264,11 +258,6 @@ router.post('/api/send/events',
 
 router.post('/api/get/weekly/:limit?/:skip?',
 	async (ctx) => {
-		if (!helper.validate(ctx.param.limit, "paramNumber")
-			|| !helper.validate(ctx.param.skip, "paramNumber")) {
-			throw new Error(config.errors.PARAMETER_ERROR);
-		}
-
 		ctx.body = await ScheduleController.getWeeklySchedules(
 			ctx.params.limit,
 			ctx.params.skip,
@@ -288,11 +277,6 @@ router.post('/api/get/weekly',
 
 router.post('/api/get/daily/:limit?/:skip?',
 	async (ctx) => {
-		if (!helper.validate(ctx.param.limit, "paramNumber")
-			|| !helper.validate(ctx.param.skip, "paramNumber")) {
-			throw new Error(config.errors.PARAMETER_ERROR);
-		}
-
 		ctx.body = await ScheduleController.getDailySchedules(
 			ctx.params.limit,
 			ctx.params.skip,
@@ -390,7 +374,7 @@ router.get('/api/remove/dailyFromWeekly/:dailyScheduleId/:weeklyScheduleId/',
 // REQUESTCONTROLLER >>
 
 router.get('/api/get/requests/:limit?/:skip?',
-helper.authenticateAdmin,
+	helper.authenticateAdmin,
 	async (ctx) => {
 
 		ctx.body = await RequestController.getRequests(
@@ -401,7 +385,7 @@ helper.authenticateAdmin,
 )
 
 router.get('/api/get/request/:id',
-helper.authenticateAdmin,
+	helper.authenticateAdmin,
 	async (ctx) => {
 
 		ctx.body = await RequestController.getRequestById(
@@ -411,7 +395,7 @@ helper.authenticateAdmin,
 )
 
 router.post('/api/add/request',
-helper.authenticateAdmin,
+	helper.authenticateAdmin,
 	async (ctx) => {
 
 		ctx.body = await RequestController.add(
@@ -421,7 +405,7 @@ helper.authenticateAdmin,
 )
 
 router.get('/api/delete/request/:id',
-helper.authenticateAdmin,
+	helper.authenticateAdmin,
 	async (ctx) => {
 
 		ctx.body = await RequestController.delete(
@@ -431,7 +415,7 @@ helper.authenticateAdmin,
 )
 
 router.post('/api/handle/request',
-helper.authenticateAdmin,
+	helper.authenticateAdmin,
 	async (ctx) => {
 
 		ctx.body = await RequestController.add(
@@ -446,12 +430,6 @@ helper.authenticateAdmin,
 
 router.get('/api/get/courses/:limit?/:skip?',
 	async (ctx) => {
-
-		if (!helper.validate(ctx.param.limit, "paramNumber")
-			|| !helper.validate(ctx.param.skip, "paramNumber")) {
-			throw new Error(config.errors.PARAMETER_ERROR);
-		}
-
 		ctx.body = await CourseController.getCourses(
 			ctx.params.limit,
 			ctx.params.skip
@@ -497,7 +475,7 @@ router.get('/api/delete/course/:id',
 )
 
 router.get('/api/publish/course/:id',
-helper.authenticateAdmin,
+	helper.authenticateAdmin,
 	async (ctx) => {
 
 		ctx.body = await CourseController.getCourse(

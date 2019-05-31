@@ -5,6 +5,10 @@ const Schema = mongoose.Schema;
 const db = mongoose.createConnection("mongodb://localhost:27017/iztapp")
 
 const DailyScheduleSchema = new Schema({
+	day: {
+		type: Number,
+		required: true,
+	},
 	courses: {
 		type: [{
 			type: Schema.Types.ObjectId,

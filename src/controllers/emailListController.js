@@ -1,4 +1,3 @@
-import Email from "./emailController";
 import DatabaseController from "./databaseController";
 import config from "../config";
 import helpers from "../helpers";
@@ -6,12 +5,13 @@ import helpers from "../helpers";
 const EmailListController = (() => ({
 
 	async getEmailLists(limit = 0, skip = 0) {
-		return DatabaseController.find("emailList", limit, skip);
+		const wantedEmailLists = await DatabaseController.find("emailList", limit, skip);
+		return wantedEmailLists;
 	},
 
 	async getEmailListById(id) {
 		// validate id
-		if (typeof id === "undefined" || id === null) throw new Error(config.errors.UNFILLED_REQUIREMENTS);
+		if (typeof id === "undefined" || id === null) throw new Error(config.errors.MISSING_PARAMETER);
 		id += "";
 		await helpers.validate(id, "id");
 
@@ -23,11 +23,11 @@ const EmailListController = (() => ({
 
 	async add(entity) {
 		// validate entity
-		if (typeof entity === "undefined" || entity === null || typeof entity.name === "undefined" || entity.name === null) throw new Error(config.errors.UNFILLED_REQUIREMENTS);
+		if (typeof entity === "undefined" || entity === null || typeof entity.name === "undefined" || entity.name === null) throw new Error(config.errors.MISSING_PARAMETER);
 
 		// validate name
 		entity.name += "";
-		if (entity.name.length < config.limits.emailList.minNameLength || entity.name.length > config.limits.emailList.maxNameLength) throw new Error(config.errors.EMAIL_LIST_NAME_VALIDATION);
+		if (entity.name.length < config.limits.emailList.minNameLength || entity.name.length > config.limits.emailList.maxNameLength) throw new Error(config.errors.EMAIL_LIST.VALIDATION.INVALID_NAME);
 
 		const now = new Date().toISOString();
 
@@ -41,16 +41,15 @@ const EmailListController = (() => ({
 
 	async update(id, entity) {
 		// validate entity
-		if (typeof entity === "undefined" || entity === null || typeof id === "undefined" || id === null || typeof entity.name === "undefined" || entity.name === null) throw new Error(config.errors.UNFILLED_REQUIREMENTS);
+		if (typeof entity === "undefined" || entity === null || typeof id === "undefined" || id === null || typeof entity.name === "undefined" || entity.name === null) throw new Error(config.errors.MISSING_PARAMETER);
 
 		// validate id
-		if (typeof id === "undefined" || id === null) throw new Error(config.errors.UNFILLED_REQUIREMENTS);
 		id += "";
 		await helpers.validate(id, "id");
 
 		// validate name
 		entity.name += "";
-		if (entity.name.length < config.limits.emailList.minNameLength || entity.name.length > config.limits.emailList.maxNameLength) throw new Error(config.errors.EMAIL_LIST_NAME_VALIDATION);
+		if (entity.name.length < config.limits.emailList.minNameLength || entity.name.length > config.limits.emailList.maxNameLength) throw new Error(config.errors.EMAIL_LIST.VALIDATION.INVALID_NAME);
 
 		const wantedEntity = await this.getEmailListById(id);
 
@@ -62,26 +61,26 @@ const EmailListController = (() => ({
 	},
 
 	async delete(id) {
-		return DatabaseController.delete("emailList", {
+		if (typeof id === "undefined" || id === null) throw new Error(config.errors.MISSING_PARAMETER);
+		const deleteResult = await DatabaseController.delete("emailList", {
 			_id: id
 		});
+		return deleteResult;
 	},
 
 	async addEmailToList(emailId, emailListId) {
-		// validate email id
-		if (typeof emailId === "undefined" || emailId === null) throw new Error(config.errors.UNFILLED_REQUIREMENTS);
+		if (typeof emailId === "undefined" || emailId === null || typeof emailListId === "undefined" || emailListId === null) throw new Error(config.errors.MISSING_PARAMETER);
+
+		// validate id's
 		emailId += "";
 		await helpers.validate(emailId, "id");
-
-		// validate email list id
-		if (typeof emailListId === "undefined" || emailListId === null) throw new Error(config.errors.UNFILLED_REQUIREMENTS);
 		emailListId += "";
 		await helpers.validate(emailListId, "id");
 
 		const wantedEmail = await DatabaseController.findOneByQuery("email", { _id: emailId });
 		const wantedEmailList = await this.getEmailListById(emailListId);
 
-		if (wantedEmailList.emails.includes(wantedEmail._id)) throw new Error(config.errors.EMAIL_ALREADY_ADDED)
+		if (wantedEmailList.emails.includes(wantedEmail._id)) throw new Error(config.errors.EMAIL_LIST.ALREADY_ADDED);
 
 		wantedEmailList.emails.push(wantedEmail._id);
 
@@ -91,21 +90,20 @@ const EmailListController = (() => ({
 	},
 
 	async removeEmailFromList(emailId, emailListId) {
-		// validate email id
-		if (typeof emailId === "undefined" || emailId === null) throw new Error(config.errors.UNFILLED_REQUIREMENTS);
+		if (typeof emailId === "undefined" || emailId === null || typeof emailListId === "undefined" || emailListId === null) throw new Error(config.errors.MISSING_PARAMETER);
+
+		// validate ids
 		emailId += "";
 		await helpers.validate(emailId, "id");
-
-		// validate email list id
-		if (typeof emailListId === "undefined" || emailListId === null) throw new Error(config.errors.UNFILLED_REQUIREMENTS);
 		emailListId += "";
 		await helpers.validate(emailListId, "id");
 
 		const wantedEmail = await DatabaseController.findOneByQuery("email", { _id: emailId });
 		const wantedEmailList = await this.getEmailListById(emailListId);
 
-		if (!wantedEmailList.emails.includes(wantedEmail._id)) throw new Error(config.errors.EMAIL_NOT_IN_LIST);
+		if (!wantedEmailList.emails.includes(wantedEmail._id)) throw new Error(config.errors.EMAIL_LIST.NOT_IN_LIST);
 
+		// Remove email
 		wantedEmailList.emails.splice(wantedEmailList.emails.indexOf(wantedEmail._id), 1);
 
 		const updatedEntity = await DatabaseController.update("emailList", wantedEmailList);

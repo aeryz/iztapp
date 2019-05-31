@@ -24,11 +24,13 @@ const CourseSchema = new Schema({
 	},
 	pagePath: {
 		type: String,
-		required: true
+		required: true,
+		unique: true
 	},
 	courseCode: {
 		type: String,
-		required: false
+		required: true,
+		unique: true
 	},
 	departmentCode: {
 		type: String,

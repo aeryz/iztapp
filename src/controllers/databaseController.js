@@ -4,28 +4,28 @@ const DatabaseController = (() => ({
 
 	async find(model, limit = 0, skip = 0, query = {}) {
 		// validate model parameter
-		if (typeof model === "undefined" || model === null || !Object.keys(config.models).includes(model)) throw new Error(config.errors.INVALID_MODEL);
+		if (typeof model === "undefined" || model === null || !Object.keys(config.models).includes(model)) throw new Error(config.errors.VALIDATION.INVALID_MODEL);
 		model = config.models[model];
 		// validate limit parameter
 		limit = +limit;
-		if (Number.isNaN(limit) || limit < 0 || Math.floor(limit) !== limit) throw new Error(config.errors.INVALID_LIMIT);
+		if (Number.isNaN(limit) || limit < 0 || Math.floor(limit) !== limit) throw new Error(config.errors.VALIDATION.INVALID_LIMIT);
 		// validate skip parameter
 		skip = +skip;
-		if (Number.isNaN(skip) || skip < 0 || Math.floor(skip) !== skip) throw new Error(config.errors.INVALID_SKIP);
+		if (Number.isNaN(skip) || skip < 0 || Math.floor(skip) !== skip) throw new Error(config.errors.VALIDATION.INVALID_SKIP);
 		// validate query
-		if (typeof query !== "object") throw new Error(config.errors.INVALID_QUERY);
+		if (typeof query !== "object") throw new Error(config.errors.VALIDATION.INVALID_QUERY);
 
 		return model.find(query).skip(skip).limit(limit).exec();
 	},
 
 	async findOneByQuery(model, query) {
 		// validate model parameter
-		if (typeof model === "undefined" || model === null || !Object.keys(config.models).includes(model)) throw new Error(config.errors.INVALID_MODEL);
+		if (typeof model === "undefined" || model === null || !Object.keys(config.models).includes(model)) throw new Error(config.errors.VALIDATION.INVALID_MODEL);
 		model = config.models[model];
 		// validate query
-		if (typeof query !== "object") throw new Error(config.errors.INVALID_QUERY);
+		if (typeof query !== "object") throw new Error(config.errors.VALIDATION.INVALID_QUERY);
 
-		const wantedEntity = model.findOne(query).exec()
+		const wantedEntity = await model.findOne(query).exec()
 
 		if (typeof wantedEntity === "undefined" || wantedEntity === null) throw new Error(config.errors.RECORD_NOT_FOUND);
 
@@ -34,23 +34,27 @@ const DatabaseController = (() => ({
 
 	async add(model, query) {
 		// validate model parameter
-		if (typeof model === "undefined" || model === null || !Object.keys(config.models).includes(model)) throw new Error(config.errors.INVALID_MODEL);
+		if (typeof model === "undefined" || model === null || !Object.keys(config.models).includes(model)) throw new Error(config.errors.VALIDATION.INVALID_MODEL);
 		model = config.models[model];
 		// validate query
-		if (typeof query !== "object") throw new Error(config.errors.INVALID_QUERY);
+		if (typeof query !== "object") throw new Error(config.errors.VALIDATION.INVALID_QUERY);
 
 		// save new entity
-		const newEntity = new model(query);
-		await newEntity.save();
-		return newEntity;
+		try {
+			const newEntity = new model(query);
+			await newEntity.save();
+			return newEntity;
+		} catch (err) {
+			throw new Error(config.errors.ADD_FAILURE);
+		}
 	},
 
 	async update(model, query) {
 		// validate model parameter
-		if (typeof model === "undefined" || model === null || !Object.keys(config.models).includes(model)) throw new Error(config.errors.INVALID_MODEL);
+		if (typeof model === "undefined" || model === null || !Object.keys(config.models).includes(model)) throw new Error(config.errors.VALIDATION.INVALID_MODEL);
 		model = config.models[model];
 		// validate query
-		if (typeof query !== "object") throw new Error(config.errors.INVALID_QUERY);
+		if (typeof query !== "object") throw new Error(config.errors.VALIDATION.INVALID_QUERY);
 
 		try {
 			const updatedEntity = await model.findOneAndUpdate(
@@ -60,19 +64,23 @@ const DatabaseController = (() => ({
 			);
 			return updatedEntity;
 		} catch (err) {
-			throw new Error(config.errors.UNDONE_UPDATE);
+			throw new Error(config.errors.UPDATE_FAILURE);
 		}
 	},
 
 	async delete(model, query) {
 		// validate model parameter
-		if (typeof model === "undefined" || model === null || !Object.keys(config.models).includes(model)) throw new Error(config.errors.INVALID_MODEL);
+		if (typeof model === "undefined" || model === null || !Object.keys(config.models).includes(model)) throw new Error(config.errors.VALIDATION.INVALID_MODEL);
 		model = config.models[model];
 		// validate query
-		if (typeof query !== "object") throw new Error(config.errors.INVALID_QUERY);
+		if (typeof query !== "object") throw new Error(config.errors.VALIDATION.INVALID_QUERY);
 
-		const deleteResult = await model.deleteOne(query);
-		return deleteResult;
+		try {
+			const deleteResult = await model.deleteOne(query);
+			return deleteResult;
+		} catch (err) {
+			throw new Error(config.errors.DELETE_FAILURE);
+		}
 	}
 
 }))();

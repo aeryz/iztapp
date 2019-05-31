@@ -1,40 +1,54 @@
 // Import libraries
 import chalk from "chalk";
 
-// Define env parser helpers
-function parseIntFromEnvOr(name, defaultValue) {
-	if (typeof process.env[name] === "undefined" || process.env[name] === null) return defaultValue;
-	const parsedOption = +process.env[name];
-	if (Number.isNaN(parsedOption) || parsedOption < 0 || Math.floor(parsedOption) !== parsedOption) {
-		console.log(`${chalk.red.bold("(!)")} Invalid environment configuration detected: Expected a positive integer for option "${name}", instead got "${process.env[name]}"`);
-		process.exit(1);
-	}
-	return parsedOption;
-}
-
 // Define limits
 const limits = {
+	general: {
+		minLimit: 1
+	},
 	account: {
-		minEmailLength: parseIntFromEnvOr("LIMITS_ACCOUNT_MIN_EMAIL_LENGTH", 1),
-		maxEmailLength: parseIntFromEnvOr("LIMITS_ACCOUNT_MAX_EMAIL_LENGTH", 254),
-		minPasswordLength: parseIntFromEnvOr("LIMITS_ACCOUNT_MIN_PASSWORD_LENGTH", 5),
-		maxPasswordLength: parseIntFromEnvOr("LIMITS_ACCOUNT_MAX_PASSWORD_LENGTH", 64),
-		maxPasswordTry: parseIntFromEnvOr("LIMITS_ACCOUNT_MAX_PASSWORD_TRY", 10)
+		minEmailLength: 1,
+		maxEmailLength: 254,
+		minPasswordLength: 5,
+		maxPasswordLength: 64,
+		maxPasswordTry: 10
 	},
 	email: {
-		minEmailLength: parseIntFromEnvOr("LIMITS_EMAIL_MIN_EMAIL_LENGTH", 1),
-		maxEmailLength: parseIntFromEnvOr("LIMITS_EMAIL_MAX_EMAIL_LENGTH", 254),
+		minEmailLength: 1,
+		maxEmailLength: 254
 	},
 	emailList: {
-		minNameLength: parseIntFromEnvOr("LIMITS_EMAIL_LIST_MIN_NAME_LENGTH", 1),
-		maxNameLength: parseIntFromEnvOr("LIMITS_EMAIL_LIST_MAX_NAME_LENGTH", 30),
+		minNameLength: 1,
+		maxNameLength: 30
 	},
-	weeklyScheule: {
-		minSemesterNumber: parseIntFromEnvOr("LIMITS_WEEKLY_SCHEDULE_MIN_SEMESTER", 1),
-		maxSemesterNumber: parseIntFromEnvOr("LIMITS_WEEKLY_SCHEDULE_MAX_SEMESTER", 12),
-		minDayNumber: parseIntFromEnvOr("LIMITS_DAILY_SCHEDULE_MIN_DAY_NUMBER", 0),
-		maxDayNumber: parseIntFromEnvOr("LIMITS_DAILY_SCHEDULE_MAX_DAY_NUMBER", 4),
+	weeklySchedule: {
+		minSemesterNumber: 1,
+		maxSemesterNumber: 12,
+		minDayNumber: 0,
+		maxDayNumber: 4
 	},
+	dailySchedule: {
+		minDayNumber: 0,
+		maxDayNumber: 4
+	},
+	course: {
+		minNameLength: 1,
+		maxNameLength: 120,
+		minDescriptionLength: 1,
+		maxDescriptionLength: 1000,
+		minCourseCodeLength: 1,
+		maxCourseCodeLength: 12,
+		minDepartmentCodeLength: 1,
+		maxDepartmentCodeLength: 12,
+		minLectureHours: 1,
+		maxLectureHours: 10,
+		minLabHours: 0,
+		maxLabHours: 10,
+		minCredits: 1,
+		maxCredits: 20,
+		minEcts: 1,
+		maxEcts: 20,
+	}
 };
 
 // Export limits

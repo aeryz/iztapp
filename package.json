@@ -41,6 +41,7 @@
     "koa-useragent": "^1.2.1",
     "mongoose": "^5.4.19",
     "mongoose-auto-increment": "^5.0.1",
+    "speakingurl": "^14.0.1",
     "validator": "^10.11.0"
   }
 }

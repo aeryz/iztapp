@@ -5,46 +5,47 @@ import helpers from "../helpers";
 const AccountController = (() => ({
 
 	async getAccounts(limit = 0, skip = 0, accountType = 0) {
-		// validate accountType parameter
+		// validate account type
 		accountType = +accountType;
-		if (Number.isNaN(accountType) || !config.accountTypes.includes(accountType) || Math.floor(accountType) !== accountType) throw new Error(config.errors.INVALID_ACCOUNT_TYPE);
+		if (Number.isNaN(accountType) || !config.accountTypes.includes(accountType) || Math.floor(accountType) !== accountType) throw new Error(config.errors.ACCOUNT.VALIDATION.INVALID_TYPE);
 
+		// set query
 		let query = {};
-
 		if (accountType !== 0) query = { type: accountType };
 
+		// get wanted accounts
 		return DatabaseController.find("account", limit, skip, query);
 	},
 
 	async getAccountById(id) {
 		// validate id
-		if (typeof id === "undefined" || id === null) throw new Error(config.errors.UNFILLED_REQUIREMENTS);
+		if (typeof id === "undefined" || id === null) throw new Error(config.errors.MISSING_PARAMETER);
 		id += "";
 		await helpers.validate(id, "id");
 
 		// get wanted entity
 		const wantedEntity = await DatabaseController.findOneByQuery("account", { _id: id });
-
 		return wantedEntity;
 	},
 
 	async add(entity) {
 		// validate entity
-		if (typeof entity === "undefined" || entity === null || typeof entity.email === "undefined" || entity.email === null || typeof entity.password === "undefined" || entity.password === null || typeof entity.type === "undefined" || entity.type === null) throw new Error(config.errors.UNFILLED_REQUIREMENTS);
+		if (typeof entity === "undefined" || entity === null || typeof entity.email === "undefined" || entity.email === null || typeof entity.password === "undefined" || entity.password === null || typeof entity.type === "undefined" || entity.type === null) throw new Error(config.errors.MISSING_PARAMETER);
 
 		// validate email
 		entity.email += "";
-		if (entity.email.length < config.limits.account.minEMailLength || entity.email.length > config.limits.account.maxEMailLength) throw new Error(config.errors.EMAIL_VALIDATION);
+		if (entity.email.length < config.limits.account.minEmailLength || entity.email.length > config.limits.account.maxEmailLength) throw new Error(config.errors.ACCOUNT.VALIDATION.INVALID_EMAIL);
 		await helpers.validate(entity.email, "email");
 
 		// validate password
 		entity.password += "";
-		if (entity.password.length < config.limits.account.minPasswordLength || entity.password.length > config.limits.account.maxPasswordLength) throw new Error(config.errors.PASSWORD_VALIDATION);
+		if (entity.password.length < config.limits.account.minPasswordLength || entity.password.length > config.limits.account.maxPasswordLength) throw new Error(config.errors.ACCOUNT.VALIDATION.INVALID_PASSWORD);
 
 		// validate type
 		entity.type = +entity.type
-		if (Number.isNaN(entity.type) || !config.accountTypes.includes(entity.type) || Math.floor(entity.type) !== entity.type) throw new Error(config.errors.INVALID_ACCOUNT_TYPE);
+		if (Number.isNaN(entity.type) || !config.accountTypes.includes(entity.type) || Math.floor(entity.type) !== entity.type) throw new Error(config.errors.ACCOUNT.VALIDATION.INVALID_TYPE);
 
+		// set other fields
 		const now = new Date().toISOString();
 
 		// generate salt
@@ -54,7 +55,7 @@ const AccountController = (() => ({
 		// encrypt password
 		entity.password = await helpers.generatePasswordHash(entity.password, entity.salt);
 
-		// set bad login count
+		// set password try counter
 		entity.passwordTry = 0;
 
 		// set is locked
@@ -75,57 +76,54 @@ const AccountController = (() => ({
 	},
 
 	async delete(id) {
-		return DatabaseController.delete("account", {
+		if (typeof id === "undefined" || id === null) throw new Error(config.errors.MISSING_PARAMETER);
+		const deleteResult = await DatabaseController.delete("account", {
 			_id: id
 		});
+		return deleteResult;
 	},
 
 	async login(entity) {
 		// validate entity
-		if (typeof entity === "undefined" || entity === null || typeof entity.email === "undefined" || entity.email === null || typeof entity.password === "undefined" || entity.password === null) throw new Error(config.errors.UNFILLED_REQUIREMENTS);
+		if (typeof entity === "undefined" || entity === null || typeof entity.email === "undefined" || entity.email === null || typeof entity.password === "undefined" || entity.password === null) throw new Error(config.errors.MISSING_PARAMETER);
 
 		// validate email
 		entity.email += "";
-		if (entity.email.length < config.limits.account.minEmailLength || entity.email.length > config.limits.account.maxEMailLength) throw new Error(config.errors.EMAIL_VALIDATION);
+		if (entity.email.length < config.limits.account.minEmailLength || entity.email.length > config.limits.account.maxEmailLength) throw new Error(config.errors.ACCOUNT.VALIDATION.INVALID_EMAIL);
 		await helpers.validate(entity.email, "email");
 
 		// validate password
 		entity.password += "";
-		if (entity.password.length < config.limits.account.minPasswordLength || entity.password.length > config.limits.account.maxPasswordLength) throw new Error(config.errors.PASSWORD_VALIDATION);
+		if (entity.password.length < config.limits.account.minPasswordLength || entity.password.length > config.limits.account.maxPasswordLength) throw new Error(config.errors.ACCOUNT.VALIDATION.INVALID_PASSWORD);
 
 		const wantedEntity = await DatabaseController.findOneByQuery("account", {
 			email: entity.email
 		});
 
-		if (wantedEntity.isLocked) throw new Error(config.errors.LOCKED_ACCOUNT);
+		// validate lock state
+		if (wantedEntity.isLocked) throw new Error(config.errors.ACCOUNT.LOCKED_ACCOUNT);
 
-		const now = new Date().toISOString();
-
+		// log user in
 		if (!await helpers.comparePassword(entity.password, wantedEntity.password)) {
 			wantedEntity.passwordTry++;
-
 			await DatabaseController.update("account", wantedEntity);
-
 			if (wantedEntity.passwordTry >= config.limits.account.maxPasswordTry) await this.lockAccount(wantedEntity._id);
-			throw new Error(config.errors.WRONG_PASSWORD);
+			throw new Error(config.errors.ACCOUNT.WRONG_PASSWORD);
 		}
 
+		const now = new Date().toISOString();
 		wantedEntity.lastLoginDate = now;
 		wantedEntity.passwordTry = 0;
-
 		await DatabaseController.update("account", wantedEntity);
-
 		return wantedEntity;
 	},
 
 	async lockAccount(id) {
 		const wantedEntity = await this.getAccountById(id);
 
-		if (wantedEntity.isLocked === true) throw new Error(config.errors.ALREADY_LOCKED);
+		if (wantedEntity.isLocked === true) throw new Error(config.errors.ACCOUNT.ALREADY_LOCKED);
 
-		// set as locked
 		wantedEntity.isLocked = true;
-
 		await DatabaseController.update("account", wantedEntity);
 
 		// send email here
@@ -134,11 +132,12 @@ const AccountController = (() => ({
 	},
 
 	async unlockAccount(hash) {
+		if (typeof hash === "undefined" || hash === null) throw new Error(config.errors.MISSING_PARAMETER);
 		const wantedEntity = await DatabaseController.findOneByQuery("account", {
 			unlockHash: hash
 		});
 
-		if (!wantedEntity.isLocked) throw new Error(config.errors.ALREADY_UNLOCKED);
+		if (!wantedEntity.isLocked) throw new Error(config.errors.ACCOUNT.ALREADY_UNLOCKED);
 
 		const now = new Date().toISOString();
 
@@ -157,11 +156,11 @@ const AccountController = (() => ({
 	},
 
 	async updatePassword(id, newPassword) {
-		if (typeof newPassword === "undefined" || newPassword === null) throw new Error(config.errors.UNFILLED_REQUIREMENTS);
+		if (typeof newPassword === "undefined" || newPassword === null) throw new Error(config.errors.MISSING_PARAMETER);
 
 		// validate password
 		newPassword += "";
-		if (newPassword.length < config.limits.account.minPasswordLength || newPassword.length > config.limits.account.maxPasswordLength) throw new Error(config.errors.PASSWORD_VALIDATION);
+		if (newPassword.length < config.limits.account.minPasswordLength || newPassword.length > config.limits.account.maxPasswordLength) throw new Error(config.errors.ACCOUNT.VALIDATION.INVALID_PASSWORD);
 
 		const wantedEntity = await this.getAccountById(id)
 
