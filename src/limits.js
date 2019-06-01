@@ -25,11 +25,13 @@ const limits = {
 		minSemesterNumber: 1,
 		maxSemesterNumber: 12,
 		minDayNumber: 0,
-		maxDayNumber: 4
+		maxDayNumber: 4,
+		dayNumber: 5
 	},
 	dailySchedule: {
 		minDayNumber: 0,
-		maxDayNumber: 4
+		maxDayNumber: 4,
+		courseNumber: 8
 	},
 	course: {
 		minNameLength: 1,

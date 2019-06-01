@@ -1,0 +1,122 @@
+{% extends "panel/templates/global.njk" %}
+
+<!-- #region Styles -->
+
+{% block styles %}
+
+<link rel="stylesheet" href="/assets/css/posts/all.css">
+
+{% endblock %}
+
+<!-- #endregion -->
+
+<!-- #region Body -->
+
+{% block wrapper %}
+
+<!-- #region Heading -->
+
+<h1 id="heading" class="h4">{{ locales.static.heading }}</h1>
+
+<!-- #endregion -->
+
+<!-- #region Posts -->
+
+{% if (posts | length) > 0 %}
+
+<ul class="list-unstyled">
+
+  {% for post in posts %}
+
+  <li class="media">
+    <!-- #region Avatar -->
+    <img class="mr-3 avatar" src="{{ dynamic.avatar }}" alt="User Avatar" height="64px">
+    <!-- #endregion -->
+    <div class="media-body">
+      <!-- #region Title -->
+      <a class="title" href="/{{ lang }}/posts/{{ post._id }}">{{ post.title }}</a>
+      <!-- #endregion -->
+      <!-- #region Author & Date-->
+      <small>{{ post._author.name
+        }} {{ post._author.surname }}, {{
+        post.creationDate | date("DD
+        MMMM YYYY
+        dddd") }}</small>
+      <!-- #endregion -->
+      <!-- #region Category-->
+      <small>
+        <a class="category" href="/{{ lang }}/categories/{{ post._category._id }}">{{
+          post._category.name }}</a>
+      </small>
+      <!-- #endregion -->
+      <div class="dropdown-divider"></div>
+      <!-- #region Preview -->
+      <div class="preview">
+        <span>{{ locales.static.post.preview }} : </span> {{ post.preview }}
+      </div>
+      <!-- #endregion -->
+      <div class="dropdown-divider"></div>
+      <!-- #region Tags -->
+      <small class="tag-list">
+        {% for tag in post._tags %}
+        <div class="tag"><a href="/{{ lang }}/tags/{{ tag.urlString }}">
+            #{{ tag.name }}
+          </a>
+        </div>
+        {% endfor %}
+      </small>
+      <!-- #endregion -->
+      <div class="dropdown-divider"></div>
+      <!-- #region Language & Translation-->
+      <small class="language">
+        {{ locales.static.post.language }} : <span>
+          {% if post.lang == en %}
+          <span>{{ locales.languages.en }}</span>
+          {% else %}
+          <span>{{ locales.languages.tr }}</span>
+          {% endif %}
+        </span>
+      </small>
+      <small class="translations">
+        {% if post.lang == "en" %}
+        {% if post.translations.tr %}
+        <span class="translations-label">{{ locales.static.post.translations }} : </span>
+        <span>{{ locales.languages.tr }}</span>
+        {% endif %}
+        {% else %}
+        {% if post.translations.en %}
+        <span class="translations-label">{{ locales.static.post.translations }} : </span>
+        <span>{{ locales.languages.en}}</span>
+        {% endif %}
+        {% endif %}
+      </small>
+      {% if not post.translations.tr or not post.translations.en %}
+      <a class="translate" href="/{{ lang }}/posts/translate/{{ post._id }}">{{ locales.static.post.addTranslation }}</a>
+      {% endif %}
+      <!-- #endregion -->
+    </div>
+  </li>
+
+  <div class="dropdown-divider"></div>
+
+  {% endfor %}
+
+</ul>
+
+{% else %}
+
+<!-- #region Empty -->
+
+<div class="alert info-alert" role="alert" style="margin-top: 20px;">
+  {{ locales.static.empty }}
+</div>
+
+<!-- #endregion -->
+
+{% endif %}
+
+<!-- #endregion -->
+
+{% endblock %}
+
+<!-- #endregion -->

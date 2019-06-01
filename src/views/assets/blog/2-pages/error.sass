@@ -1,0 +1,27 @@
+// Import fonts
+@import url('https://fonts.googleapis.com/css?family=Asap:400,500,600,700&subset=latin-ext');
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900');
+
+// Import tools
+@import "../../general/0-tools/global"
+
+// Import modules
+@import "../../general/1-modules/navbar.sass"
+@import "../../general/1-modules/footer.sass"
+
+body
+  font-family: Asap
+  background: url("https://static.bigdarkgames.com/img/concepts/space.png")
+  background-size: contain
+
+.main
+  background: $white
+  padding: 100px 0
+  .error-heading
+    text-align: center
+    font-weight: 700
+    color: $black
+  .alert
+    text-align: center
+    color: $black
+    margin-bottom: 0px !important

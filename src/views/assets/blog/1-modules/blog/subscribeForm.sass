@@ -1,0 +1,47 @@
+.subscribe
+  margin-top: 50px
+  margin-bottom: 20px
+  h2
+    display: block
+    text-align: center
+    font-family: Source Sans Pro
+    font-weight: 600
+    @include fluid-type(500px, 1600px, 16px, 22px)
+  .subscribeForm
+    display: block
+    margin-top: 30px
+    width: 40%
+    margin: 0 auto
+    input, button
+      padding: 10px
+      font-family: Source Sans Pro
+      &:focus
+        outline: none
+    input
+      margin-top: 20px
+      width: 100%
+      text-indent: 0px
+      border-radius: 25px
+      border: 1px solid $black
+      font-weight: 500
+      text-align: center
+      &:placeholder
+        color: gray
+    button
+      display: block
+      margin: 0 auto
+      margin-top: 10px
+      width: 100%
+      border-radius: 25px
+      border: 1px solid $black
+      border-left: none
+      font-weight: 600
+      cursor: pointer
+      background: $black
+      color: $white
+
+@media screen and (max-width: 576px)
+  .subscribeForm
+    width: 90% !important
+    margin-left: 10px
+    margin-right: 10px

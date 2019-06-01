@@ -1,0 +1,158 @@
+{% extends "panel/templates/preLogin.njk" %}
+
+<!-- #region Styles -->
+
+{% block styles %}
+
+<style>
+	html,
+	body {
+		height: 100%;
+	}
+
+	* {
+		color: #3D414D
+	}
+
+	body {
+		display: -ms-flexbox;
+		display: flex;
+		-ms-flex-align: center;
+		align-items: center;
+		padding-top: 40px;
+		padding-bottom: 40px;
+		background-color: #F8F9FB;
+	}
+
+	img {
+		margin-bottom: 20px
+	}
+
+	.form-signin {
+		width: 100%;
+		max-width: 330px;
+		padding: 15px;
+		margin: auto;
+	}
+
+	.form-signin .form-control {
+		position: relative;
+		box-sizing: border-box;
+		height: auto;
+		padding: 10px;
+		font-size: 16px;
+	}
+
+	.form-signin .form-control:focus {
+		z-index: 2;
+	}
+
+	.form-signin input::placeholder {
+		font-weight: 300
+	}
+
+	.form-signin input {
+		font-weight: 500
+	}
+
+	.form-signin input {
+		margin-bottom: 10px;
+		border-top-left-radius: 0;
+		border-top-right-radius: 0;
+	}
+
+	.btn {
+		color: #F8F9FB;
+		font-weight: 400;
+		font-size: 14px;
+	}
+
+	.form-signin .btn:hover {
+		background: #A80811;
+	}
+
+	.form-signin .login-btn {
+		background: #CA0914;
+	}
+
+	.form-signin .forgot-password-btn {
+		background: #3D414D
+	}
+
+	.form-signin a .btn {
+		margin-top: 5px;
+	}
+
+	.form-signin a:hover {
+		text-decoration: none;
+	}
+
+	.alert.error-alert {
+		background: #EE7271 !important;
+		color: #F8F9FB !important;
+		margin-bottom: 0px;
+	}
+
+	.alert.error-alert #error-message {
+		color: #F8F9FB !important;
+	}
+</style>
+
+{% endblock %}
+
+<!-- #endregion -->
+
+<!-- #region Body -->
+
+{% block body %}
+
+<!-- #region Alerts -->
+
+<div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-labelledby="error-title" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h6 class="modal-title" id="error-title"></h6>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="alert error-alert alert-dismissible fade show" id="error-alert" role="alert">
+					<span id="error-message"></span>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- #endregion -->
+
+<!-- #region Login Form-->
+
+<form class="form-signin" id="login-form" method="POST" action="/api/login">
+	<img class="mx-auto d-block"
+		src="https://upload.wikimedia.org/wikipedia/tr/b/bd/%C4%B0yte_t%C3%BCrk%C3%A7e_logo.png" alt="" width="120"
+		height="120">
+	<label for="inputEmail" class="sr-only">Email</label>
+	<input type="email" id="inputEmail" class="form-control" placeholder="Enter your email" name="email" required>
+	<label for="inputPassword" class="sr-only">Password</label>
+	<input type="password" id="inputPassword" class="form-control" placeholder="Enter your password" name="password"
+		required>
+	<button class="btn btn-block login-btn" type="submit">Login</button>
+	<p class="mt-5 mb-3 text-muted"></p>
+</form>
+
+<!-- #endregion -->
+
+{% endblock %}
+
+<!-- #endregion -->
+
+<!-- #region Scripts -->
+
+{% block scripts %}
+
+{% endblock %}
+
+<!-- #endregion -->

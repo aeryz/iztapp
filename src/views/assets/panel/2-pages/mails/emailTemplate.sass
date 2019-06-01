@@ -1,0 +1,63 @@
+// Import required globals
+@import "../../_sass_lib/global"
+
+body
+  +size(100%, 100%)
+  background: $buttonColor
+
+.container
+  +size(100%, 100%)
+  +margin(0 auto)
+  max-width: 90%
+  display: flex
+  flex-direction: column
+  justify-content: center
+  align-items: center
+  color: $black
+
+.content
+  +padding(50px 20px)
+  text-align: center
+  background: white
+  box-shadow: 0px 0px 50px 10px rgba(0, 0, 0, 0.2)
+  font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+
+img
+  max-width: 30%
+  width: 100%
+
+.info
+  +margin(40px 0 0 0)
+  +padding(0px 10%)
+  text-align: left
+  font-size: 14px
+  .dear
+    font-weight: 600
+  span
+    color: $buttonColor
+    font-weight: 600
+  .message
+    font-style: italic
+  .warning
+    color: $sugarRed
+    font-weight: 600
+  button
+    +size(100%, 40px)
+    background: $buttonColor
+    border: none
+    color: $white
+    border-radius: 5px
+    cursor: pointer
+    font-weight: 600
+    &:focus
+      outline: none
+  .copyright
+    +margin(40px 0 0 0)
+    text-align: center
+    color: $gray
+    a
+      color: $buttonColor
+  ul
+    +margin(20px 0 0 20px)
+    li
+      +margin(5px 0 0 0)

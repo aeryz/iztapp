@@ -1,0 +1,58 @@
+.jumbotron
+  position: relative
+  height: 80vh
+  margin-bottom: 0px !important
+  background-color: rgba(0, 0, 0, 0.7) !important
+  overflow: hidden
+  .container
+    font-family: Source Sans Pro
+    color: white
+    z-index: 3
+    h1
+      font-weight: 600
+      @include fluid-type(500px, 1600px, 32px, 64px)
+      background: rgba(0, 0, 0, 0.8)
+    p
+      @include fluid-type(500px, 1600px, 14px, 22px)
+      background: rgba(0, 0, 0, 0.8)
+  .spaceship
+    position: absolute
+    bottom: 10vw
+    z-index: 1
+    left: 0px
+    right: 0px
+    img
+      max-width: 65px
+      +size(6vw, auto)
+  .earth
+    position: absolute
+    bottom: 0
+    left: 0px
+    right: 0px
+    margin: 0 auto
+    img
+      max-width: 430px
+      +size(40vw, auto)
+
+@media screen and (max-width: 520px)
+ .jumbotron
+    .spaceship
+      bottom: 15vw
+      img
+        +size(10vw, auto)
+    .earth
+      img
+         +size(60vw, auto)
+@media screen and (min-width: 520px) and (max-width: 876px)
+  .jumbotron
+    .spaceship
+      bottom: 12vw
+      img
+        +size(8vw, auto)
+    .earth
+      img
+        +size(50vw, auto)
+@media screen and (min-width: 1000px)
+  .jumbotron
+    .spaceship
+      bottom: 110px

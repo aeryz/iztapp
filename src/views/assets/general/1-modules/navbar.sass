@@ -1,0 +1,69 @@
+.navigation-bar
+  background-color: rgba(0, 0, 0, 0.7)
+  .navbar-brand
+    img
+      +size(48px)
+  ul
+    li
+      +margin(0 10px)
+      font-family: Source Sans Pro
+      a
+        color: $white
+      &.active, &:hover
+        a
+          color: $navbarActiveColor
+      .dropdown-menu
+        background: $navbarBackground
+        min-width: max-content
+        max-width: max-content
+        margin: 0 auto
+        .dropdown-item
+          padding: .5rem
+          &:hover
+            background: $navbarActiveColor
+            color: $navbarBackground
+      &.language-dropdown
+        a
+          text-transform: uppercase
+        text-transform: uppercase
+  .navbar-collapse
+    &.collapsing, &.show
+      ul
+        li
+          text-align: center
+          .dropdown-menu
+            text-align: center
+  .navbar-toggler
+    padding: 0px !important
+    &:focus
+      outline: none
+    .line
+      width: 30px
+      height: 3px
+      background-color: #ecf0f1
+      padding: 0
+      display: block
+      margin: 8px auto
+      -webkit-transition: all 0.3s ease-in-out
+      -o-transition: all 0.3s ease-in-out
+      transition: all 0.3s ease-in-out
+    &.active
+      .line
+        &:nth-child(1)
+          -webkit-transform: translateY(13px) rotate(45deg)
+          -ms-transform: translateY(13px) rotate(45deg)
+          -o-transform: translateY(13px) rotate(45deg)
+          transform: translateY(13px) rotate(45deg)
+        &:nth-child(2)
+          opacity: 0
+        &:nth-child(3)
+          -webkit-transform: translateY(-9px) rotate(-45deg)
+          -ms-transform: translateY(-9px) rotate(-45deg)
+          -o-transform: translateY(-9px) rotate(-45deg)
+          transform: translateY(-9px) rotate(-45deg)
+
+
+  @media screen and (min-width: 992px)
+    .navbar
+      .dropdown-menu
+        text-align: left

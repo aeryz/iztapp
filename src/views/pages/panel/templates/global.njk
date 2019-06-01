@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+	<!-- #region Meta sets -->
+
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- #endregion -->
+
+	<!-- #region Bootstrap -->
+
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"
+		integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+		integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+		crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+		integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+		crossorigin="anonymous"></script>
+
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+		integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+
+
+	<!-- #endregion -->
+
+	<!-- #region Styles -->
+	<link rel="stylesheet" type="text/css" media="screen" href="/assets/css/global.css" />
+	{% block styles %}{% endblock %}
+
+	<!-- #endregion -->
+
+	<!-- #region Fonts -->
+
+	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600" rel="stylesheet">
+	<link href="https://file.myfontastic.com/GnqohETWtMwG7YN2KJqFWW/icons.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+		integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+
+	<!-- #endregion -->
+
+	<!-- #region Set Title -->
+
+	<title>Dashboard</title>
+
+	{% block title %}{% endblock %}
+
+	<!-- #endregion -->
+
+</head>
+
+<body>
+
+	<!-- #region Side Menu -->
+
+	<div class="nav-side-menu">
+		<i class="icon-toggler toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
+
+		<div class="menu-list">
+
+			<ul id="menu-content" class="menu-content collapse out">
+
+				<a href="/">
+					<li class="{% if keys.page == 'dashboard' %} active {% endif %}">
+						<i class="icon-dashboard"></i> <span>Dashboard</span>
+					</li>
+				</a>
+
+				<li data-toggle="collapse" data-target="#blog-dropdown"
+					class="collapsed {% if keys.page == 'blog' %} active {% endif %}">
+					<i class="icon-blog"></i> <span>{{ locales.sidebar.blog.name }}</span> <span class="arrow"></span>
+				</li>
+				<ul class="sub-menu collapse" id="blog-dropdown">
+					<a href="/{{ lang }}/posts">
+						<li class="{% if keys.subpage == 'allPosts' %} active {% endif %}">
+							{{ locales.sidebar.blog.all }}</li>
+					</a>
+					<a href="/{{ lang }}/posts/new">
+						<li class="{% if keys.subpage == 'newPost' %} active {% endif %}">{{ locales.sidebar.blog.new }}
+						</li>
+					</a>
+				</ul>
+
+				<li data-toggle="collapse" data-target="#draft-dropdown"
+					class="collapsed {% if keys.page == 'draft' %} active {% endif %}">
+					<i class="icon-draft"></i> <span>{{ locales.sidebar.draft.name }}</span> <span class="arrow"></span>
+				</li>
+				<ul class="sub-menu collapse" id="draft-dropdown">
+					<a href="/{{ lang }}/drafts">
+						<li class="{% if keys.subpage == 'allDrafts' %} active {% endif %}">
+							{{ locales.sidebar.draft.all }}</li>
+					</a>
+					<a href="/{{ lang }}/drafts/new">
+						<li class="{% if keys.subpage == 'newDraft' %} active {% endif %}">
+							{{ locales.sidebar.draft.new }}</li>
+					</a>
+				</ul>
+
+				<li data-toggle="collapse" data-target="#category-dropdown"
+					class="collapsed {% if keys.page == 'category' %} active {% endif %}">
+					<i class="icon-category"></i> <span>{{ locales.sidebar.category.name }}</span> <span
+						class="arrow"></span>
+				</li>
+				<ul class="sub-menu collapse" id="category-dropdown">
+					<a href="/{{ lang }}/categories">
+						<li class="{% if keys.subpage == 'allCategories' %} active {% endif %}">
+							{{ locales.sidebar.category.all }}</li>
+					</a>
+					<a href="/{{ lang }}/categories/new">
+						<li class="{% if keys.subpage == 'newCategory' %} active {% endif %}">
+							{{ locales.sidebar.category.new }}</li>
+					</a>
+				</ul>
+
+
+				<li data-toggle="collapse" data-target="#tag-dropdown"
+					class="collapsed {% if keys.page == 'tag' %} active {% endif %}">
+					<i class="icon-tag"></i> <span>{{ locales.sidebar.tag.name }}</span> <span class="arrow"></span>
+				</li>
+				<ul class="sub-menu collapse" id="tag-dropdown">
+					<a href="/{{ lang }}/tags">
+						<li class="{% if keys.subpage == 'allTags' %} active {% endif %}">{{ locales.sidebar.tag.all }}
+						</li>
+					</a>
+				</ul>
+
+				<li data-toggle="collapse" data-target="#management-dropdown"
+					class="collapsed {% if keys.page == 'management' %} active {% endif %}">
+					<i class="icon-management"></i> <span>{{ locales.sidebar.management.name }}</span> <span
+						class="arrow"></span>
+				</li>
+				<ul class="sub-menu collapse" id="management-dropdown">
+					<a href="/{{ lang }}/management/subscribers">
+						<li class="{% if keys.subpage == 'subscribers' %} active {% endif %}">{{
+              locales.sidebar.management.subscribers }}</li>
+					</a>
+					<a href="/{{ lang }}/management/upload">
+						<li class="{% if keys.subpage == 'uploadTool' %} active {% endif %}">{{
+              locales.sidebar.management.uploadTool }}</li>
+					</a>
+				</ul>
+
+				<a href="/{{ lang }}/logout">
+					<li>
+						<i class="icon-exit"></i> {{ locales.sidebar.exit }}
+					</li>
+				</a>
+
+			</ul>
+		</div>
+	</div>
+
+	<!-- #endregion -->
+
+	<!-- #region Wrapper -->
+
+	<div class="wrapper">
+		{% block wrapper %} {% endblock %}
+	</div>
+
+	<!-- #endregion -->
+
+</body>
+
+<!-- #region Scripts -->
+
+{% block scripts %}{% endblock %}
+
+<!-- #endregion -->
+
+</html>

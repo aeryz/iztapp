@@ -1,0 +1,25 @@
+.filter
+  margin-top: 40px
+  border-bottom: 1px solid $dividerColor
+  padding-bottom: 20px
+  select, .search
+    display: inline-block
+  select
+    border-width: 2px
+    border-color: $sidebarActive
+    background: $sidebarActive
+    color: $white
+    &:focus
+      outline: none
+  .search
+    margin-left: 20px
+    form
+      input
+        +padding(5px)
+        border-radius: 25px
+        border: 1px solid $dividerColor
+        background: transparent
+        color: $black
+        text-indent: 10px
+        &:focus
+          outline: none

@@ -1,0 +1,324 @@
+{% extends "panel/templates/global.njk" %}
+
+<!-- #region Title set -->
+
+{% block title %}
+
+<title>{{ locales.static.title }} - {{ category.name }}</title>
+
+{% endblock %}
+
+<!-- #endregion -->
+
+<!-- #region Styles -->
+
+{% block styles %}
+
+<link rel="stylesheet" href="/assets/css/categories/details.css">
+
+{% endblock %}
+
+<!-- #endregion -->
+
+<!-- #region Body -->
+
+{% block wrapper %}
+
+<!-- #region Heading -->
+
+<h1 id="heading" class="h4">{{ locales.static.heading }}</h1>
+
+<!-- #endregion -->
+
+<!-- #region Alerts -->
+
+<div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-labelledby="error-title" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="error-title">{{ locales.static.alerts.error.heading }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="alert error-alert alert-dismissible fade show" id="error-alert" role="alert">
+          <span id="error-message"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="success-modal" tabindex="-1" role="dialog" aria-labelledby="success-title" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="success-title">{{ locales.static.alerts.success.heading }}</h5>
+        <button type="button" class="close" onclick="redirectPost();" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="alert success-alert alert-dismissible fade show" id="success-alert" role="alert">
+          {{ locales.static.alerts.success.message }}
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" onclick="redirectPost();" class="btn accept-btn">{{ locales.static.buttonTexts.turnBack
+          }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="delete-modal" tabindex="-1" role="dialog" aria-labelledby="delete-title" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="delete-title">{{ locales.static.alerts.delete.heading }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="alert error-alert alert-dismissible fade show" id="delete-alert" role="alert">
+          {{ locales.static.alerts.delete.message }}
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn delete-btn">{{ locales.static.buttonTexts.delete
+          }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- #endregion -->
+
+<!-- #region Category Form -->
+
+<form id="category-form" method="POST">
+  <!-- #region Name -->
+  <div style="margin-top: 1rem;" class="form-group row">
+    <label for="input-name" class="col-sm-2 col-form-label">{{ locales.static.category.name }} : </label>
+    <div class="col-sm-10">
+      <input id="input-name" type="text" class="form-control" name="name" minlength="{{ limits.minNameLength }}"
+        maxlength="{{ limits.maxNameLength }}" value="{{ category.name }}" required>
+    </div>
+  </div>
+  <!-- #endregion -->
+  <!-- #region Description -->
+  <div style="margin-top: 1rem;" class="form-group row">
+    <label for="input-description" class="col-sm-2 col-form-label">{{ locales.static.category.description }} : </label>
+    <div class="col-sm-10">
+      <input id="input-description" type="text" class="form-control" name="description" minlength="{{ limits.minDescriptionLength }}"
+        maxlength="{{ limits.maxDescriptionLength }}" value="{{ category.description }}" required>
+    </div>
+  </div>
+  <!-- #endregion -->
+  <!-- #region Language -->
+  <div class="form-group row">
+    <label for="input-language" class="col-sm-2 col-form-label">{{ locales.static.category.language }} : </label>
+    <div class="col-sm-10">
+      <div class="input-group">
+        <select class="custom-select language" name="lang" required>
+          {% if category.lang == "tr" %}
+          <option value="tr" selected>{{ locales.languages.tr }}</option>
+          <option value="en">{{ locales.languages.en }}</option>
+          {% else %}
+          <option value="en" selected>{{ locales.languages.en }}</option>
+          <option value="tr">{{ locales.languages.tr }}</option>
+          {% endif %}
+        </select>
+      </div>
+    </div>
+  </div>
+  <!-- #endregion -->
+  <!-- #region Creation Date -->
+  <div style="margin-top: 1rem;" class="form-group row">
+    <label for="input-creationDate" class="col-sm-2 col-form-label">{{ locales.static.category.creationDate }} :
+    </label>
+    <div class="col-sm-10">
+      <input id="input-creationDate" type="text" class="form-control" value="{{ category.creationDate | date('DD MMMM YYYY, dddd, h:mm:ss a') }}"
+        disabled>
+    </div>
+  </div>
+  <!-- #endregion -->
+  <!-- #region Last Update Date -->
+  <div style="margin-top: 1rem;" class="form-group row">
+    <label for="input-lastUpdate" class="col-sm-2 col-form-label">{{ locales.static.category.lastUpdateDate }} :
+    </label>
+    <div class="col-sm-10">
+      <input id="input-lastUpdate" type="text" class="form-control" value="{{ category.lastUpdateDate | date('DD MMMM YYYY, dddd, h:mm:ss a') }}"
+        disabled>
+    </div>
+  </div>
+  <!-- #endregion -->
+  <div class="dropdown-divider"></div>
+  <!-- #region Buttons -->
+  <div id="button-group" class="form-group row">
+    <div class="col-sm-10">
+      <button type="button" class="btn save-btn">{{ locales.static.buttonTexts.save }}</button>
+      <button type="button" class="btn delete-btn">{{ locales.static.buttonTexts.delete }}</button>
+    </div>
+  </div>
+  <!-- #endregion -->
+
+</form>
+
+<!-- #endregion -->
+
+<div class="dropdown-divider"></div>
+
+<!-- #region Category posts -->
+
+<!-- #region Heading -->
+
+<h1 id="heading" class="h4" style="margin-top:20px">{{ locales.static.posts.heading}}</h1>
+
+<!-- #endregion -->
+
+{% if (posts | length) > 0 %}
+
+<!-- #region Information -->
+
+<div class="alert info-alert" role="alert" style="margin-top: 20px;">
+  {{ locales.static.posts.information }}
+</div>
+
+<!-- #endregion -->
+
+<ul class="list-unstyled" id="category-posts">
+
+  {% for post in posts %}
+
+  <li class="media">
+    <div class="media-body">
+      <!-- #region Title -->
+      <a class="title" href="/{{ lang }}/posts/{{ post._id }}">{{ post.title }}</a>
+      <!-- #endregion -->
+      <!-- #region Author -->
+      <div class="author">{{ post._author.name }} {{ post._author.surname }}</div>
+      <!-- #endregion -->
+      <!-- #region Preview -->
+      <div class="preview">{{ post.preview }}</div>
+      <!-- #endregion -->
+    </div>
+  </li>
+
+  <div class="dropdown-divider"></div>
+
+  {% endfor %}
+
+</ul>
+
+{% else %}
+
+<!-- #region Empty -->
+
+<div class="alert info-alert" role="alert" style="margin-top: 20px;">
+  {{ locales.static.posts.empty }}
+</div>
+
+<!-- #endregion -->
+
+{% endif %}
+
+<!-- #endregion -->
+
+{% endblock %}
+
+<!-- #endregion -->
+
+<!-- #region Scripts -->
+
+{% block scripts %}
+
+<!-- #region POST -->
+<script>
+
+  $(".save-btn").on("click", function (e) {
+
+    e.preventDefault();
+
+    const formElement = document.getElementById("category-form");
+
+    const data = {}
+
+    for (const pair of new FormData(formElement)) {
+
+      data[pair[0]] = pair[1]
+
+    }
+
+    postData(`{{ domains.panel }}/{{ lang }}/categories/update/{{ category._id }}`, data)
+      .then(function (data) {
+
+        if (data.success) {
+
+          $("#success-modal").modal("toggle");
+
+        } else if (data.error) {
+
+          $("#error-alert #error-message").text(data.errorMessage)
+
+          $("#error-modal").modal("toggle");
+
+        }
+
+      }) // JSON-string from `response.json()` call
+      .catch(error => console.error(error));
+
+    function postData(url = ``, data) {
+      // Default options are marked with *
+      return fetch(url, {
+        method: "POST", // *GET, POST, PUT, DELETE, etc.
+        mode: "cors", // no-cors, cors, *same-origin
+        cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+        credentials: "same-origin", // include, same-origin, *omit
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+          // "Content-Type": "application/x-www-form-urlencoded",
+        },
+        redirect: "follow", // manual, *follow, error
+        referrer: "no-referrer", // no-referrer, *client
+        body: JSON.stringify(data), // body data type must match "Content-Type" header
+      })
+        .then(response => response.json()); // parses response to JSON
+    }
+
+  });
+
+  function redirectPost() {
+
+    window.location.href = `{{ domains.panel }}/{{ lang }}/categories/{{ category._id }}`
+
+  }
+
+</script>
+<!-- #endregion -->
+
+<!-- #region DELETE -->
+
+<script>
+
+  $("#category-form .delete-btn").on("click", function () {
+
+    $("#delete-modal").modal("toggle");
+
+  });
+
+  $("#delete-modal .delete-btn").on("click", function () {
+
+    window.location.href = `{{ domains.panel }}/{{ lang }}/categories/delete/{{ category._id }}`
+
+  });
+
+</script>
+
+<!-- #endregion -->
+
+{% endblock %}
+
+<!-- #endregion -->

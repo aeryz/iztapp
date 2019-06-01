@@ -1,0 +1,318 @@
+{% extends "panel/templates/global.njk" %}
+
+<!-- #region Title -->
+
+{% block title %}
+
+<title>{{ locales.static.title }} - {{ post.title }}</title>
+
+{% endblock %}
+
+<!-- #endregion -->
+
+<!-- #region Styles -->
+
+{% block styles %}
+
+<link rel="stylesheet" href="/assets/css/simplemde.css">
+
+{% endblock %}
+
+<!-- #endregion -->
+
+<!-- #region Body -->
+
+{% block wrapper %}
+
+<!-- #region Heading -->
+
+<h1 id="heading" class="h4">{{ locales.static.heading }}</h1>
+
+<!-- #endregion -->
+
+<!-- #region Alerts -->
+
+<div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-labelledby="error-title" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="error-title">{{ locales.static.alerts.error.heading }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="alert error-alert alert-dismissible fade show" id="error-alert" role="alert">
+          <span id="error-message"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="success-modal" tabindex="-1" role="dialog" aria-labelledby="success-title" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="success-title">{{ locales.static.alerts.success.heading }}</h5>
+        <button type="button" class="close" onclick="redirectPost();" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="alert success-alert alert-dismissible fade show" id="success-alert" role="alert">
+          {{ locales.static.alerts.success.message }}
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" onclick="redirectPost();" class="btn accept-btn">{{ locales.static.buttonTexts.turnBack
+          }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="delete-modal" tabindex="-1" role="dialog" aria-labelledby="delete-title" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="delete-title">{{ locales.static.alerts.delete.heading }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="alert error-alert alert-dismissible fade show" id="delete-alert" role="alert">
+          {{ locales.static.alerts.delete.message }}
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn delete-btn">{{ locales.static.buttonTexts.delete
+          }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- #endregion -->
+
+<!-- #region Post Form -->
+
+<form id="post-form" method="POST">
+  <!-- #region Title -->
+  <div style="margin-top: 1rem;" class="form-group row">
+    <label for="input-title" class="col-sm-2 col-form-label">{{ locales.static.post.postTitle }} : </label>
+    <div class="col-sm-10">
+      <input id="input-title" type="text" class="form-control" name="title" minlength="{{ limits.minTitleLength }}"
+        maxlength="{{ limits.maxTitleLength }}" value="{{ post.title }}" required>
+    </div>
+  </div>
+  <!-- #endregion -->
+  <!-- #region Author -->
+  <div style="margin-top: 1rem;" class="form-group row">
+    <label for="input-title" class="col-sm-2 col-form-label">{{ locales.static.post.author }} : </label>
+    <div class="col-sm-10">
+      <input id="input-title" type="text" class="form-control" value="{{ post._author.name }} {{ post._author.surname }}"
+        disabled>
+    </div>
+  </div>
+  <!-- #endregion -->
+  <!-- #region Language -->
+  <div class="form-group row">
+    <label for="input-language" class="col-sm-2 col-form-label">{{ locales.static.post.language }} : </label>
+    <div class="col-sm-10">
+      <div class="input-group">
+        <select class="custom-select language" name="lang" required>
+          {% if post.lang == "tr" %}
+          <option value="tr" selected>{{ locales.languages.tr }}</option>
+          <option value="en">{{ locales.languages.en }}</option>
+          {% else %}
+          <option value="en" selected>{{ locales.languages.en }}</option>
+          <option value="tr">{{ locales.languages.tr }}</option>
+          {% endif %}
+        </select>
+      </div>
+    </div>
+  </div>
+  <!-- #endregion -->
+  <!-- #region Category -->
+  <div class="form-group row">
+    <label for="input-category" class="col-sm-2 col-form-label">{{ locales.static.post.category }} : </label>
+    <div class="col-sm-10">
+      <div class="input-group">
+        <select class="custom-select category" name="_category" required>
+          <option class="lang_{{ category.lang }}" selected value="{{ post._category._id }}">{{ post._category.name }}</option>
+          {% for category in categories %}
+          {% if category.name != post._category.name %}
+          <option class="lang_{{ category.lang }}" value="{{ category._id }}" style="display: none;">{{ category.name
+            }}</option>
+          {% endif %}
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+  </div>
+  <!-- #endregion -->
+  <!-- #region Tags -->
+  <div class="form-group row">
+    <label for="input-tags" class="col-sm-2 col-form-label">{{ locales.static.post.tags }} : </label>
+    <div class="col-sm-10">
+      <input id="input-tags" class="form-control" name="_tags" type="text" value="{% for i in range(0, post._tags | length) %}{{ post._tags[i].name }}{% if not loop.last %},{% endif %}{% endfor %}"
+        required>
+    </div>
+  </div>
+  <!-- #endregion -->
+  <!-- #region Preview -->
+  <div class="form-group row">
+    <label for="input-preview" class="col-sm-2 col-form-label">{{ locales.static.post.preview }} : </label>
+    <div class="col-sm-10">
+      <input id="input-preview" type="text" class="form-control" name="preview" minlength="{{ limits.minPreviewLength }}"
+        maxlength="{{ limits.maxPreviewLength }}" value="{{ post.preview }}" required>
+    </div>
+  </div>
+  <!-- #endregion -->
+  <!-- #region Creation Date -->
+  <div style="margin-top: 1rem;" class="form-group row">
+    <label for="input-title" class="col-sm-2 col-form-label">{{ locales.static.post.creationDate }} : </label>
+    <div class="col-sm-10">
+      <input id="input-title" type="text" class="form-control" value="{{ post.creationDate | date('DD MMMM YYYY, dddd, h:mm:ss a') }}"
+        disabled>
+    </div>
+  </div>
+  <!-- #endregion -->
+  <!-- #region Last Update Date -->
+  <div style="margin-top: 1rem;" class="form-group row">
+    <label for="input-title" class="col-sm-2 col-form-label">{{ locales.static.post.lastUpdateDate }} : </label>
+    <div class="col-sm-10">
+      <input id="input-title" type="text" class="form-control" value="{{ post.lastUpdateDate | date('DD MMMM YYYY, dddd, h:mm:ss a') }}"
+        disabled>
+    </div>
+  </div>
+  <!-- #endregion -->
+  <div class="dropdown-divider"></div>
+  <!-- #region Content -->
+  <div class="form-group row" style="margin-top: 1.5rem;">
+    <div class="col-sm-12">
+      <textarea name="content" id="editor" value="{{ post.content }}">{{ post.content }}</textarea>
+    </div>
+  </div>
+  <!-- #endregion -->
+  <div class="dropdown-divider"></div>
+  <!-- #region Buttons -->
+  <div id="button-group" class="form-group row">
+    <div class="col-sm-10">
+      <button type="button" class="btn save-btn">{{ locales.static.buttonTexts.save }}</button>
+      <button type="button" class="btn delete-btn">{{ locales.static.buttonTexts.delete }}</button>
+    </div>
+  </div>
+  <!-- #endregion -->
+
+</form>
+
+<!-- #endregion -->
+
+{% endblock %}
+
+<!-- #endregion -->
+
+<!-- #region Scripts -->
+
+{% block scripts %}
+
+<!-- #region POST -->
+<script>
+
+  $(".save-btn").on("click", function (e) {
+
+    e.preventDefault();
+
+    const formElement = document.getElementById("post-form");
+
+    const data = {}
+
+    for (const pair of new FormData(formElement)) {
+
+      data[pair[0]] = pair[1]
+
+    }
+
+    postData(`{{ domains.panel }}/{{ lang }}/posts/update/{{ post._id }}`, data)
+      .then(function (data) {
+
+        if (data.success) {
+
+          $("#success-modal").modal("toggle");
+
+        } else if (data.error) {
+
+          $("#error-alert #error-message").text(data.errorMessage)
+
+          $("#error-modal").modal("toggle");
+
+        }
+
+      }) // JSON-string from `response.json()` call
+      .catch(error => console.error(error));
+
+    function postData(url = ``, data) {
+      // Default options are marked with *
+      return fetch(url, {
+        method: "POST", // *GET, POST, PUT, DELETE, etc.
+        mode: "cors", // no-cors, cors, *same-origin
+        cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+        credentials: "same-origin", // include, same-origin, *omit
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+          // "Content-Type": "application/x-www-form-urlencoded",
+        },
+        redirect: "follow", // manual, *follow, error
+        referrer: "no-referrer", // no-referrer, *client
+        body: JSON.stringify(data), // body data type must match "Content-Type" header
+      })
+        .then(response => response.json()); // parses response to JSON
+    }
+
+  });
+
+  function redirectPost() {
+
+    window.location.href = `{{ domains.panel }}/{{ lang }}/posts/{{ post._id }}`
+
+  }
+
+</script>
+<!-- #endregion -->
+
+<!-- #region DELETE -->
+
+<script>
+
+  $("#post-form .delete-btn").on("click", function () {
+
+    $("#delete-modal").modal("toggle");
+
+  });
+
+  $("#delete-modal .delete-btn").on("click", function () {
+
+    window.location.href = `{{ domains.panel }}/{{ lang }}/posts/delete/{{ post._id }}`
+
+  });
+
+</script>
+
+<!-- #endregion -->
+
+<!-- #region Import libraries -->
+
+<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+<script src="/assets/js/createEditor.js"></script>
+<script src="/assets/js/languageAndCategory.js"></script>
+<script src="/assets/js/flowType.js"></script>
+<script src="/assets/js/setEditorStyles.js"></script>
+
+<!-- #endregion -->
+
+{% endblock %}
+
+<!-- #endregion -->

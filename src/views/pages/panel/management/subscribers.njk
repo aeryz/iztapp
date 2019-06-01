@@ -1,0 +1,71 @@
+{% extends "panel/templates/global.njk" %}
+
+<!-- #region Styles -->
+
+{% block styles %}
+
+<link rel="stylesheet" href="/assets/css/management/subscribers.css">
+
+{% endblock %}
+
+<!-- #endregion -->
+
+{% set counter = 1 %}
+
+<!-- #region Body -->
+
+{% block wrapper %}
+
+<!-- #region Heading -->
+
+<h1 id="heading" class="h4">{{ locales.static.heading }}</h1>
+
+<!-- #endregion -->
+
+<!-- #region Subscribers -->
+
+{% if (subscribers | length) > 0 %}
+
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">{{ locales.static.table.email }}</th>
+      <th scope="col">{{ locales.static.table.language }}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for subscriber in subscribers %}
+    <tr class="{% if subscriber.language == 'tr' %} lang_tr {% else %} lang_en {% endif %}">
+      <th class="number" scope="row">{{ counter }}</th>
+      {% set counter = counter + 1 %}
+      <td class="email">{{ subscriber.email }}</td>
+      <td class="language">
+        {% if subscriber.preferedLanguage == "tr" %}
+        {{ locales.languages.tr }}
+        {% else %}
+        {{ locales.languages.en }}
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% else %}
+
+<!-- #region Empty -->
+
+<div class="alert info-alert" role="alert" style="margin-top: 20px;">
+  {{ locales.static.empty }}
+</div>
+
+<!-- #endregion -->
+
+{% endif %}
+
+<!-- #endregion -->
+
+{% endblock %}
+
+<!-- #endregion -->

@@ -1,0 +1,473 @@
+{% extends "panel/templates/global.njk" %}
+
+<!-- #region Styles -->
+
+{% block styles %}
+
+<link rel="stylesheet" href="/assets/css/profile/profile.css">
+
+<style>
+
+  #update-avatar-form label::after{ content: "{{ locales.static.updateAvatarModal.browse }}" !important }
+
+</style>
+
+{% endblock %}
+
+<!-- #endregion -->
+
+<!-- #region Body -->
+
+{% block wrapper %}
+
+<!-- #region Alerts -->
+
+<div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-labelledby="error-title" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="error-title">{{ locales.static.alerts.error.heading }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="alert error-alert alert-dismissible fade show" id="error-alert" role="alert">
+          <span id="error-message"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="success-modal" tabindex="-1" role="dialog" aria-labelledby="success-title" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="success-title">{{ locales.static.alerts.success.heading }}</h5>
+        <button type="button" class="close" onclick="redirectBack();" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="alert success-alert alert-dismissible fade show" id="success-alert" role="alert">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" onclick="redirectBack();" class="btn accept-btn">{{ locales.static.buttonTexts.turnBack
+          }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- #endregion -->
+
+<!-- #region Heading -->
+
+<h1 id="heading" class="h4">{{ locales.static.heading }}</h1>
+
+<!-- #endregion -->
+
+<!-- #region User Information Form -->
+
+<form id="user-form" method="POST">
+  <!-- #region Avatar-->
+  <div class="
+  media">
+    <img class="align-self-center mr-3" src="{{ dynamic.avatar }}" alt="User Avatar" height="128px">
+    <input type="hidden" name="profilePhoto" value="{{ dynamic.avatar }}">
+    <div class="media-body align-self-center">
+      <button id="avatar-update-button" type="button" class="btn edit-btn" data-toggle="modal" data-target="#update-avatar-modal">{{
+        locales.static.buttonTexts.updateAvatar
+        }}</button>
+    </div>
+  </div>
+  <!-- #endregion -->
+  <div class="dropdown-divider"></div>
+  <!-- #region Name -->
+  <div style="margin-top: 1rem;" class="form-group row">
+    <label for="input-name" class="col-sm-2 col-form-label">{{ locales.static.userInformations.name }} : </label>
+    <div class="col-sm-10">
+      <input id="input-name" type="text" class="form-control" name="name" value="{{ dynamic.data.name }}" placeholder="{{ locales.static.userInformations.name }}"
+        minlength="{{ limits.minNameLength }}" maxlength="{{ limits.maxNameLength }}" required>
+    </div>
+  </div>
+  <!-- #endregion -->
+  <!-- #region Surname -->
+  <div class="form-group row">
+    <label for="input-surname" class="col-sm-2 col-form-label">{{ locales.static.userInformations.surname }} : </label>
+    <div class="col-sm-10">
+      <input id="input-surname" type="text" class="form-control" name="surname" value="{{ dynamic.data.surname }}"
+        placeholder="{{ locales.static.userInformations.surname }}" minlength="{{ limits.minSurnameLength }}" maxlength="{{ limits.maxSurnameLength }}"
+        required>
+    </div>
+  </div>
+  <!-- #endregion -->
+  <!-- #region Email -->
+  <div class="form-group row">
+    <label for="input-email" class="col-sm-2 col-form-label">{{ locales.static.userInformations.email }} : </label>
+    <div class="col-sm-10">
+      <input type="email" class="form-control" id="input-email" name="email" value="{{ dynamic.data.email }}"
+        placeholder="{{ locales.static.userInformations.email }}" minlength="{{ limits.minEMailLength }}" maxlength="{{ limits.maxEMailLength }}"
+        required>
+    </div>
+  </div>
+  <!-- #endregion -->
+  <div class="dropdown-divider"></div>
+  <!-- #region Buttons -->
+  <div id="button-group" class="form-group row">
+    <div class="col-sm-10">
+      <button id="password-update-button" type="button" class="btn edit-btn" data-toggle="modal" data-target="#update-password-modal">{{
+        locales.static.buttonTexts.updatePassword }}</button>
+      <button type="button" class="btn save-btn">{{ locales.static.buttonTexts.save }}</button>
+    </div>
+  </div>
+  <!-- #endregion -->
+</form>
+
+<!-- #endregion -->
+
+<!-- #region Modals -->
+
+<!-- #region Password Update Modal -->
+<div class="modal fade" id="update-password-modal" tabindex="-1" role="dialog" aria-labelledby="update-password-label"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <!-- #region Model title -->
+      <div class="modal-header">
+        <h5 class="modal-title" id="update-password-label">{{
+          locales.static.updatePasswordModal.title
+          }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <!-- #endregion -->
+      <!-- #region Password Update Form -->
+      <form id="update-password-form" class="container" enctype="multipart/form-data">
+        <div class="modal-body">
+          <!-- #region Old Password -->
+          <div class="form-group row" style="margin-top:1rem;">
+            <div class="col-sm-12">
+              <input type="password" class="form-control" name="oldPassword" id="inputPassword" placeholder="{{ locales.static.updatePasswordModal.oldPassword }}"
+                minlength="{{ limits.minPasswordLength }}" maxlength="{{ limits.maxPasswordLength }}" required>
+            </div>
+          </div>
+          <!-- #endregion -->
+          <!-- #region New Password -->
+          <div class="form-group row">
+            <div class="col-sm-12">
+              <input type="password" class="form-control" name="password" id="inputPassword" placeholder="{{ locales.static.updatePasswordModal.newPassword }}"
+                minlength="{{ limits.minPasswordLength }}" maxlength="{{ limits.maxPasswordLength }}" required>
+            </div>
+          </div>
+          <!-- #endregion -->
+          <!-- #region New Password Verification -->
+          <div class="form-group row">
+            <div class="col-sm-12">
+              <input type="password" class="form-control" name="passwordConfirm" id="inputPassword" placeholder="{{ locales.static.updatePasswordModal.newPasswordVerification }}"
+                minlength="{{ limits.minPasswordLength }}" maxlength="{{ limits.maxPasswordLength }}" required>
+            </div>
+          </div>
+          <!-- #endregion -->
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn save-btn">{{
+            locales.static.updatePasswordModal.save
+            }}</button>
+          <button type="button" class="btn cancel-btn" data-dismiss="modal">{{
+            locales.static.updatePasswordModal.cancel
+            }}</button>
+        </div>
+      </form>
+      <!-- #endregion -->
+    </div>
+  </div>
+</div>
+<!-- #endregion -->
+
+<!-- #region Avatar Update Modal -->
+<div class="modal fade" id="update-avatar-modal" tabindex="-1" role="dialog" aria-labelledby="update-avatar-label"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <!-- #region Modal Title -->
+      <div class="modal-header">
+        <h5 class="modal-title" id="update-avatar-label">{{
+          locales.static.updateAvatarModal.title
+          }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <!-- #endregion -->
+      <!-- #region Avatar Update Form -->
+      <form id="update-avatar-form" class="container">
+        <div class="modal-body">
+          <div class="custom-file">
+            <input type="file" class="custom-file-input" id="avatar-upload-input" accept="image/*" name="avatar"
+              required>
+            <label class="custom-file-label" id="avatar-input-label">{{locales.static.updateAvatarModal.chooseFile
+              }}</label>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn save-btn">{{
+            locales.static.updateAvatarModal.save
+            }}</button>
+          <button type="button" class="btn cancel-btn" data-dismiss="modal">{{
+            locales.static.updateAvatarModal.cancel
+            }}</button>
+        </div>
+      </form>
+      <!-- #endregion -->
+    </div>
+  </div>
+</div>
+<!-- #endregion -->
+
+<!-- #endregion -->
+
+{% endblock %}
+
+<!-- #endregion -->
+
+<!-- #region Scripts -->
+
+{% block scripts %}
+
+<!-- #region REDIRECT profile -->
+<script>
+
+  function redirectBack() {
+
+    window.location.href = `{{ domains.panel }}/{{ lang }}/profile`
+
+  }
+
+</script>
+<!-- #endregion -->
+
+<!-- #region POST method -->
+<script>
+  function postData(url = ``, data) {
+    // Default options are marked with *
+    return fetch(url, {
+      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      mode: "cors", // no-cors, cors, *same-origin
+      cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+      credentials: "same-origin", // include, same-origin, *omit
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        // "Content-Type": "application/x-www-form-urlencoded",
+      },
+      redirect: "follow", // manual, *follow, error
+      referrer: "no-referrer", // no-referrer, *client
+      body: JSON.stringify(data), // body data type must match "Content-Type" header
+    })
+      .then(response => response.json()); // parses response to JSON
+  }
+</script>
+<!-- #endregion -->
+
+<!-- #region UPDATE profile -->
+<script>
+  $("#user-form .save-btn").on("click", function (e) {
+
+    e.preventDefault();
+
+    const formElement = document.getElementById("user-form");
+
+    const data = {}
+
+    for (const pair of new FormData(formElement)) {
+
+      data[pair[0]] = pair[1]
+
+    }
+
+    postData(`{{ domains.panel }}/{{ lang }}/updateProperties`, data)
+      .then(function (data) {
+
+        if (data.success) {
+
+          $("#success-modal #success-alert").html("{{ locales.static.alerts.success.updateProfile.message }}");
+
+          $("#success-modal").modal("toggle");
+
+        } else if (data.error) {
+
+          $("#error-alert #error-message").text(data.errorMessage)
+
+          $("#error-alert").css("display", "block");
+
+          $("#error-modal").modal("toggle");
+
+        }
+
+      }) // JSON-string from `response.json()` call
+      .catch(error => console.error(error));
+
+  });
+</script>
+<!-- #endregion -->
+
+<!-- #region UPDATE password -->
+<script>
+  $("#update-password-form .save-btn").on("click", function (e) {
+
+    e.preventDefault();
+
+    const formElement = document.getElementById("update-password-form");
+
+    const data = {}
+
+    for (const pair of new FormData(formElement)) {
+
+      data[pair[0]] = pair[1]
+
+    }
+
+    postData(`{{ domains.panel }}/{{ lang }}/updatePassword`, data)
+      .then(function (data) {
+
+        $("#update-password-modal").modal("toggle");
+
+        if (data.success) {
+
+          $("#success-modal #success-message").text("{{ locales.alerts.success.updatePassword.message }}");
+
+          $("#success-modal").modal("toggle");
+
+        } else if (data.error) {
+
+          $("#error-alert #error-message").text(data.errorMessage)
+
+          $("#error-alert").css("display", "block");
+
+          $("#error-modal").modal("toggle");
+
+        }
+
+      }) // JSON-string from `response.json()` call
+      .catch(error => console.error(error));
+
+  });
+</script>
+<!-- #endregion -->
+
+<!-- #region UPDATE avatar -->
+<script>
+  $("#update-avatar-form .save-btn").on("click", function (e) {
+
+    if ($("#update-avatar-form input").val() !== "undefined" && $("#update-avatar-form input").val() !== null && $("#update-avatar-form input").val().length !== 0) {
+
+      var formData = new FormData(document.getElementById('update-avatar-form'));
+
+      $.ajax({
+        type: "POST",
+        url: "/upload",
+        data: formData,
+        dataType: "json",
+        encode: true,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (data) {
+
+          if (data.success) {
+
+            updateAvatarAjax(e, data.result)
+
+          } else if (data.error) {
+
+            $("#error-modal #error-message").text(data);
+
+            $("#error-modal").modal("toggle");
+
+          }
+
+        },
+        error: function (error) {
+          console.log(error);
+        }
+      });
+
+    } else {
+
+      alert("{{ locales.static.alerts.preSelect.message }}")
+
+    }
+
+  });
+
+  function updateAvatarAjax(e, avatarData) {
+
+    e.preventDefault();
+
+    postData(`{{ domains.panel }}/{{ lang }}/updateAvatar`, avatarData)
+      .then(function (data) {
+
+        $("#update-avatar-modal").modal("toggle");
+
+        if (data.success) {
+
+          $("#success-modal #success-alert").html("{{ locales.static.alerts.success.updateAvatar.message }}");
+
+          $("#success-modal").modal("toggle");
+
+        } else if (data.error) {
+
+          $("#error-alert #error-message").text(data.errorMessage)
+
+          $("#error-alert").css("display", "block");
+
+          $("#error-modal").modal("toggle");
+
+        }
+
+      }) // JSON-string from `response.json()` call
+      .catch(error => console.error(error));
+
+  }
+
+  $("#update-avatar-form input").on("change", (function () {
+
+    document.getElementById("avatar-input-label").innerText = document.getElementById("avatar-upload-input").files[0].name;
+
+  }));
+</script>
+<!-- #endregion -->
+
+<!-- #region Reset input fields on close -->
+
+<script>
+
+  $("#update-password-modal .close").on("click", function () {
+    $("#update-password-form input").val("")
+  });
+
+  $("#update-password-modal .cancel-btn").on("click", function () {
+    $("#update-password-form input").val("")
+  });
+
+  $("#update-avatar-modal .close").on("click", function () {
+    $("#update-avatar-form input").val("")
+  });
+
+
+  $("#update-avatar-modal .cancel-btn").on("click", function () {
+    $("#update-avatar-form input").val("")
+  });
+
+</script>
+
+<!-- #endregion -->
+
+{% endblock %}
+
+<!-- #endregion -->

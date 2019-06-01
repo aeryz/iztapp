@@ -1,0 +1,47 @@
+// Import fonts
+@import url('https://fonts.googleapis.com/css?family=Asap:400,500,600,700&subset=latin-ext')
+
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900')
+
+// Import tools
+@import "../../general/0-tools/_global.sass"
+
+// Import modules
+@import "../../general/1-modules/navbar.sass"
+
+@import "../../general/1-modules/footer.sass"
+
+@import "../1-modules/blog/jumbotron.sass"
+
+@import "../1-modules/blog/post.sass"
+
+@import "../1-modules/blog/subscribeForm.sass"
+
+body
+  font-family: Asap
+  background: url("https://static.bigdarkgames.com/img/concepts/space.png")
+  background-size: contain
+
+.main
+  background: $white
+  padding: 10px 0
+  .alert
+    margin: 0 auto;
+    margin-top: 50px
+    background: transparent
+    color: black
+    border-color: black
+    width: max-content
+    font-family: Source Sans Pro
+    font-style: italic
+    text-align: center
+
+#pagination
+  li
+    margin-top: 40px
+
+.divider
+  width: 50%
+  height: 1px
+  background-color: rgba(0, 0, 0, 0.2)
+  margin: 50px auto

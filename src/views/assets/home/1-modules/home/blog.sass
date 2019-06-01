@@ -1,0 +1,52 @@
+.blog
+  padding: 20px 0
+  .alert
+    margin: 0 auto;
+    margin-top: 20px
+    background: transparent
+    color: white
+    font-family: Source Sans Pro
+    font-style: italic
+    text-align: center
+.line
+  margin: 0 auto
+  margin-top: 20px
+  padding: 5px 0 5px 10px
+  border-left: 3px solid white
+  a
+    &:hover
+      text-decoration: none
+  .post
+    font-family: Source Sans Pro
+    width: 100%
+    color: white
+    margin: 20px 0
+    padding-left: 10px
+    position: relative
+    .post-title
+      @include fluid-type(500px, 1600px, 18px, 24px)
+      margin: 0 !important
+      font-weight: 500
+    span
+      display: block
+      margin-left: 2px
+      font-weight: 300
+    .author
+      @include fluid-type(500px, 1600px, 12px, 14px)
+    .category
+      @include fluid-type(500px, 1600px, 12px, 14px)
+      color: $navbarActiveColor
+    .content
+      @include fluid-type(500px, 1600px, 14px, 16px)
+      margin-left: 2px
+      font-weight: 100
+    &:before
+      content: ''
+      position: absolute
+      left: -18.5px
+      top: 0
+      width: 15px
+      height: 15px
+      border: 3px solid white
+      border-radius: 50%
+      background-color: white

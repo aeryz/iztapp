@@ -19,12 +19,8 @@ router.use(
 		try {
 			await next();
 		} catch (err) {
-			let errorCode = +err.message;
-			if (Number.isNaN(errorCode)) {
-				errorCode = 1;
-			}
 			ctx.body = {
-				errorCode: errorCode
+				errorCode: err.message
 			};
 		}
 	}
@@ -58,24 +54,16 @@ router.get('/api/get/account/:id',
 	}
 )
 
-router.post("/login",
+router.post("/api/login",
 	async (ctx) => {
-
-		// @ts-ignore
 		const loggedInUser = await AccountController.login(ctx.request.body);
 
 		// @ts-ignore
 		ctx.cookies.set("token", await helper.authenticate(loggedInUser._id, ctx.userAgent), {
-
 			// @ts-ignore
 			expires: new Date(Date.now() + ((config.jwtOptions.expiresIn * 1000) * 2))
-
 		});
-
-		ctx.body = {
-			success: true
-		};
-
+		await ctx.redirect("/");
 	}
 
 );
@@ -101,11 +89,11 @@ router.post('/api/delete/account',
 )
 
 router.post('/api/unlock/account/:hash',
-	helper.authenticateAdmin,
 	async (ctx) => {
-		ctx.body = await AccountController.delete(ctx.params.id);
+		await AccountController.unlockAccount(ctx.params.hash);
+		ctx.redirect("/login");
 	}
-)
+);
 
 router.post('/api/update/password/:id',
 	helper.authenticateAdmin,

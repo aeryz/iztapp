@@ -116,7 +116,6 @@ async function authenticateAdmin(ctx, next) {
 	const { id, exp } = await verifyToken(token, ctx.userAgent.source);
 	const wantedAdmin = await AccountController.getAccountById(id)
 	if (wantedAdmin.isLocked === true) throw new Error(config.errors.ACCOUNT.LOCKED_ACCOUNT);
-	console.log(wantedAdmin.type === config.accountTypes[2]);
 	if (wantedAdmin.type !== config.accountTypes[2]) throw new Error(config.errors.PERMISSON_DENIED);
 	if (exp - Math.floor(Date.now() / 1000) < config.jwtOptions.expiresIn / 2) ctx.cookies.set("token", await authenticate(wantedAdmin._id, ctx.userAgent), {
 		// @ts-ignore

@@ -1,0 +1,132 @@
+@import url('https://fonts.googleapis.com/css?family=Source+Code+Pro')
+
+@function strip-unit($value)
+  @return $value / ($value * 0 + 1)
+
+@mixin fluid-type($min-vw, $max-vw, $min-font-size, $max-font-size)
+  $u1: unit($min-vw)
+  $u2: unit($max-vw)
+  $u3: unit($min-font-size)
+  $u4: unit($max-font-size)
+
+  @if $u1 == $u2 and $u1 == $u3 and $u1 == $u4
+    &
+      font-size: $min-font-size;
+      @media screen and (min-width: $min-vw)
+        font-size: calc(#{$min-font-size} + #{strip-unit($max-font-size - $min-font-size)} * ((100vw - #{$min-vw}) / #{strip-unit($max-vw - $min-vw)}))
+      @media screen and (min-width: $max-vw)
+        font-size: $max-font-size
+
+.post
+  a
+    font-family: Source Sans Pro
+    &.back-link
+      &:hover
+        color: blue
+        text-decoration: none
+  .content
+    width: 80%
+    padding: 0px 50px
+    margin: 20px auto
+    border-left: 1px solid rgba(0,0,0,0.1)
+    border-right: 1px solid rgba(0,0,0,0.1)
+    h1.main-heading
+      color: $black
+      text-transform: capitalize
+      font-weight: 700
+      font-family: Source Sans Pro
+      text-align: center
+    .preview
+      color: gray
+      font-weight: 300
+      font-style: italic
+      text-align: center
+    .media
+      font-family: Source Sans Pro
+      margin-top: 20px
+      .avatar
+        +size(64px)
+        border-radius: 50%
+      .author
+        margin-bottom: 0px !important
+      small
+        display: block
+      a
+        color: gray
+        &:hover
+          text-decoration: none
+          color: $black
+    .post-content
+      line-height: 1.5em !important
+      font-family: Source Sans Pro !important
+      h1, h2, h3, h4, h5, h6
+        margin: 0.5em 0
+        font-weight: 600
+        font-family: Source Sans Pro
+      h1, h2
+        text-align: center
+      h3, h4, h5
+        text-align: left
+      h1
+        @include fluid-type(500px, 1600px, 24px, 32px)
+      h2
+        @include fluid-type(500px, 1600px, 22px, 30px)
+      h3
+        @include fluid-type(500px, 1600px, 16px, 24px)
+      h4
+        @include fluid-type(500px, 1600px, 16px, 23px)
+      h5
+        @include fluid-type(500px, 1600px, 16px, 20px)
+      h6, p
+        @include fluid-type(500px, 1200px, 14px, 16px)
+      h6
+        text-align: center
+        font-weight: 400
+      img
+        display: block
+        max-width: 100%
+        max-height: 300px
+        margin: 20px auto;
+      ul, ol
+        padding-left: 40px
+      ul
+        list-style: disc !important
+      ol
+        list-style: decimal !important
+      ul, ol
+        @include fluid-type(500px, 1200px, 14px, 16px)
+      em
+        font-style: italic !important
+      strong, b
+        font-weight: bold
+      code
+        color: green
+        font-family: Source Code Pro
+    .tag-list
+      display: block
+      .tag
+        margin-top: 10px
+        +padding(5px 10px)
+        background: $dividerColor
+        border-radius: 25px
+        font-weight: 600
+        display: inline-block
+        a
+          color: $black
+          &:hover
+            text-decoration: none
+            color: $linkActiveColor
+    .translation
+      display: block
+      margin-top: 20px !important
+      font-style: italic
+      right: 0px
+      &:hover
+        text-decoration: none
+        color: blue
+
+@media screen and (max-width: 760px)
+  .post
+    .content
+      width: 100%
+      padding: 0 20px

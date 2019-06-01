@@ -1,0 +1,69 @@
+{% extends "panel/templates/global.njk" %}
+
+<!-- #region Styles -->
+
+{% block styles %}
+
+<link rel="stylesheet" href="/assets/css/tags/all.css">
+
+{% endblock %}
+
+<!-- #endregion -->
+
+<!-- #region Body -->
+
+{% block wrapper %}
+
+<!-- #region Heading -->
+
+<h1 id="heading" class="h4">{{ locales.static.heading }}</h1>
+
+<!-- #endregion -->
+
+<!-- #region Tags -->
+
+{% if (tags | length) > 0 %}
+
+<ul class="list-unstyled">
+
+  {% for tag in tags %}
+
+  <li class="media">
+    <div class="media-body">
+      <!-- #region Name -->
+      <a class="name" href="/{{ lang }}/tags/{{ tag._id }}">{{ tag.name }}</a>
+      <!-- #endregion -->
+      <!-- #region Language -->
+      <div class="language"><span>{{ locales.static.language }} : </span>
+        {% if tag.lang == "tr" %}
+        {{ locales.languages.tr }}
+        {% else %}
+        {{ locales.languages.en }}
+        {% endif %}</div>
+      <!-- #endregion -->
+    </div>
+  </li>
+
+  <div class="dropdown-divider"></div>
+
+  {% endfor %}
+
+</ul>
+
+{% else %}
+
+<!-- #region Empty -->
+
+<div class="alert info-alert" role="alert" style="margin-top: 20px;">
+  {{ locales.static.empty }}
+</div>
+
+<!-- #endregion -->
+
+{% endif %}
+
+<!-- #endregion -->
+
+{% endblock %}
+
+<!-- #endregion -->

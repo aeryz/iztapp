@@ -1,0 +1,153 @@
+{% extends "panel/templates/global.njk" %}
+
+<!-- #region Body -->
+
+{% block wrapper %}
+
+<!-- #region Heading -->
+
+<h1 id="heading" class="h4">{{ locales.static.heading }}</h1>
+
+<!-- #endregion -->
+
+<!-- #region Alerts -->
+
+<div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-labelledby="error-title" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="error-title">{{ locales.static.alerts.error.heading }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="alert error-alert alert-dismissible fade show" id="error-alert" role="alert" style="display: none;">
+          <span id="error-message"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- #endregion -->
+
+<!-- #region Category Creation Form -->
+
+<form id="category-form">
+  <!-- #region Name -->
+  <div style="margin-top: 1rem;" class="form-group row">
+    <label for="input-name" class="col-sm-2 col-form-label">{{ locales.static.category.name }} : </label>
+    <div class="col-sm-10">
+      <input id="input-name" type="text" class="form-control" name="name" minlength="{{ limits.minNameLength }}"
+        maxlength="{{ limits.maxNameLength }}" required>
+    </div>
+  </div>
+  <!-- #endregion -->
+  <!-- #region Description -->
+  <div style="margin-top: 1rem;" class="form-group row">
+    <label for="input-description" class="col-sm-2 col-form-label">{{ locales.static.category.description }} : </label>
+    <div class="col-sm-10">
+      <input id="input-description" type="text" class="form-control" name="description" minlength="{{ limits.minDescriptionLength }}"
+        maxlength="{{ limits.maxDescriptionLength }}" required>
+    </div>
+  </div>
+  <!-- #endregion -->
+  <!-- #region Language -->
+  <div class="form-group row">
+    <label for="input-language" class="col-sm-2 col-form-label">{{ locales.static.category.language }} : </label>
+    <div class="col-sm-10">
+      <div class="input-group">
+        <select class="custom-select language" name="lang" required>
+          <option option disabled selected value>{{ locales.static.category.select }}</option>
+          <option value="tr">{{ locales.languages.tr }}</option>
+          <option value="en">{{ locales.languages.en }}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <!-- #endregion -->
+  <div class="dropdown-divider"></div>
+  <!-- #region Buttons -->
+  <div id="button-group" class="form-group row">
+    <div class="col-sm-10">
+      <button type="button" class="btn save-btn">{{ locales.static.buttonTexts.create }}</button>
+    </div>
+  </div>
+  <!-- #endregion -->
+
+</form>
+
+<!-- #endregion -->
+
+{% endblock %}
+
+<!-- #endregion -->
+
+<!-- #region Scripts -->
+
+{% block scripts %}
+
+<!-- #region POST -->
+<script>
+
+  $(".save-btn").on("click", function (e) {
+
+    e.preventDefault();
+
+    const formElement = document.getElementById("category-form");
+
+    const data = {}
+
+    for (const pair of new FormData(formElement)) {
+
+      data[pair[0]] = pair[1]
+
+    }
+
+    postData(`{{ domains.panel }}/{{ lang }}/categories/new`, data)
+      .then(function (data) {
+
+        if (data.success) {
+
+          window.location.href = `{{ domains.panel }}/{{ lang }}/categories/${data.redirectParam}`
+
+        } else if (data.error) {
+
+          $("#error-alert #error-message").text(data.errorMessage)
+
+          $("#error-alert").css("display", "block");
+
+          $("#error-modal").modal("toggle");
+
+        }
+
+      }) // JSON-string from `response.json()` call
+      .catch(error => console.error(error));
+
+    function postData(url = ``, data) {
+      // Default options are marked with *
+      return fetch(url, {
+        method: "POST", // *GET, POST, PUT, DELETE, etc.
+        mode: "cors", // no-cors, cors, *same-origin
+        cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+        credentials: "same-origin", // include, same-origin, *omit
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+          // "Content-Type": "application/x-www-form-urlencoded",
+        },
+        redirect: "follow", // manual, *follow, error
+        referrer: "no-referrer", // no-referrer, *client
+        body: JSON.stringify(data), // body data type must match "Content-Type" header
+      })
+        .then(response => response.json()); // parses response to JSON
+    }
+
+  });
+
+</script>
+<!-- #endregion -->
+
+{% endblock %}
+
+<!-- #endregion -->

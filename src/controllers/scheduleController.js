@@ -1,6 +1,7 @@
 import DatabaseController from "./databaseController";
 import config from "../config";
 import helpers from "../helpers";
+import CourseController from "./courseController";
 
 const ScheduleController = (() => ({
 
@@ -38,7 +39,8 @@ const ScheduleController = (() => ({
 
 		const now = new Date().toISOString();
 		entity.creationDate = now;
-		entity.days = [null, null, null, null, null]
+		entity.days = new Array(config.limits.weeklySchedule.dayNumber).fill(null);
+		entity.days = [null, null, null, null, null];
 
 		const newEntity = await DatabaseController.add("weeklySchedule", entity);
 
@@ -88,6 +90,7 @@ const ScheduleController = (() => ({
 
 		const now = new Date().toISOString();
 		entity.creationDate = now;
+		entity.courses = new Array(config.limits.dailySchedule.courseNumber).fill(null);
 
 		const newEntity = await DatabaseController.add("dailySchedule", entity);
 
@@ -110,6 +113,7 @@ const ScheduleController = (() => ({
 
 		wantedEntity.day = entity.day;
 		wantedEntity.type = entity.type;
+		wantedEntity.courses = entity.courses;
 
 		const updatedEntity = await DatabaseController.update("dailySchedule", wantedEntity);
 
@@ -176,6 +180,33 @@ const ScheduleController = (() => ({
 
 		if (deleteResult) return wantedEntity;
 		else throw new Error(config.errors.DELETE_FAILURE);
+	},
+
+	async addCourseToDaily(courseId, dailyScheduleId, hours) {
+		if (typeof courseId === "undefined" || courseId === null || typeof dailyScheduleId === "undefined" || dailyScheduleId === null) throw new Error(config.errors.MISSING_PARAMETER);
+
+		// validate courseId
+		courseId += "";
+		await helpers.validate(courseId, "id");
+
+		// validate dailyScheduleId
+		dailyScheduleId += "";
+		await helpers.validate(dailyScheduleId, "id");
+
+		const wantedDailySchedule = await this.getDailySchedule({ _id: dailyScheduleId });
+		const wantedCourse = await CourseController.getCourse({ _id: courseId });
+
+		if (wantedCourse.type !== wantedDailySchedule.type) throw new Error(config.errors.DAILY_SCHEDULE.TYPE_MISMATCH);
+		if (wantedDailySchedule.courses.includes(wantedCourse._id)) throw new Error(config.errors.DAILY_SCHEDULE.COURSE_EXISTS);
+
+		hours.forEach(hour => {
+			if (hour < config.limits.dailySchedule.minCourseHour || hour > config.limits.dailySchedule.maxCourseHour) throw new Error(config.errors.DAILY_SCHEDULE.VALIDATION.INVALID_HOUR);
+			wantedDailySchedule.courses[hour] = wantedCourse._id;
+		});
+
+		const updatedDailySchedule = await this.updateDailySchedule(wantedDailySchedule._id, wantedDailySchedule);
+
+		return updatedDailySchedule;
 	},
 
 }))();

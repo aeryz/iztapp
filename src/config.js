@@ -1,7 +1,3 @@
-// Read environment from .env file
-import dotenv from "dotenv";
-dotenv.config();
-
 // Import libraries
 import crypto from "crypto";
 import chalk from "chalk";
@@ -20,41 +16,24 @@ import Email from "./models/email";
 import EmailList from "./models/emailList";
 import Request from "./models/request";
 
-
-// Define env parser helper
-function parseIntFromEnvOr(name, defaultValue) {
-	if (typeof process.env[name] === "undefined" || process.env[name] === null) return defaultValue;
-	const parsedOption = +process.env[name];
-	if (Number.isNaN(parsedOption) || Math.floor(parsedOption) !== parsedOption) {
-		console.log(`${chalk.red.bold("(!)")} Invalid environment configuration detected: Expected an integer for option "${name}", instead got "${process.env[name]}"`);
-		process.exit(1);
-	}
-	return parsedOption;
-}
-
 // region Set configurations
 const config = {
 	mainDirectory: __dirname,
-	port: parseIntFromEnvOr("CONFIG_PORT", 5000),
-	isDev: process.env.NODE_ENV !== "production",
+	port: 5000,
 	owner: process.env.CONFIG_OWNER || "DEBAK",
 	databaseConnections: {
-		main: mongoose.createConnection(process.env.CONFIG_DATABASE || "mongodb://localhost:27017/iztapp")
+		main: mongoose.createConnection("mongodb://localhost:27017/iztapp")
 	},
-	supportedLangs: [
-		"en",
-		"tr"
-	],
 	limits,
-	minSalt: parseIntFromEnvOr("CONFIG_SALT_ROUNDS", 4),
-	maxSalt: parseIntFromEnvOr("CONFIG_SALT_ROUNDS", 12),
-	hashAlgorithm: process.env.CONFIG_HASH_ALGORITHM || "sha512",
-	encryptionAlgorithm: process.env.CONFIG_ENCRYPTION_ALGORITHM || "aes-256-cbc",
+	minSalt: 4,
+	maxSalt: 12,
+	hashAlgorithm: "sha512",
+	encryptionAlgorithm: "aes-256-cbc",
 	jwtOptions: {
-		secret: process.env.CONFIG_JWTOPTIONS_SECRET || "Default_Jwt_Secret",
-		idEncryptionSecret: crypto.createHash("sha256").update(process.env.CONFIG_JWTOPTIONS_ID_ENCRYPTION_SECRET || "Default_ID_Encryption_Secret").digest(),
-		idEncryptionIvSize: parseIntFromEnvOr("CONFIG_JWTOPTIONS_ID_ENCRYPTION_IV_SIZE", 16),
-		expiresIn: parseIntFromEnvOr("CONFIG_JWTOPTIONS_EXPIRESIN", 2629746)
+		secret: "Default_Jwt_Secret",
+		idEncryptionSecret: crypto.createHash("sha256").update("Default_ID_Encryption_Secret").digest(),
+		idEncryptionIvSize: 16,
+		expiresIn: 2629746
 	},
 	models: {
 		"account": Account,
@@ -163,7 +142,9 @@ const config = {
 			VALIDATION: {
 				INVALID_TYPE: "Given daily schedule type is not valid. Please enter a valid daily schedule type.",
 				INVALID_DAY: `Given day must be between ${limits.dailySchedule.minDayNumber} and ${limits.dailySchedule.maxDayNumber}.`
-			}
+			},
+			TYPE_MISMATCH: "Given daily schedule and course types must be the same.",
+			COURSE_EXISTS: "This daily schedule already contains given course."
 		},
 	}
 };

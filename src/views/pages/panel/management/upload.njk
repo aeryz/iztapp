@@ -1,0 +1,212 @@
+{% extends "panel/templates/global.njk" %}
+
+<!-- #region Styles -->
+{% block styles %}
+
+<link rel="stylesheet" href="/assets/css/management/upload.css">
+
+<style>
+
+  #upload-label:after {
+
+    content: "{{ locales.static.browse }}"
+
+  }
+
+</style>
+
+{% endblock %}
+
+<!-- #endregion -->
+
+<!-- #region Body -->
+
+{% block wrapper %}
+
+<!-- #region Alerts -->
+
+<div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-labelledby="error-title" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="error-title">{{ locales.static.alerts.error.heading }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="alert error-alert alert-dismissible fade show" id="error-alert" role="alert">
+          <span id="error-message"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="success-modal" tabindex="-1" role="dialog" aria-labelledby="success-title" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="success-title">{{ locales.static.alerts.success.heading }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="alert success-alert alert-dismissible fade show" id="success-alert" role="alert">
+          {{ locales.static.alerts.success.message }}
+        </div>
+        <div class="alert info-alert" id="result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="confirm-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-title" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirm-title">{{ locales.static.alerts.confirm.heading }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="alert error-alert alert-dismissible fade show" id="confirm-alert" role="alert">
+          {{ locales.static.alerts.confirm.message }}
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn accept-btn">{{ locales.static.alerts.confirm.buttonTexts.accept
+          }}</button>
+        <button type="button" class="btn reject-btn">{{ locales.static.alerts.confirm.buttonTexts.reject
+          }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- #endregion -->
+
+<!-- #region Heading -->
+
+<h1 id="heading" class="h4">{{ locales.static.heading }}</h1>
+
+<!-- #endregion -->
+
+<!-- #region Upload -->
+
+<form id="upload-form" method="POST">
+  <div class="form-group">
+    <div class="input-group mb-3">
+      <div class="custom-file">
+        <input type="file" class="custom-file-input" id="upload-input" name="image" type="image/*" required>
+        <label id="upload-label" class="custom-file-label" for="inputGroupFile02" aria-describedby="inputGroupFileAddon02">{{
+          locales.static.choose }}</label>
+      </div>
+      <div class="input-group-append">
+        <span class="input-group-text" id="upload-btn">{{ locales.static.upload }}</span>
+      </div>
+    </div>
+  </div>
+</form>
+
+<!-- #endregion -->
+
+{% endblock %}
+
+<!-- #endregion -->
+
+<!-- #region Scripts -->
+
+{% block scripts %}
+
+<!-- #region POST -->
+<script>
+
+  $("#upload-form input").on("change", (function () {
+
+    document.getElementById("upload-label").innerText = document.getElementById("upload-input").files[0].name;
+
+  }));
+
+  $("#confirm-modal .accept-btn").on("click", (function (e) {
+
+    if ($("#upload-form input").val() !== "undefined" && $("#upload-form input").val() !== null && $("#upload-form input").val().length !== 0) {
+
+      var formData = new FormData(document.getElementById('upload-form'));
+
+      $.ajax({
+        type: "POST",
+        url: "/upload",
+        data: formData,
+        dataType: "json",
+        encode: true,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (data) {
+
+          $("#confirm-modal").modal("toggle");
+
+          if (data.success) {
+
+            $("#success-modal #result").html(`<span>{{ locales.static.alerts.success.result }} :</span> ${data.result.image}`)
+
+            $("#success-modal").modal("toggle");
+
+            document.getElementById("upload-label").innerText = "{{ locales.static.choose }}";
+
+            $("#upload-form input").val("")
+
+          } else if (data.error) {
+
+            $("#error-modal #error-message").text(data);
+
+            $("#error-modal").modal("toggle");
+
+          }
+
+        },
+        error: function (error) {
+          console.log(error);
+        }
+      });
+
+    } else {
+
+      alert("{{ locales.static.alerts.preSelect.message }}")
+
+    }
+
+  }));
+
+
+</script>
+<!-- #endregion -->
+
+<!-- #region DELETE -->
+
+<script>
+
+  $("#upload-btn").on("click", function () {
+
+    if ($("#upload-form input").val() !== "undefined" && $("#upload-form input").val() !== null && $("#upload-form input").val().length !== 0) {
+
+      $("#confirm-modal").modal("toggle");
+
+    } else {
+
+      alert("{{ locales.static.alerts.preSelect.message }}")
+
+    }
+
+  });
+
+</script>
+
+<!-- #endregion -->
+
+{% endblock %}
+
+<!-- #endregion -->

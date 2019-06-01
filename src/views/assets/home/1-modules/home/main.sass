@@ -1,0 +1,15 @@
+@import "./blog.sass"
+@import "./about.sass"
+
+.main
+  background-color: rgba(0, 0, 0, 0.7)
+  .section-heading, .section-heading-about
+    text-align: center
+    color: white
+    font-family: Asap
+    font-weight: 600
+    background-color: rgba(0, 0, 0, 0.7)
+  .section-heading
+    @include fluid-type(500px, 1600px, 24px, 48px)
+  .section-heading-about
+    @include fluid-type(500px, 1600px, 18px, 48px)
