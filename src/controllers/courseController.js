@@ -2,6 +2,7 @@ import DatabaseController from "./databaseController";
 import config from "../config";
 import helpers from "../helpers";
 import AccountController from "./accountController";
+import RequestController from "./requestController";
 
 const CourseController = (() => ({
 
@@ -65,11 +66,18 @@ const CourseController = (() => ({
 
 		const courseCreator = await AccountController.getAccountById(entity.courseCreator);
 
+		let newEntity;
 		if (+courseCreator.type === 2) {
-			const newEntity = await DatabaseController.add("course", entity);
-			return newEntity;
+			newEntity = await DatabaseController.add("course", entity);
+		} else {
+			const requestEntity = {
+				body: entity,
+				type: 0,
+				createdBy: courseCreator._id
+			};
+			newEntity = await RequestController.add(requestEntity);
 		}
-		else { }
+		return newEntity;
 	},
 
 	async update(id, entity) {
@@ -115,7 +123,9 @@ const CourseController = (() => ({
 		// generate page path
 		entity.pagePath = await helpers.generatePagePath(entity.courseCode);
 
-		const wantedEntity = await this.getCourse({ _id: id });
+		const wantedEntity = await this.getCourse({
+			_id: id
+		});
 
 		wantedEntity.name = entity.name;
 		wantedEntity.description = entity.description;
@@ -129,20 +139,45 @@ const CourseController = (() => ({
 
 		const courseUpdator = await AccountController.getAccountById(entity.courseUpdator);
 
+		let newEntity;
 		if (+courseUpdator.type === 2) {
-			const updatedEntity = await DatabaseController.update("course", entity);
-			return updatedEntity;
+			newEntity = await DatabaseController.update("course", wantedEntity);
+		} else {
+			const requestEntity = {
+				body: entity,
+				type: 1,
+				createdBy: courseUpdator._id
+			};
+			newEntity = await RequestController.add(requestEntity);
 		}
-		else { }
+		return newEntity;
 	},
 
-	async delete(id) {
-		return DatabaseController.delete("course", {
+	async delete(id, deletorId) {
+		if (+deletorId.type === 2) {
+			const deleteResult = await DatabaseController.delete("course", {
+				_id: id
+			});
+			return deleteResult;
+		} else {
+			const requestEntity = {
+				body: id,
+				type: 2,
+				createdBy: deletorId
+			};
+			const newEntity = await DatabaseController.add("request", requestEntity);
+			return newEntity;
+		}
+	},
+
+	async publishCourse(id) {
+		const wantedEntity = await this.getCourse({
 			_id: id
 		});
-	},
-
-	async publishCourse(id) { }
+		wantedEntity.isOffered = true;
+		await DatabaseController.update("course", wantedEntity);
+		return wantedEntity;
+	}
 
 
 }))();
