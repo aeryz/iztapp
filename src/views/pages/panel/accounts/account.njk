@@ -1,0 +1,20 @@
+{% extends "panel/templates/global.njk" %}
+
+{% block wrapper %}
+<h1>Account - {{ wantedAccount.email }}</h1>
+
+<form action="/api/update/password/{{ wantedAccount._id }}" method="POST">
+	<div class="form-group">
+		<label for="newPassword">Enter new password</label>
+		<input type="password" class="form-control" id="newPassword" name="newPassword"
+			placeholder="Enter new password">
+	</div>
+	<button type="submit" class="btn btn-primary">Update Password</button>
+</form>
+<hr>
+<form action="/api/delete/account" method="POST">
+	<input type="text" value="{{ wantedAccount._id }}" name="id" hidden>
+	<button type="submit" class="btn btn-danger">Delete</button>
+</form>
+
+{% endblock %}

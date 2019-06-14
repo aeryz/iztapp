@@ -20,6 +20,10 @@ const mv = promisify(mvCallback);
 
 // import controllers
 import AccountController from "../controllers/accountController"
+import ScheduleController from "../controllers/scheduleController";
+import WorkerController from "../controllers/workerController";
+import EmailController from "../controllers/emailController";
+import EmailListController from "../controllers/emailListController";
 
 // initialize router
 const router = new Router();
@@ -28,6 +32,7 @@ const router = new Router();
 router.use(
 	async (ctx, next) => {
 		try {
+			if (typeof ctx.cookie === "undefined" || ctx.cookie === null) ctx.cookie = {};
 			await next();
 		} catch (err) {
 			ctx.body = {
@@ -81,7 +86,7 @@ router.get("/unlock/:hash",
 
 router.get("/",
 	async (ctx) => {
-		const token = ctx.cookies.get("token");
+		const token = ctx.cookie.token;
 		// @ts-ignore
 		if (typeof token === "undefined" || token === null) await ctx.redirect(`/login`);
 
@@ -92,6 +97,120 @@ router.get("/",
 router.get("/login",
 	async (ctx) => {
 		await ctx.render("panel/prelogin/login");
+	}
+);
+
+router.get("/panel/accounts",
+	async (ctx) => {
+		const wantedEntity = await AccountController.getAccountById(ctx.cookie.userId);
+		const wantedAccounts = await AccountController.getAccounts()
+		await ctx.render("panel/accounts/accounts", {
+			loggedAccount: wantedEntity,
+			accounts: wantedAccounts,
+			typeStrings: config.accountTypeStrings
+		});
+	}
+);
+
+router.get("/panel/accounts/add",
+	helpers.authenticateAdmin,
+	async (ctx) => {
+		await ctx.render("panel/accounts/add");
+	}
+);
+
+router.get("/panel/accounts/:id",
+	helpers.authenticateAdmin,
+	async (ctx) => {
+		const wantedEntity = await AccountController.getAccountById(ctx.params.id);
+		await ctx.render("panel/accounts/account", {
+			wantedAccount: wantedEntity,
+		});
+	}
+);
+
+router.get("/panel/emails",
+	async (ctx) => {
+		const wantedEmails = await EmailController.getEmails()
+		await ctx.render("panel/emails/emails", {
+			emails: wantedEmails,
+		});
+	}
+);
+
+router.get("/panel/emails/add",
+	async (ctx) => {
+		await ctx.render("panel/emails/add");
+	}
+);
+
+router.get("/panel/emailLists",
+	async (ctx) => {
+		const wantedEmailLists = await EmailListController.getEmailLists()
+		await ctx.render("panel/emaillists/emailLists", {
+			emailLists: wantedEmailLists,
+		});
+	}
+);
+
+router.get("/panel/emailLists/add",
+	async (ctx) => {
+		await ctx.render("panel/emaillists/add");
+	}
+);
+
+router.get("/panel/emailLists/:id",
+	async (ctx) => {
+		const wantedEmailList = await EmailListController.getEmailListById(ctx.params.id);
+		await ctx.render("panel/emaillists/emailList", {
+			emailList: wantedEmailList,
+		});
+	}
+);
+
+
+router.get("/panel/workers",
+	async (ctx) => {
+		const wantedWorkers = await WorkerController.getWorkers();
+		await ctx.render("panel/workers/workers", {
+			workers: wantedWorkers,
+		});
+	}
+);
+
+router.get("/panel/emails",
+	async (ctx) => {
+		const wantedWorkers = await WorkerController.getWorkers();
+		await ctx.render("panel/workers/workers", {
+			workers: wantedWorkers,
+		});
+	}
+);
+
+router.get("/panel/schedule/add",
+	async (ctx) => {
+		await ctx.render("panel/schedule/add");
+	}
+);
+
+router.get("/panel/schedule/weeklySchedules",
+	async (ctx) => {
+		const wantedEntities = await ScheduleController.getWeeklySchedules();
+		await ctx.render("panel/schedule/weeklySchedules", {
+			weeklySchedules: wantedEntities,
+			typeStrings: config.scheduleTypeStrings
+		});
+	}
+);
+
+router.get("/panel/schedule/weeklySchedule/:id",
+	async (ctx) => {
+		const wantedEntity = await ScheduleController.getWeeklySchedule({ _id: ctx.params.id });
+		await ctx.render("panel/schedule/weeklySchedule", {
+			weeklySchedule: wantedEntity,
+			types: config.scheduleTypes,
+			typeStrings: config.scheduleTypeStrings
+		});
 	}
 );
 

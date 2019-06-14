@@ -2,6 +2,7 @@ import DatabaseController from "./databaseController";
 import config from "../config";
 import helpers from "../helpers";
 import AccountController from "./accountController";
+import CourseController from "./courseController";
 
 const RequestController = (() => ({
 
@@ -62,10 +63,37 @@ const RequestController = (() => ({
 		id += "";
 		await helpers.validate(id, "id");
 
+		state = +state;
 		// validate state
 		if (Number.isNaN(state) || !config.requestStates.includes(state) || Math.floor(state) !== state) throw new Error(config.errors.REQUEST.VALIDATION.INVALID_STATE);
 
-		// ! TODO: Do What to do
+		if (state === 1) {
+			await RequestController.delete(id);
+			return true;
+		}
+
+		const wantedEntity = await this.getRequestById(id);
+
+		if (wantedEntity.type === 0) {
+			wantedEntity.body.courseCreator = 0;
+			const newEntity = await CourseController.add(wantedEntity.body);
+			await RequestController.delete(id);
+			return newEntity;
+		}
+		else if (wantedEntity.type === 1) {
+			wantedEntity.body.courseUpdator = 0;
+			const updatedEntity = await CourseController.update(wantedEntity.body.updatedCourseId, wantedEntity.body);
+			await RequestController.delete(id);
+			return updatedEntity;
+		}
+		else if (wantedEntity.type === 2) {
+			wantedEntity.body.courseDeletor = 0;
+			const deleteResult = await CourseController.delete(wantedEntity.body);
+			await RequestController.delete(id);
+			return deleteResult;
+		}
+
+		return false;
 	}
 
 

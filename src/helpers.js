@@ -112,16 +112,22 @@ async function authenticate(id, userAgent) {
 
 async function authenticateAdmin(ctx, next) {
 	const { token } = ctx.cookie;
-	if (typeof token === "undefined" || token === null) throw new Error(config.errors.PERMISSION_DENIED);
+	if (typeof token === "undefined" || token === null) throw new Error(config.errors.NOT_LOGGED_IN);
 	const { id, exp } = await verifyToken(token, ctx.userAgent.source);
 	const wantedAdmin = await AccountController.getAccountById(id)
 	if (wantedAdmin.isLocked === true) throw new Error(config.errors.ACCOUNT.LOCKED_ACCOUNT);
-	if (wantedAdmin.type !== config.accountTypes[2]) throw new Error(config.errors.PERMISSON_DENIED);
+	if (wantedAdmin.type !== config.accountTypes[2]) throw new Error(config.errors.PERMISSION_DENIED);
 	if (exp - Math.floor(Date.now() / 1000) < config.jwtOptions.expiresIn / 2) ctx.cookies.set("token", await authenticate(wantedAdmin._id, ctx.userAgent), {
 		// @ts-ignore
 		expires: new Date(Date.now() + ((config.jwtOptions.expiresIn * 1000) * 2)),
 		overwrite: true
 	});
+	await next();
+}
+
+async function isLoggedIn(ctx, next) {
+	const token = ctx.cookie.token;
+	if (typeof token === "undefined" || token === null) throw new Error(config.errors.NOT_LOGGED_IN);
 	await next();
 }
 
@@ -136,6 +142,7 @@ async function generatePasswordHash(password, salt) {
 export default {
 	authenticate,
 	authenticateAdmin,
+	isLoggedIn,
 	validate,
 	generatePagePath,
 	generateHash,

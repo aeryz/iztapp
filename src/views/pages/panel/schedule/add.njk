@@ -1,0 +1,17 @@
+{% extends "panel/templates/global.njk" %}
+
+{% block wrapper %}
+<h1>Create Weekly Schedule</h1>
+
+<form action="/api/add/weeklySchedule" method="POST">
+	<label for="semester">Semester</label>
+	<input type="number" name="semester" id="semester" required>
+	<label for="type">Type</label>
+	<select name="type" id="type" required>
+		<option value="0" selected>Lisans</option>
+		<option value="1">Yüksek</option>
+		<option value="2">Doktora</option>
+	</select>
+	<button type="submit">Add</button>
+</form>
+{% endblock %}

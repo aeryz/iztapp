@@ -1,0 +1,10 @@
+{% extends "panel/templates/global.njk" %}
+
+{% block wrapper %}
+<h1>Workers</h1>
+
+{% for worker in workers %}
+{{ worker.email }}
+{% endfor %}
+
+{% endblock %}

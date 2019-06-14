@@ -1,0 +1,15 @@
+{% extends "panel/templates/global.njk" %}
+
+{% block wrapper %}
+<h1>Add Email</h1>
+
+<form action="/api/add/email" method="POST">
+	<div class="form-group">
+		<label for="email">Enter email</label>
+		<input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp"
+			placeholder="Enter email">
+	</div>
+	<button type="submit" class="btn btn-primary">Add Email</button>
+</form>
+
+{% endblock %}

@@ -15,7 +15,7 @@ const RequestSchema = new Schema({
 		required: true
 	},
 	body: {
-		type: String,
+		type: Object,
 		required: true
 	},
 	status: {

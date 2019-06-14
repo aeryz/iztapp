@@ -8,7 +8,7 @@ const WeeklyScheduleSchema = new Schema({
 	days: {
 		type: [{
 			type: Schema.Types.ObjectId,
-			required: true,
+			required: false,
 			ref: "dailySchedule"
 		}],
 		required: true

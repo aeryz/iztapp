@@ -43,7 +43,7 @@ const AccountController = (() => ({
 
 		// validate type
 		entity.type = +entity.type
-		if (Number.isNaN(entity.type) || !config.accountTypes.includes(entity.type) || Math.floor(entity.type) !== entity.type) throw new Error(config.errors.ACCOUNT.VALIDATION.INVALID_TYPE);
+		if (Number.isNaN(entity.type) || entity.type === 0 || !config.accountTypes.includes(entity.type) || Math.floor(entity.type) !== entity.type) throw new Error(config.errors.ACCOUNT.VALIDATION.INVALID_TYPE);
 
 		// set other fields
 		const now = new Date().toISOString();

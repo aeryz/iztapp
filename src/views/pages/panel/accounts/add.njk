@@ -1,0 +1,27 @@
+{% extends "panel/templates/global.njk" %}
+
+{% block wrapper %}
+<h1>Add Account</h1>
+
+<form action="/api/add/account" method="POST">
+	<div class="form-group">
+		<label for="email">Enter email</label>
+		<input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp"
+			placeholder="Enter email">
+	</div>
+	<div class="form-group">
+		<label for="password">Enter password</label>
+		<input type="password" class="form-control" id="password" name="password" placeholder="Enter password">
+	</div>
+	<div class="form-group">
+		<label for="type">Account Type</label>
+		<select class="form-control" id="type" name="type">
+			<option value="1">Content Manager</option>
+			<option value="2">Admin</option>
+		</select>
+	</div>
+	<button type="submit" class="btn btn-primary">Add Account</button>
+</form>
+
+
+{% endblock %}

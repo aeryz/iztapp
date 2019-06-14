@@ -12,7 +12,7 @@ const DailyScheduleSchema = new Schema({
 	courses: {
 		type: [{
 			type: Schema.Types.ObjectId,
-			required: true,
+			required: false,
 			ref: "course"
 		}],
 		required: true

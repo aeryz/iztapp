@@ -2,6 +2,7 @@ import DatabaseController from "./databaseController";
 import config from "../config";
 import helpers from "../helpers";
 import CourseController from "./courseController";
+import course from "../models/course";
 
 const ScheduleController = (() => ({
 
@@ -78,7 +79,7 @@ const ScheduleController = (() => ({
 
 	async addDailySchedule(entity) {
 		// validate entity
-		if (typeof entity === "undefined" || entity === null || typeof entity.type === "undefined" || entity.type === null || typeof entity.day === "undefined" || entity.day === null) throw new Error(config.errors.MISSING_PARAMETER);
+		if (typeof entity === "undefined" || entity === null || typeof entity.type === "undefined" || entity.type === null || typeof entity.day === "undefined" || entity.day === null || typeof entity.courses === "undefined" || entity.courses === null) throw new Error(config.errors.MISSING_PARAMETER);
 
 		// validate type
 		entity.type = +entity.type
@@ -88,9 +89,12 @@ const ScheduleController = (() => ({
 		entity.day = +entity.day
 		if (entity.semester < config.limits.dailySchedule.minDayNumber || entity.semester > config.limits.dailySchedule.maxDayNumber) throw new Error(config.errors.DAILY_SCHEDULE.VALIDATION.INVALID_DAY);
 
+		// validate courses
+		if (!Array.isArray(entity.courses)) throw new Error(config.errors.DAILY_SCHEDULE.VALIDATION.INVALID_COURSES);
+		if (entity.courses.length !== config.limits.dailySchedule.courseNumber) throw new Error(config.errors.DAILY_SCHEDULE.VALIDATION.INVALID_COURSE_COUNT);
+
 		const now = new Date().toISOString();
 		entity.creationDate = now;
-		entity.courses = new Array(config.limits.dailySchedule.courseNumber).fill(null);
 
 		const newEntity = await DatabaseController.add("dailySchedule", entity);
 

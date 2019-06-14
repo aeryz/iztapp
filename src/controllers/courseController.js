@@ -31,6 +31,12 @@ const CourseController = (() => ({
 		// validate course code
 		entity.courseCode += "";
 		if (entity.courseCode.length < config.limits.course.minCourseCodeLength || entity.courseCode.length > config.limits.course.maxCourseCodeLength) throw new Error(config.errors.COURSE.VALIDATION.INVALID_COURSE_CODE);
+		let duplicated = null;
+		try {
+			duplicated = await this.getCourse({ courseCode: entity.courseCode });
+		} catch { }
+		if (!(typeof duplicated === "undefined" || duplicated === null)) throw new Error(config.errors.COURSE.DUPLICATION);
+
 
 		// validate department code
 		entity.departmentCode += "";
@@ -64,7 +70,10 @@ const CourseController = (() => ({
 		// set creation date
 		entity.creationDate = now;
 
-		const courseCreator = await AccountController.getAccountById(entity.courseCreator);
+		let courseCreator;
+
+		if (entity.courseCreator === 0) courseCreator = { type: 2 }
+		else courseCreator = await AccountController.getAccountById(entity.courseCreator);
 
 		let newEntity;
 		if (+courseCreator.type === 2) {
@@ -84,6 +93,10 @@ const CourseController = (() => ({
 		// validate entity
 		if (typeof entity === "undefined" || entity === null || typeof id === "undefined" || id === null || typeof entity.name === "undefined" || entity.name === null || typeof entity.description === "undefined" || entity.description === null || typeof entity.courseCode === "undefined" || entity.courseCode === null || typeof entity.departmentCode === "undefined" || entity.departmentCode === null || typeof entity.topics === "undefined" || entity.topics === null || typeof entity.type === "undefined" || entity.type === null || typeof entity.workers === "undefined" || entity.workers === null || typeof entity.lectureHours === "undefined" || entity.lectureHours === null || typeof entity.labHours === "undefined" || entity.labHours === null || typeof entity.credits === "undefined" || entity.credits === null || typeof entity.ects === "undefined" || entity.ects === null) throw new Error(config.errors.MISSING_PARAMETER);
 
+		const wantedEntity = await this.getCourse({
+			_id: id
+		});
+
 		// validate name
 		entity.name += "";
 		if (entity.name.length < config.limits.course.minNameLength || entity.name.length > config.limits.course.maxNameLength) throw new Error(config.errors.COURSE.VALIDATION.INVALID_NAME);
@@ -95,6 +108,12 @@ const CourseController = (() => ({
 		// validate course code
 		entity.courseCode += "";
 		if (entity.courseCode.length < config.limits.course.minCourseCodeLength || entity.courseCode.length > config.limits.course.maxCourseCodeLength) throw new Error(config.errors.COURSE.VALIDATION.INVALID_COURSE_CODE);
+		let duplicated = null;
+		try {
+			duplicated = await this.getCourse({ courseCode: entity.courseCode });
+		} catch { }
+		if (!(typeof duplicated === "undefined" || duplicated === null) && duplicated._id !== wantedEntity._id) throw new Error(config.errors.COURSE.DUPLICATION);
+
 
 		// validate department code
 		entity.departmentCode += "";
@@ -123,10 +142,6 @@ const CourseController = (() => ({
 		// generate page path
 		entity.pagePath = await helpers.generatePagePath(entity.courseCode);
 
-		const wantedEntity = await this.getCourse({
-			_id: id
-		});
-
 		wantedEntity.name = entity.name;
 		wantedEntity.description = entity.description;
 		wantedEntity.courseCode = entity.courseCode;
@@ -136,13 +151,18 @@ const CourseController = (() => ({
 		wantedEntity.labHours = entity.labHours;
 		wantedEntity.credits = entity.credits;
 		wantedEntity.ects = entity.ects;
+		wantedEntity.pagePath = await helpers.generatePagePath(wantedEntity.courseCode);
 
-		const courseUpdator = await AccountController.getAccountById(entity.courseUpdator);
+		let courseUpdator;
+
+		if (entity.courseUpdator === 0) courseUpdator = { type: 2 }
+		else courseUpdator = await AccountController.getAccountById(entity.courseUpdator);
 
 		let newEntity;
 		if (+courseUpdator.type === 2) {
 			newEntity = await DatabaseController.update("course", wantedEntity);
 		} else {
+			entity.updatedCourseId = wantedEntity._id;
 			const requestEntity = {
 				body: entity,
 				type: 1,
@@ -154,7 +174,10 @@ const CourseController = (() => ({
 	},
 
 	async delete(id, deletorId) {
-		if (+deletorId.type === 2) {
+		let courseDeletor;
+		if (deletorId === 0) courseDeletor = { type: 2 }
+		else courseDeletor = await AccountController.getAccountById(deletorId);
+		if (courseDeletor.type === 2) {
 			const deleteResult = await DatabaseController.delete("course", {
 				_id: id
 			});
@@ -165,7 +188,7 @@ const CourseController = (() => ({
 				type: 2,
 				createdBy: deletorId
 			};
-			const newEntity = await DatabaseController.add("request", requestEntity);
+			const newEntity = await RequestController.add(requestEntity);
 			return newEntity;
 		}
 	},

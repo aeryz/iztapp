@@ -1,0 +1,15 @@
+{% extends "panel/templates/global.njk" %}
+
+{% block wrapper %}
+<h1>Add Email List</h1>
+
+<form action="/api/add/emailList" method="POST">
+	<div class="form-group">
+		<label for="name">Enter list name</label>
+		<input type="text" class="form-control" id="name" name="name" placeholder="Enter list name">
+	</div>
+	<button type="submit" class="btn btn-primary">Add Email List</button>
+</form>
+
+
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends "panel/templates/global.njk" %}
+
+{% block wrapper %}
+<h1>Email List - {{ emailList.name }}</h1>
+
+<form action="/api/update/emailList" method="POST">
+	<div class="form-group">
+		<input type="text" name="id" value="{{ emailList._id }}" hidden>
+		<label for="name">Enter new name</label>
+		<input type="text" class="form-control" id="name" name="name" value="{{ emailList.name }}"
+			placeholder="Enter new name" required>
+	</div>
+	<button type="submit" class="btn btn-primary">Update Email List</button>
+</form>
+<hr>
+<form action="/api/delete/emailList/{{ emailList._id }}" method="GET">
+	<input type="text" value="{{ wantedAccount._id }}" name="id" hidden>
+	<button type="submit" class="btn btn-danger">Delete</button>
+</form>
+{% endblock %}

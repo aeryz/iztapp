@@ -101,7 +101,10 @@ const EmailListController = (() => ({
 		const wantedEmail = await DatabaseController.findOneByQuery("email", { _id: emailId });
 		const wantedEmailList = await this.getEmailListById(emailListId);
 
-		if (!wantedEmailList.emails.includes(wantedEmail._id)) throw new Error(config.errors.EMAIL_LIST.NOT_IN_LIST);
+		const wantedEmailId = wantedEmail._id + "";
+		const wantedEmailListEmails = wantedEmailList.emails.map(email => email + "");
+
+		if (!wantedEmailListEmails.includes(wantedEmailId)) throw new Error(config.errors.EMAIL_LIST.NOT_IN_LIST);
 
 		// Remove email
 		wantedEmailList.emails.splice(wantedEmailList.emails.indexOf(wantedEmail._id), 1);

@@ -1,0 +1,45 @@
+{% extends "panel/templates/global.njk" %}
+
+{% block wrapper %}
+<h1>Accounts</h1>
+
+{% if loggedAccount.type == 2 %}
+<a href="/panel/accounts/add" class="add-account">
+	<button type="button" class="btn btn-dark">Add New Account
+	</button>
+</a>
+{% endif %}
+
+<br>
+<hr>
+
+<h3>My account</h3>
+<a href="/panel/accounts/{{ loggedAccount._id }}">{{ loggedAccount.email }}</a>
+
+<br>
+<hr>
+
+{% if loggedAccount.type == 2 %}
+<h3>All Accounts</h3>
+<table class="table">
+	<thead>
+		<tr>
+			<th scope="col">Email</th>
+			<th scope="col">Type</th>
+			<th scope="col">Option</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for account in accounts %}
+		<tr>
+			<td>{{ account.email }}</td>
+			<td>{{ typeStrings[account.type] }}</td>
+			<td><a href="/panel/accounts/{{ account._id }}">Edit/Delete</a></td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+{% endif %}
+
+
+{% endblock %}

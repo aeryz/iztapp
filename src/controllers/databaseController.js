@@ -45,7 +45,7 @@ const DatabaseController = (() => ({
 			await newEntity.save();
 			return newEntity;
 		} catch (err) {
-			throw new Error(config.errors.ADD_FAILURE);
+			throw new Error(err);
 		}
 	},
 
@@ -62,7 +62,7 @@ const DatabaseController = (() => ({
 				{ $set: query },
 				{ returnNewDocument: true }
 			);
-			return updatedEntity;
+			return query;
 		} catch (err) {
 			throw new Error(config.errors.UPDATE_FAILURE);
 		}
@@ -77,7 +77,8 @@ const DatabaseController = (() => ({
 
 		try {
 			const deleteResult = await model.deleteOne(query);
-			return deleteResult;
+			if (deleteResult.deletedCount === 0) return false;
+			else return true;
 		} catch (err) {
 			throw new Error(config.errors.DELETE_FAILURE);
 		}

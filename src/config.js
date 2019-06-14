@@ -50,11 +50,20 @@ const config = {
 		1, // Content managers
 		2 // Admins
 	],
+	accountTypeStrings: {
+		1: "Content Manager",
+		2: "Admin"
+	},
 	scheduleTypes: [
 		0, // Lisans
 		1, // Yüksek
 		2 // Doktora
 	],
+	scheduleTypeStrings: {
+		0: "Lisans",
+		1: "Yüksek",
+		2: "Doktora"
+	},
 	requestTypes: [
 		0, // Add
 		1, // Update
@@ -76,8 +85,9 @@ const config = {
 		DELETE_FAILURE: "Delete operation is not done because of some reason. Please try again.",
 		UPDATE_FAILURE: "Update operation is not done because of some reason. Please try again.",
 		ADD_FAILURE: "Add operation is not done because of some reason. Please try again.",
-		PERMISSON_DENIED: "You don't have access to do that.",
+		PERMISSION_DENIED: "You don't have access to do that.",
 		SESSION_EXPIRED: "Your session is expired. Please login again.",
+		NOT_LOGGED_IN: "You have not logged in yet.",
 		VALIDATION: {
 			INVALID_VALIDATION_TYPE: "Given validation type is not valid. Please enter a valid validation type.",
 			INVALID_LIMIT: "Given limit amount is not a positive integer. Please enter a positive integer for limit amount to proceed.",
@@ -117,6 +127,7 @@ const config = {
 			}
 		},
 		COURSE: {
+			DUPLICATION: "This course already exists.",
 			VALIDATION: {
 				INVALID_NAME: `Given course name length must be between ${limits.course.minNameLength} and ${limits.course.maxNameLength} characters.`,
 				INVALID_DESCRIPTION: `Given course description length must be between ${limits.course.minDescriptionLength} and ${limits.course.maxDescriptionLength} characters.`,
