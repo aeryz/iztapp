@@ -230,15 +230,6 @@ router.get("/panel/workers",
 	}
 );
 
-router.get("/panel/emails",
-	async (ctx) => {
-		const wantedWorkers = await WorkerController.getWorkers();
-		await ctx.render("panel/workers/workers", {
-			workers: wantedWorkers,
-		});
-	}
-);
-
 router.get("/panel/schedules/add",
 	async (ctx) => {
 		await ctx.render("panel/schedule/add");
