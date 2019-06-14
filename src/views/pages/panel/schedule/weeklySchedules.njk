@@ -3,8 +3,25 @@
 {% block wrapper %}
 <h1>Weekly Schedules</h1>
 
-{% for weeklySchedule in weeklySchedules %}
-<a href="/panel/schedule/weeklySchedule/{{ weeklySchedule._id }}">Type: {{ typeStrings[weeklySchedule.type] }},
-	Semester: {{ weeklySchedule.semester }}</a>
-{% endfor %}
+<hr>
+
+<table class="table">
+	<thead>
+		<tr>
+			<th scope="col">Type</th>
+			<th scope="col">Semester</th>
+			<th scope="col">Option</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for weeklySchedule in weeklySchedules %}
+		<tr>
+			<td>{{ typeStrings[weeklySchedule.type] }}</td>
+			<td>{{ weeklySchedule.semester }}</td>
+			<td><a href="/panel/schedules/weeklySchedule/{{ weeklySchedule._id }}">Details</a></td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+
 {% endblock %}

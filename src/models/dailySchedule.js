@@ -17,6 +17,15 @@ const DailyScheduleSchema = new Schema({
 		}],
 		required: true
 	},
+	semester: {
+		type: Number,
+		required: true,
+		min: 1,
+	},
+	type: {
+		type: Number,
+		required: true
+	},
 	creationDate: {
 		type: Date,
 		required: true,

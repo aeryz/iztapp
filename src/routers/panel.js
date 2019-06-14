@@ -239,13 +239,13 @@ router.get("/panel/emails",
 	}
 );
 
-router.get("/panel/schedule/add",
+router.get("/panel/schedules/add",
 	async (ctx) => {
 		await ctx.render("panel/schedule/add");
 	}
 );
 
-router.get("/panel/schedule/weeklySchedules",
+router.get("/panel/schedules/weeklySchedules",
 	async (ctx) => {
 		const wantedEntities = await ScheduleController.getWeeklySchedules();
 		await ctx.render("panel/schedule/weeklySchedules", {
@@ -255,13 +255,14 @@ router.get("/panel/schedule/weeklySchedules",
 	}
 );
 
-router.get("/panel/schedule/weeklySchedule/:id",
+router.get("/panel/schedules/weeklySchedule/:id",
 	async (ctx) => {
 		const wantedEntity = await ScheduleController.getWeeklySchedule({ _id: ctx.params.id });
+		const wantedCourses = await CourseController.getCourses();
 		await ctx.render("panel/schedule/weeklySchedule", {
 			weeklySchedule: wantedEntity,
-			types: config.scheduleTypes,
-			typeStrings: config.scheduleTypeStrings
+			config: config,
+			courses: wantedCourses
 		});
 	}
 );

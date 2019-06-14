@@ -293,7 +293,7 @@ router.post('/api/add/weeklySchedule',
 		const newEntity = await ScheduleController.addWeeklySchedule(
 			ctx.request.body
 		);
-		ctx.redirect(`/panel/schedule/weeklySchedule/${newEntity._id}`)
+		await ctx.redirect(`/panel/schedule/weeklySchedule/${newEntity._id}`)
 	}
 );
 
@@ -303,7 +303,7 @@ router.post('/api/update/weeklySchedule/:id',
 			ctx.params.id,
 			ctx.request.body
 		);
-		ctx.redirect(`/panel/schedule/weeklySchedule/${updatedEntity._id}`)
+		await ctx.redirect(`/panel/schedules/weeklySchedule/${updatedEntity._id}`)
 	}
 );
 

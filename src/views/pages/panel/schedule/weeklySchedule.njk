@@ -4,53 +4,57 @@
 <h1>Weekly Schedule</h1>
 
 <form action="/api/update/weeklySchedule/{{ weeklySchedule._id }}" method="POST">
-	<label for="semester">Semester</label>
-	<input type="number" name="semester" id="semester" value="{{ weeklySchedule.semester }}" required>
-	<label for="type">Type</label>
-	<select name="type" id="type" required>
-		{% for type in types %}
-		{% if weeklySchedule.type == type %}
-		<option value="{{ type }}" selected>{{ typeStrings[type] }}</option>
-		{% else %}
-		<option value="{{ type }}">{{ typeStrings[type] }}</option>
-		{% endif %}
-		{% endfor %}
-	</select>
-	<button type="submit">Update</button>
+	<div class="form-group">
+		<label for="semester">Weekly Schedule Semester</label>
+		<input type="number" class="form-control" id="semester" name="semester" placeholder="Enter semester"
+			value="{{ weeklySchedule.semester }}">
+	</div>
+	<div class="form-group">
+		<label for="type">Weekly Schedule Type</label>
+		<select class="form-control" id="type" name="type">
+			{% for type in config.scheduleTypes %}
+			{% if type == course.type %}
+			<option value="{{ course.type }}" selected>{{ config.scheduleTypeStrings[course.type] }}</option>
+			{% else %}
+			<option value="{{ type }}">{{ config.scheduleTypeStrings[type] }}</option>
+			{% endif %}
+			{% endfor %}
+		</select>
+	</div>
+	<button type="submit" class="btn btn-primary">Update Weekly Schedule</button>
+</form>
+<hr>
+<form action="/api/delete/weeklySchedule/{{ weeklySchedule._id }}" method="GET">
+	<button type="submit" class="btn btn-danger">Delete</button>
 </form>
 
-<div class="days">
-	{% set dayCounter = 0 %}
-	{% for day in weeklySchedule.days %}
-	{% if day == null %}
-	<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#day-modal-{{ dayCounter }}">
-		Launch demo modal
-	</button>
-	<div class="modal fade" id="day-modal-{{ dayCounter }}" tabindex="-1" role="dialog"
-		aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<form action="">
-						<input type="number" name="type" value="{{ weeklySchedule.type }}" hidden>
-						<input type="number" name="day" value="{{ dayCounter }}" hidden>
-					</form>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-					<button type="button" class="btn btn-primary">Save changes</button>
-				</div>
+<hr>
+
+<h1 class="text-center">Days</h1>
+<br>
+<div class="row justify-content-md-center">
+
+	{% for k in range(1, config.limits.weeklySchedule.dayNumber + 1) %}
+	<div class="col-md-2">
+		<form action="">
+			<h3 class="text-center">Day {{k}}</h3>
+			<hr>
+			<input type="number" name="type" value="{{ weeklySchedule.type }}" hidden>
+			<input type="number" name="semester" value="{{ weeklySchedule.semester }}" hidden>
+			{% for i in range(1, config.limits.dailySchedule.courseNumber + 1) %}
+			<div class="form-group">
+				<label for="hour-1">{{i}}. Hour</label>
+				<select class="form-control" name="hour-{{i}}" id="hour-{{i}}">
+					<option value="null" selected>Empty</option>
+					{% for course in courses %}
+					<option value="{{ course._id }}">{{ course.courseCode }}</option>
+					{% endfor %}
+				</select>
 			</div>
-		</div>
+			{% endfor %}
+			<button type="button" class="btn btn-success btn-block">Save Day</button>
+		</form>
 	</div>
-	{% set dayCounter = dayCounter + 1 %}
-	{% endif %}
 	{% endfor %}
 </div>
 {% endblock %}
