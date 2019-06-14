@@ -185,36 +185,40 @@ router.post('/api/add/emailList',
 
 router.post('/api/update/emailList',
 	async (ctx) => {
-		ctx.body = await EmailListController.update(
+		const updatedEntity = await EmailListController.update(
 			ctx.request.body.id,
 			ctx.request.body
 		);
+		await ctx.redirect(`/panel/emailLists/${updatedEntity._id}`)
 	}
 );
 
 router.get('/api/delete/emailList/:id',
 	async (ctx) => {
-		ctx.body = await EmailListController.delete(
+		await EmailListController.delete(
 			ctx.params.id
 		);
+		await ctx.redirect("/panel/emailLists")
 	}
 );
 
 router.post('/api/append/emailList',
 	async (ctx) => {
-		ctx.body = await EmailListController.addEmailToList(
+		await EmailListController.addEmailToList(
 			ctx.request.body.emailId,
 			ctx.request.body.emailListId
 		);
+		await ctx.redirect(`/panel/emailLists/${ctx.request.body.emailListId}`);
 	}
 );
 
 router.post('/api/remove/email',
 	async (ctx) => {
-		ctx.body = await EmailListController.removeEmailFromList(
+		EmailListController.removeEmailFromList(
 			ctx.request.body.emailId,
 			ctx.request.body.emailListId
 		);
+		await ctx.redirect(`/panel/emailLists/${ctx.request.body.emailListId}`);
 	}
 );
 
@@ -430,28 +434,31 @@ router.get('/api/get/course/:id',
 router.post('/api/add/course',
 	async (ctx) => {
 		ctx.request.body.courseCreator = ctx.cookie.userId;
-		ctx.body = await CourseController.add(
+		await CourseController.add(
 			ctx.request.body
 		);
+		await ctx.redirect(`url`)
 	}
 );
 
 router.post('/api/update/course/:id',
 	async (ctx) => {
 		ctx.request.body.courseUpdator = ctx.cookie.userId;
-		ctx.body = await CourseController.update(
+		await CourseController.update(
 			ctx.params.id,
 			ctx.request.body
-		)
+		);
+		await ctx.redirect(`/panel/courses/${ctx.params.id}`);
 	}
-)
+);
 
 router.get('/api/delete/course/:id',
 	async (ctx) => {
-		ctx.body = await CourseController.delete(
+		await CourseController.delete(
 			ctx.params.id,
 			ctx.cookie.userId
 		);
+		await ctx.redirect("/panel/courses");
 	}
 );
 

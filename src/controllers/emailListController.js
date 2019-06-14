@@ -1,6 +1,7 @@
 import DatabaseController from "./databaseController";
 import config from "../config";
 import helpers from "../helpers";
+import email from "../models/email";
 
 const EmailListController = (() => ({
 

@@ -7,7 +7,7 @@ import CourseController from "./courseController";
 const RequestController = (() => ({
 
 	async getRequests(limit = 0, skip = 0) {
-		const wantedRequests = await DatabaseController.find("account", limit, skip);
+		const wantedRequests = await DatabaseController.find("request", limit, skip);
 		return wantedRequests;
 	},
 

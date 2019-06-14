@@ -69,6 +69,11 @@ const config = {
 		1, // Update
 		2 // Delete
 	],
+	requestTypeStrings: {
+		0: "Add",
+		1: "Update",
+		2: "Delete"
+	},
 	requestStatus: [
 		0, // Pending
 		1, // Accepted

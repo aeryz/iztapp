@@ -24,6 +24,8 @@ import ScheduleController from "../controllers/scheduleController";
 import WorkerController from "../controllers/workerController";
 import EmailController from "../controllers/emailController";
 import EmailListController from "../controllers/emailListController";
+import CourseController from "../controllers/courseController";
+import RequestController from "../controllers/requestController";
 
 // initialize router
 const router = new Router();
@@ -162,12 +164,62 @@ router.get("/panel/emailLists/add",
 router.get("/panel/emailLists/:id",
 	async (ctx) => {
 		const wantedEmailList = await EmailListController.getEmailListById(ctx.params.id);
+		const wantedEmails = await EmailController.getEmails();
 		await ctx.render("panel/emaillists/emailList", {
 			emailList: wantedEmailList,
+			emails: wantedEmails
 		});
 	}
 );
 
+router.get("/panel/courses",
+	async (ctx) => {
+		const wantedCourses = await CourseController.getCourses();
+		await ctx.render("panel/courses/courses", {
+			courses: wantedCourses,
+		});
+	}
+);
+
+router.get("/panel/courses/add",
+	async (ctx) => {
+		await ctx.render("panel/courses/add", {
+			config: config
+		});
+	}
+);
+
+router.get("/panel/courses/:id",
+	async (ctx) => {
+		const wantedCourse = await CourseController.getCourse({ _id: ctx.params.id });
+		await ctx.render("panel/courses/course", {
+			course: wantedCourse,
+			config: config
+		});
+	}
+);
+
+router.get("/panel/requests",
+	helpers.authenticateAdmin,
+	async (ctx) => {
+		const wantedRequests = await RequestController.getRequests();
+		await ctx.render("panel/requests/requests", {
+			requests: wantedRequests,
+			config: config
+		});
+	}
+);
+
+router.get("/panel/requests/:id",
+	helpers.authenticateAdmin,
+	async (ctx) => {
+		const wantedRequest = await RequestController.getRequestById(ctx.params.id);
+		await ctx.render("panel/requests/request", {
+			request: wantedRequest,
+			config: config
+		});
+	}
+);
 
 router.get("/panel/workers",
 	async (ctx) => {

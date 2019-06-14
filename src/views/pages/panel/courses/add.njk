@@ -1,0 +1,65 @@
+{% extends "panel/templates/global.njk" %}
+
+{% block wrapper %}
+<h1>Add Course</h1>
+
+<hr>
+
+<form action="/api/add/course" method="POST">
+	<div class="form-group">
+		<label for="name">Course Name</label>
+		<input type="text" class="form-control" id="name" name="name" placeholder="Enter course name">
+	</div>
+	<div class="form-group">
+		<label for="description">Course Description</label>
+		<input type="text" class="form-control" id="description" name="description"
+			placeholder="Enter course description">
+	</div>
+	<div class="form-group">
+		<label for="courseCode">Course Code</label>
+		<input type="text" class="form-control" id="courseCode" name="courseCode" placeholder="Enter course code">
+	</div>
+	<div class="form-group">
+		<label for="departmentCode">Department Code</label>
+		<input type="text" class="form-control" id="departmentCode" name="departmentCode"
+			placeholder="Enter department code">
+	</div>
+	<div class="form-group">
+		<label for="topics">Course Topics</label>
+		<input type="text" class="form-control" id="topics" name="topics" placeholder="Enter course topics"
+			aria-describedby="topicDescribe">
+		<small id="topicDescribe" class="form-text text-muted">Please seperate topics with comma (,).</small>
+	</div>
+	<div class="form-group">
+		<label for="type">Course Type</label>
+		<select class="form-control" id="type" name="type">
+			{% for type in config.scheduleTypes %}
+			<option value="{{ type }}">{{ config.scheduleTypeStrings[type] }}</option>
+			{% endfor %}
+		</select>
+	</div>
+	<div class="form-group">
+		<label for="workers">Course Workers</label>
+		<input type="text" class="form-control" id="workers" name="workers" placeholder="Enter course workers">
+	</div>
+	<div class="form-group">
+		<label for="credits">Credits</label>
+		<input type="text" class="form-control" id="credits" name="credits" placeholder="Enter course credits">
+	</div>
+	<div class="form-group">
+		<label for="ects">ECTS</label>
+		<input type="text" class="form-control" id="ects" name="ects" placeholder="Enter course ects">
+	</div>
+	<div class="form-group">
+		<label for="lectureHours">Lecture Hours</label>
+		<input type="text" class="form-control" id="lectureHours" name="lectureHours"
+			placeholder="Enter course lecture hours">
+	</div>
+	<div class="form-group">
+		<label for="labHours">Lab Hours</label>
+		<input type="text" class="form-control" id="labHours" name="labHours" placeholder="Enter course lab hours">
+	</div>
+	<button type="submit" class="btn btn-primary">Add Course</button>
+</form>
+
+{% endblock %}

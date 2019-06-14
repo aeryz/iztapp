@@ -112,8 +112,8 @@ const CourseController = (() => ({
 		try {
 			duplicated = await this.getCourse({ courseCode: entity.courseCode });
 		} catch { }
-		if (!(typeof duplicated === "undefined" || duplicated === null) && duplicated._id !== wantedEntity._id) throw new Error(config.errors.COURSE.DUPLICATION);
 
+		if (!(typeof duplicated === "undefined" || duplicated === null) && duplicated._id + "" !== wantedEntity._id + "") throw new Error(config.errors.COURSE.DUPLICATION);
 
 		// validate department code
 		entity.departmentCode += "";
@@ -142,11 +142,15 @@ const CourseController = (() => ({
 		// generate page path
 		entity.pagePath = await helpers.generatePagePath(entity.courseCode);
 
+		entity.topics = entity.topics.split(",");
+		entity.topics = entity.topics.map(topic => topic.trim());
+
 		wantedEntity.name = entity.name;
 		wantedEntity.description = entity.description;
 		wantedEntity.courseCode = entity.courseCode;
 		wantedEntity.departmentCode = entity.departmentCode;
 		wantedEntity.type = entity.type;
+		wantedEntity.topics = entity.topics;
 		wantedEntity.lectureHours = entity.lectureHours;
 		wantedEntity.labHours = entity.labHours;
 		wantedEntity.credits = entity.credits;

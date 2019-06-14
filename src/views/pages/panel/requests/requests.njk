@@ -1,0 +1,27 @@
+{% extends "panel/templates/global.njk" %}
+
+{% block wrapper %}
+<h1>Requests</h1>
+
+<br>
+<hr>
+
+<table class="table">
+	<thead>
+		<tr>
+			<th scope="col">Type</th>
+			<th scope="col">Option</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for request in requests %}
+		<tr>
+			<td>{{ config.requestTypeStrings[request.type] }}</td>
+			<td><a href="/panel/requests/{{ request._id }}">Details</a></td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+
+
+{% endblock %}

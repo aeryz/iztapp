@@ -1,0 +1,34 @@
+{% extends "panel/templates/global.njk" %}
+
+{% block wrapper %}
+<h1>Courses</h1>
+
+<a href="/panel/courses/add">
+	<button type="button" class="btn btn-dark">Add New Course
+	</button>
+</a>
+
+<br>
+<hr>
+
+<table class="table">
+	<thead>
+		<tr>
+			<th scope="col">Course Code</th>
+			<th scope="col">Course Name</th>
+			<th scope="col">Option</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for course in courses %}
+		<tr>
+			<td>{{ course.courseCode }}</td>
+			<td>{{ course.name }}</td>
+			<td><a href="/panel/courses/{{ course._id }}">Edit/Delete</a></td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+
+
+{% endblock %}
