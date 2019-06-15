@@ -105,7 +105,8 @@ router.get('/api/unlock/account/:hash',
 router.post('/api/update/password/:id',
 	helper.authenticateAdmin,
 	async (ctx) => {
-		ctx.body = await AccountController.updatePassword(ctx.params.id, ctx.request.body.newPassword);
+		await AccountController.updatePassword(ctx.params.id, ctx.request.body.newPassword);
+		await ctx.redirect(`/panel/accounts/${ctx.params.id}`);
 	}
 );
 

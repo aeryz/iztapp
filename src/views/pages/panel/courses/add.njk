@@ -129,8 +129,10 @@
 		postData(`/api/add/course`, data)
 		.then(function (data) {
 			if (data._id) {
-				window.location.href = `/panel/courses/${data._id}`
-				console.log(data);
+				if (typeof data.body === "undefined" || data.body === null) {
+					window.location.href = `/panel/courses/${data._id}`;
+				}
+				window.location.href = `/panel/courses`;
 			}
 		})
 		.catch(error => console.error(error));
