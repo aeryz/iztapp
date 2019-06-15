@@ -41,8 +41,7 @@ router.post("/api/login",
 		});
 
 		ctx.cookies.set("userId", loggedInUser._id);
-		ctx.body = "Logged in";
-		// await ctx.redirect("/");
+		await ctx.redirect("/panel");
 	}
 );
 
@@ -52,7 +51,7 @@ router.get('/api/logout',
 	async (ctx) => {
 		ctx.cookies.set("token", null);
 		ctx.cookies.set("userId", null);
-		ctx.body = "Logged out";
+		await ctx.redirect("/panel/login");
 	}
 );
 
@@ -78,7 +77,7 @@ router.get('/api/get/account/:id',
 );
 
 router.post('/api/add/account',
-	helper.authenticateAdmin,
+	// helper.authenticateAdmin,
 	async (ctx) => {
 		const newEntity = await AccountController.add(ctx.request.body);
 		await ctx.redirect(`/panel/accounts/${newEntity._id}`);
@@ -88,7 +87,10 @@ router.post('/api/add/account',
 router.post('/api/delete/account',
 	helper.authenticateAdmin,
 	async (ctx) => {
-		ctx.body = await AccountController.delete(ctx.request.body.id);
+		const userId = ctx.cookie.userId + "";
+		if (userId === ctx.request.body.id) throw new Error(config.errors.ACCOUNT.CANT_DELETE_OWN);
+		await AccountController.delete(ctx.request.body.id);
+		await ctx.redirect("/panel/accounts");
 	}
 );
 
@@ -419,7 +421,8 @@ router.get('/api/get/courses/:limit?/:skip?',
 	async (ctx) => {
 		ctx.body = await CourseController.getCourses(
 			ctx.params.limit,
-			ctx.params.skip
+			ctx.params.skip,
+			ctx.request.body
 		)
 	}
 )
@@ -436,21 +439,21 @@ router.get('/api/get/course/:id',
 router.post('/api/add/course',
 	async (ctx) => {
 		ctx.request.body.courseCreator = ctx.cookie.userId;
-		await CourseController.add(
+		const newEntity = await CourseController.add(
 			ctx.request.body
 		);
-		await ctx.redirect(`url`)
+		ctx.body = newEntity;
 	}
 );
 
 router.post('/api/update/course/:id',
 	async (ctx) => {
 		ctx.request.body.courseUpdator = ctx.cookie.userId;
-		await CourseController.update(
+		const updatedEntity = await CourseController.update(
 			ctx.params.id,
 			ctx.request.body
 		);
-		await ctx.redirect(`/panel/courses/${ctx.params.id}`);
+		ctx.body = updatedEntity;
 	}
 );
 

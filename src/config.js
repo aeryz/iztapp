@@ -51,6 +51,7 @@ const config = {
 		2 // Admins
 	],
 	accountTypeStrings: {
+		0: "All",
 		1: "Content Manager",
 		2: "Admin"
 	},
@@ -112,6 +113,7 @@ const config = {
 			WRONG_PASSWORD: "Given password is wrong. Please check your password and try again.",
 			ALREADY_LOCKED: "This account is already locked.",
 			ALREADY_UNLOCKED: "This account is already unlocked.",
+			CANT_DELETE_OWN: "You cannot delete your own account."
 		},
 		EMAIL: {
 			VALIDATION: {

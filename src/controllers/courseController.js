@@ -18,7 +18,7 @@ const CourseController = (() => ({
 
 	async add(entity) {
 		// validate entity
-		if (typeof entity === "undefined" || entity === null || typeof entity.name === "undefined" || entity.name === null || typeof entity.description === "undefined" || entity.description === null || typeof entity.courseCode === "undefined" || entity.courseCode === null || typeof entity.departmentCode === "undefined" || entity.departmentCode === null || typeof entity.topics === "undefined" || entity.topics === null || typeof entity.type === "undefined" || entity.type === null || typeof entity.workers === "undefined" || entity.workers === null || typeof entity.lectureHours === "undefined" || entity.lectureHours === null || typeof entity.labHours === "undefined" || entity.labHours === null || typeof entity.credits === "undefined" || entity.credits === null || typeof entity.ects === "undefined" || entity.ects === null) throw new Error(config.errors.MISSING_PARAMETER);
+		if (typeof entity === "undefined" || entity === null || typeof entity.name === "undefined" || entity.name === null || typeof entity.description === "undefined" || entity.description === null || typeof entity.courseCode === "undefined" || entity.courseCode === null || typeof entity.departmentCode === "undefined" || entity.departmentCode === null || typeof entity.topics === "undefined" || entity.topics === null || typeof entity.type === "undefined" || entity.type === null || typeof entity.workers === "undefined" || entity.workers === null || typeof entity.lectureHours === "undefined" || entity.lectureHours === null || typeof entity.labHours === "undefined" || entity.labHours === null || typeof entity.credits === "undefined" || entity.credits === null || typeof entity.ects === "undefined" || entity.ects === null || typeof entity.prerequisites === "undefined" || entity.prerequisites === null) throw new Error(config.errors.MISSING_PARAMETER);
 
 		// validate name
 		entity.name += "";
@@ -91,7 +91,7 @@ const CourseController = (() => ({
 
 	async update(id, entity) {
 		// validate entity
-		if (typeof entity === "undefined" || entity === null || typeof id === "undefined" || id === null || typeof entity.name === "undefined" || entity.name === null || typeof entity.description === "undefined" || entity.description === null || typeof entity.courseCode === "undefined" || entity.courseCode === null || typeof entity.departmentCode === "undefined" || entity.departmentCode === null || typeof entity.topics === "undefined" || entity.topics === null || typeof entity.type === "undefined" || entity.type === null || typeof entity.workers === "undefined" || entity.workers === null || typeof entity.lectureHours === "undefined" || entity.lectureHours === null || typeof entity.labHours === "undefined" || entity.labHours === null || typeof entity.credits === "undefined" || entity.credits === null || typeof entity.ects === "undefined" || entity.ects === null) throw new Error(config.errors.MISSING_PARAMETER);
+		if (typeof entity === "undefined" || entity === null || typeof id === "undefined" || id === null || typeof entity.name === "undefined" || entity.name === null || typeof entity.description === "undefined" || entity.description === null || typeof entity.courseCode === "undefined" || entity.courseCode === null || typeof entity.departmentCode === "undefined" || entity.departmentCode === null || typeof entity.topics === "undefined" || entity.topics === null || typeof entity.type === "undefined" || entity.type === null || typeof entity.workers === "undefined" || entity.workers === null || typeof entity.lectureHours === "undefined" || entity.lectureHours === null || typeof entity.labHours === "undefined" || entity.labHours === null || typeof entity.credits === "undefined" || entity.credits === null || typeof entity.ects === "undefined" || entity.ects === null || typeof entity.prerequisites === "undefined" || entity.prerequisites === null) throw new Error(config.errors.MISSING_PARAMETER);
 
 		const wantedEntity = await this.getCourse({
 			_id: id
@@ -156,6 +156,7 @@ const CourseController = (() => ({
 		wantedEntity.credits = entity.credits;
 		wantedEntity.ects = entity.ects;
 		wantedEntity.pagePath = await helpers.generatePagePath(wantedEntity.courseCode);
+		wantedEntity.prerequisites = entity.prerequisites;
 
 		let courseUpdator;
 

@@ -1,0 +1,71 @@
+{% extends "panel/templates/global.njk" %}
+
+{% block wrapper %}
+<form action="" method="post" id="form-search">
+	<div class="form-group">
+		<label for="name">Course Name</label>
+		<input type="text" class="form-control" id="name" name="name" placeholder="Enter course name" required>
+	</div>
+	<button type="button" class="btn btn-dark btn-search">Search</button>
+</form>
+
+<hr>
+
+<div>
+	<table class="table">
+		<thead>
+			<tr>
+				<th scope="col">Course Code</th>
+				<th scope="col">Course Name</th>
+				<th scope="col">Option</th>
+			</tr>
+		</thead>
+		<tbody id="results">
+		</tbody>
+	</table>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+	function getData(url = ``, data) {
+		// Default options are marked with *
+		return fetch(url, {
+			method: "GET", // *GET, POST, PUT, DELETE, etc.
+			mode: "cors", // no-cors, cors, *same-origin
+			cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+			credentials: "same-origin", // include, same-origin, *omit
+			headers: {
+				"Content-Type": "application/json; charset=utf-8",
+				// "Content-Type": "application/x-www-form-urlencoded",
+			},
+			redirect: "follow", // manual, *follow, error
+			referrer: "no-referrer", // no-referrer, *client
+			body: JSON.stringify(data)
+		})
+			.then(response => response.json()); // parses response to JSON
+	}
+</script>
+<script>
+	$(".btn-search").on("click", (e) => {
+		e.preventDefault();
+		const formElement = document.getElementById("form-search");
+		const data = {};
+		for (const pair of new FormData(formElement)) {
+			data[pair[0]] = pair[1];
+		}
+		console.log(data);
+		const results = document.getElementById("results");
+		getData(`/api/get/courses`, data)
+			.then(function (data) {
+				let htmlResults = "";
+				data.forEach(entity => {
+					let addedHtml = `<tr><td>${entity.courseCode}</td><td>${entity.courseName}</td><td><a href="/panel/courses/${entity._id}">Edit/Delete</a></td></tr>`;
+					htmlResults += addedHtml;
+				});
+				results.innerHTML = htmlResults;
+			}).catch(error => console.error(error));
+	});
+</script>
+{% endblock %}

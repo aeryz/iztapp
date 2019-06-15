@@ -4,8 +4,12 @@
 <h1>Accounts</h1>
 
 {% if loggedAccount.type == 2 %}
-<a href="/panel/accounts/add" class="add-account">
+<a href="/panel/accounts/add">
 	<button type="button" class="btn btn-dark">Add New Account
+	</button>
+</a>
+<a href="/panel/accounts/search">
+	<button type="button" class="btn btn-dark">Search
 	</button>
 </a>
 {% endif %}

@@ -16,7 +16,6 @@ import PanelRouter from "./routers/panel";
 
 const server = new Koa();
 
-
 // region Set views engine
 
 const env = new nunjucks.Environment(new nunjucks.FileSystemLoader(path.join(config.mainDirectory, "views", "pages")));

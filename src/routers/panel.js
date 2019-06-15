@@ -89,17 +89,28 @@ router.get("/unlock/:hash",
 
 router.get("/",
 	async (ctx) => {
+		ctx.redirect("/panel");
+	}
+);
+
+router.get("/panel",
+	async (ctx) => {
 		const token = ctx.cookie.token;
 		// @ts-ignore
-		if (typeof token === "undefined" || token === null) await ctx.redirect(`/login`);
-
+		if (typeof token === "undefined" || token === null) await ctx.redirect(`/panel/login`);
 		await ctx.render("panel/dashboard");
 	}
 );
 
-router.get("/login",
+router.get("/panel/login",
 	async (ctx) => {
 		await ctx.render("panel/prelogin/login");
+	}
+);
+
+router.get("/panel/logout",
+	async (ctx) => {
+		await ctx.redirect("/api/logout");
 	}
 );
 
@@ -119,6 +130,15 @@ router.get("/panel/accounts/add",
 	helpers.authenticateAdmin,
 	async (ctx) => {
 		await ctx.render("panel/accounts/add");
+	}
+);
+
+router.get("/panel/accounts/search",
+	helpers.authenticateAdmin,
+	async (ctx) => {
+		await ctx.render("panel/accounts/search", {
+			config: config
+		});
 	}
 );
 
@@ -184,7 +204,18 @@ router.get("/panel/courses",
 
 router.get("/panel/courses/add",
 	async (ctx) => {
+		const wantedCourses = await CourseController.getCourses();
 		await ctx.render("panel/courses/add", {
+			config: config,
+			courses: wantedCourses
+		});
+	}
+);
+
+router.get("/panel/courses/search",
+	helpers.authenticateAdmin,
+	async (ctx) => {
+		await ctx.render("panel/courses/search", {
 			config: config
 		});
 	}
@@ -193,8 +224,10 @@ router.get("/panel/courses/add",
 router.get("/panel/courses/:id",
 	async (ctx) => {
 		const wantedCourse = await CourseController.getCourse({ _id: ctx.params.id });
+		const wantedCourses = await CourseController.getCourses();
 		await ctx.render("panel/courses/course", {
 			course: wantedCourse,
+			courses: wantedCourses,
 			config: config
 		});
 	}

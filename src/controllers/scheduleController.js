@@ -21,7 +21,7 @@ const ScheduleController = (() => ({
 				continue;
 			}
 			const dailySchedule = await this.getDailySchedule({ _id: scheduleId });
-			realDays.push(dailySchedule);
+			await realDays.push(dailySchedule);
 		}
 
 		wantedEntity.days = realDays;
@@ -43,7 +43,7 @@ const ScheduleController = (() => ({
 				continue;
 			}
 			const course = await DatabaseController.findOneByQuery("course", { _id: courseId });
-			realCourses.push(course);
+			await realCourses.push(course);
 		}
 		wantedEntity.courses = realCourses;
 		return wantedEntity;
@@ -101,7 +101,6 @@ const ScheduleController = (() => ({
 	},
 
 	async addDailySchedule(entity) {
-		console.log(entity);
 		// validate entity
 		if (typeof entity === "undefined" || entity === null || typeof entity.type === "undefined" || entity.type === null || typeof entity.day === "undefined" || entity.day === null || typeof entity.courses === "undefined" || entity.courses === null) throw new Error(config.errors.MISSING_PARAMETER);
 
