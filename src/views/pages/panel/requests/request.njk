@@ -4,10 +4,22 @@
 <ul class="list-group list-group-flush">
 	<li class="list-group-item">Type: {{ config.requestTypeStrings[request.type] }}</li>
 	<li class="list-group-item">Creation Date: {{ request.creationDate }}</li>
-	<li class="list-group-item">Request Body</li>
+	<li class="list-group-item"><b>Request Body</b></li>
 	{% for key, value in request.body %}
 	<li class="list-group-item">{{ key }}: {{ value }}</li>
 	{% endfor %}
 </ul>
+
+<form action="/api/handle/request" method="POST">
+	<input type="text" name="id" value="{{ request._id }}" hidden>
+	<input type="text" name="state" value="0" hidden>
+	<button type="submit" class="btn btn-success">Accept</button>
+</form>
+
+<form action="/api/handle/request" method="POST">
+	<input type="text" name="id" value="{{ request._id }}" hidden>
+	<input type="text" name="state" value="1" hidden>
+	<button type="submit" class="btn btn-danger">Reject</button>
+</form>
 
 {% endblock %}
