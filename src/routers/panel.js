@@ -37,6 +37,7 @@ router.use(
 			if (typeof ctx.cookie === "undefined" || ctx.cookie === null) ctx.cookie = {};
 			await next();
 		} catch (err) {
+			console.log(err);
 			ctx.body = {
 				errorMessage: err.message
 			};

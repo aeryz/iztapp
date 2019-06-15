@@ -52,9 +52,18 @@
 				</select>
 			</div>
 			{% endfor %}
-			<button type="button" class="btn btn-success btn-block">Save Day</button>
+			<button type="button" class="btn btn-success btn-block btn-save-day">Save Day</button>
 		</form>
 	</div>
 	{% endfor %}
 </div>
+{% endblock %}
+
+{% block script %}
+<script>
+	$(".btn-save-day").on("click", (e) => {
+		e.preventDefault();
+		console.log(this.parent);
+	});
+</script>
 {% endblock %}
