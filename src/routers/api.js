@@ -407,10 +407,11 @@ router.get('/api/delete/request/:id',
 router.post('/api/handle/request',
 	helper.authenticateAdmin,
 	async (ctx) => {
-		ctx.body = await RequestController.handleRequest(
+		await RequestController.handleRequest(
 			ctx.request.body.id,
 			ctx.request.body.state
 		);
+		await ctx.redirect("/panel/requests");
 	}
 );
 
