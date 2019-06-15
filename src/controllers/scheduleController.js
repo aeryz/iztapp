@@ -16,8 +16,10 @@ const ScheduleController = (() => ({
 		let realDays = [];
 
 		for (let scheduleId of wantedEntity.days) {
-			if (typeof scheduleId === "undefined" || scheduleId === null) continue;
-			console.log(scheduleId);
+			if (typeof scheduleId === "undefined" || scheduleId === null) {
+				realDays.push(null);
+				continue;
+			}
 			const dailySchedule = await this.getDailySchedule({ _id: scheduleId });
 			realDays.push(dailySchedule);
 		}
@@ -36,8 +38,10 @@ const ScheduleController = (() => ({
 		const wantedEntity = await DatabaseController.findOneByQuery("dailySchedule", query);
 		let realCourses = [];
 		for (let courseId of wantedEntity.courses) {
-			if (typeof courseId === "undefined" || courseId === null) continue;
-			console.log(courseId);
+			if (typeof courseId === "undefined" || courseId === null) {
+				realCourses.push(null);
+				continue;
+			}
 			const course = await DatabaseController.findOneByQuery("course", { _id: courseId });
 			realCourses.push(course);
 		}
@@ -97,6 +101,7 @@ const ScheduleController = (() => ({
 	},
 
 	async addDailySchedule(entity) {
+		console.log(entity);
 		// validate entity
 		if (typeof entity === "undefined" || entity === null || typeof entity.type === "undefined" || entity.type === null || typeof entity.day === "undefined" || entity.day === null || typeof entity.courses === "undefined" || entity.courses === null) throw new Error(config.errors.MISSING_PARAMETER);
 
@@ -106,7 +111,7 @@ const ScheduleController = (() => ({
 
 		// validate day
 		entity.day = +entity.day
-		if (entity.semester < config.limits.dailySchedule.minDayNumber || entity.semester > config.limits.dailySchedule.maxDayNumber) throw new Error(config.errors.DAILY_SCHEDULE.VALIDATION.INVALID_DAY);
+		if (entity.day < config.limits.dailySchedule.minDayNumber || entity.day > config.limits.dailySchedule.maxDayNumber) throw new Error(config.errors.DAILY_SCHEDULE.VALIDATION.INVALID_DAY);
 
 		// validate courses
 		if (!Array.isArray(entity.courses)) throw new Error(config.errors.DAILY_SCHEDULE.VALIDATION.INVALID_COURSES);
@@ -126,7 +131,7 @@ const ScheduleController = (() => ({
 
 		// validate day
 		entity.day = +entity.day
-		if (entity.semester < config.limits.dailySchedule.minDayNumber || entity.semester > config.limits.dailySchedule.maxDayNumber) throw new Error(config.errors.DAILY_SCHEDULE.VALIDATION.INVALID_DAY);
+		if (entity.day < config.limits.dailySchedule.minDayNumber || entity.day > config.limits.dailySchedule.maxDayNumber) throw new Error(config.errors.DAILY_SCHEDULE.VALIDATION.INVALID_DAY);
 
 		// validate type
 		entity.type = +entity.type
@@ -175,6 +180,8 @@ const ScheduleController = (() => ({
 			wantedWeeklySchedule.days[day] = dailyScheduleId;
 			if (removedDailyScheduleId !== dailyScheduleId) await this.deleteDailySchedule(removedDailyScheduleId);
 		}
+
+		console.log(wantedWeeklySchedule);
 
 		const updatedWeeklySchedule = await DatabaseController.update("weeklySchedule", wantedWeeklySchedule);
 

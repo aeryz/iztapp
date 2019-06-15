@@ -247,7 +247,7 @@ router.get("/panel/schedules/weeklySchedules",
 	}
 );
 
-router.get("/panel/schedules/weeklySchedule/:id",
+router.get("/panel/schedules/weeklySchedules/:id",
 	async (ctx) => {
 		const wantedEntity = await ScheduleController.getWeeklySchedule({ _id: ctx.params.id });
 		const wantedCourses = await CourseController.getCourses();

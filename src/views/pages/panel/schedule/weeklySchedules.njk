@@ -3,6 +3,11 @@
 {% block wrapper %}
 <h1>Weekly Schedules</h1>
 
+<a href="/panel/schedules/add">
+	<button type="button" class="btn btn-dark">Add New Schedule
+	</button>
+</a>
+
 <hr>
 
 <table class="table">
@@ -18,7 +23,7 @@
 		<tr>
 			<td>{{ typeStrings[weeklySchedule.type] }}</td>
 			<td>{{ weeklySchedule.semester }}</td>
-			<td><a href="/panel/schedules/weeklySchedule/{{ weeklySchedule._id }}">Details</a></td>
+			<td><a href="/panel/schedules/weeklySchedules/{{ weeklySchedule._id }}">Details</a></td>
 		</tr>
 		{% endfor %}
 	</tbody>

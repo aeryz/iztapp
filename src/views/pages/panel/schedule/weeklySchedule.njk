@@ -36,34 +36,121 @@
 
 	{% for k in range(1, config.limits.weeklySchedule.dayNumber + 1) %}
 	<div class="col-md-2">
-		<form action="">
+		<form action="" id="form-day-{{ k }}">
 			<h3 class="text-center">Day {{k}}</h3>
 			<hr>
 			<input type="number" name="type" value="{{ weeklySchedule.type }}" hidden>
 			<input type="number" name="semester" value="{{ weeklySchedule.semester }}" hidden>
+			<input type="number" name="day" value="{{ k - 1 }}" hidden>
 			{% for i in range(1, config.limits.dailySchedule.courseNumber + 1) %}
 			<div class="form-group">
-				<label for="hour-1">{{i}}. Hour</label>
+				<label for="hour-{{ i }}">{{i}}. Hour</label>
 				<select class="form-control" name="hour-{{i}}" id="hour-{{i}}">
+					{% if weeklySchedule.days[k - 1].courses[i - 1]._id == null %}
 					<option value="null" selected>Empty</option>
+					{% else %}
+					<option value="{{ weeklySchedule.days[k - 1].courses[i - 1]._id }}" selected>{{  weeklySchedule.days[k - 1].courses[i - 1].courseCode }}</option>
+					{% endif %}
 					{% for course in courses %}
 					<option value="{{ course._id }}">{{ course.courseCode }}</option>
 					{% endfor %}
 				</select>
 			</div>
 			{% endfor %}
-			<button type="button" class="btn btn-success btn-block btn-save-day">Save Day</button>
+			<button type="button" class="btn btn-success btn-block btn-save-day-{{ k }}">Save Day</button>
 		</form>
 	</div>
 	{% endfor %}
 </div>
 {% endblock %}
 
-{% block script %}
+{% block scripts %}
 <script>
-	$(".btn-save-day").on("click", (e) => {
+	function postData(url = ``, data) {
+		// Default options are marked with *
+		return fetch(url, {
+			method: "POST", // *GET, POST, PUT, DELETE, etc.
+			mode: "cors", // no-cors, cors, *same-origin
+			cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+			credentials: "same-origin", // include, same-origin, *omit
+			headers: {
+				"Content-Type": "application/json; charset=utf-8",
+				// "Content-Type": "application/x-www-form-urlencoded",
+			},
+			redirect: "follow", // manual, *follow, error
+			referrer: "no-referrer", // no-referrer, *client
+			body: JSON.stringify(data), // body data type must match "Content-Type" header
+		})
+			.then(response => response.json()); // parses response to JSON
+	}
+	function getData(url = ``) {
+		// Default options are marked with *
+		return fetch(url, {
+			method: "GET", // *GET, POST, PUT, DELETE, etc.
+			mode: "cors", // no-cors, cors, *same-origin
+			cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+			credentials: "same-origin", // include, same-origin, *omit
+			headers: {
+				"Content-Type": "application/json; charset=utf-8",
+				// "Content-Type": "application/x-www-form-urlencoded",
+			},
+			redirect: "follow", // manual, *follow, error
+			referrer: "no-referrer", // no-referrer, *client
+		})
+			.then(response => response.json()); // parses response to JSON
+	}
+</script>
+{% for i in range(1, config.limits.weeklySchedule.dayNumber + 1) %}
+<script>
+	let saveCount{{ i }};
+	if (`{{ weeklySchedule.days[i] }}` == "") {
+		saveCount{{ i }} = 0;
+	} else {
+		saveCount{{ i }} = 1;
+	}
+	let updateLink{{ i }} = "/api/update/dailySchedule/{{ weeklySchedule.days[i]._id }}"
+	$(".btn-save-day-{{ i }}").on("click", (e) => {
 		e.preventDefault();
-		console.log(this.parent);
+		const formElement = document.getElementById("form-day-{{ i }}");
+		const data = {};
+		let courses = [];
+		for (const pair of new FormData(formElement)) {
+			if (pair[0].startsWith("hour")) {
+				if (pair[1] === "null") {
+					pair[1] = null;
+				}
+				courses.push(pair[1]);
+			} else {
+				data[pair[0]] = pair[1];
+			}
+		}
+		data.courses = courses;
+		console.log(data);
+		if (saveCount{{ i }} == 0) {
+			postData(`/api/add/dailySchedule`, data)
+				.then(function (data) {
+					if (data._id) {
+						alert("Day saved!");
+						$(".btn-save-day-{{ i }}").prop("disabled", true);
+						saveCount{{ i }} += 1;
+						updateLink{{ i }} = `/api/update/dailySchedule/${data._id}`
+						getData(`/api/assign/dailyToWeekly/${data._id}/{{ weeklySchedule._id }}`).then();
+					}
+				}).catch(error => console.error(error));
+		} else {
+			postData(updateLink{{ i }}, data)
+				.then(function (data) {
+					if (data._id) {
+						alert("Day saved!");
+						$(".btn-save-day-{{ i }}").prop("disabled", true);
+						saveCount{{ i }} += 1;
+					}
+				}).catch(error => console.error(error));
+		}
+		$("#form-day-{{ i }}").on("change", (e) => {
+			$(".btn-save-day-{{ i }}").prop("disabled", false);
+		});
 	});
 </script>
+{% endfor %}
 {% endblock %}

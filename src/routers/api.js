@@ -293,7 +293,7 @@ router.post('/api/add/weeklySchedule',
 		const newEntity = await ScheduleController.addWeeklySchedule(
 			ctx.request.body
 		);
-		await ctx.redirect(`/panel/schedule/weeklySchedule/${newEntity._id}`)
+		await ctx.redirect(`/panel/schedules/weeklySchedules/${newEntity._id}`)
 	}
 );
 
@@ -303,7 +303,7 @@ router.post('/api/update/weeklySchedule/:id',
 			ctx.params.id,
 			ctx.request.body
 		);
-		await ctx.redirect(`/panel/schedules/weeklySchedule/${updatedEntity._id}`)
+		await ctx.redirect(`/panel/schedules/weeklySchedules/${updatedEntity._id}`)
 	}
 );
 
@@ -342,9 +342,11 @@ router.get('/api/delete/dailySchedule/:id',
 
 router.get('/api/assign/dailyToWeekly/:dailyScheduleId/:weeklyScheduleId/',
 	async (ctx) => {
+		const dailySchedule = await ScheduleController.getDailySchedule({_id: ctx.params.dailyScheduleId});
 		ctx.body = await ScheduleController.assignDailyToWeekly(
 			ctx.params.weeklyScheduleId,
-			ctx.params.dailyScheduleId
+			ctx.params.dailyScheduleId,
+			dailySchedule.day
 		);
 	}
 );
