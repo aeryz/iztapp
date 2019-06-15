@@ -92,7 +92,7 @@ router.post('/api/delete/account',
 	}
 );
 
-router.post('/api/unlock/account/:hash',
+router.get('/api/unlock/account/:hash',
 	async (ctx) => {
 		const unlockedAccount = await AccountController.unlockAccount(ctx.params.hash);
 		ctx.body = unlockedAccount;
