@@ -1,6 +1,7 @@
 import BluebirdPromise from 'bluebird';
 global.Promise = BluebirdPromise;
 
+import nodemailer from 'nodemailer';
 import Koa from 'koa';
 import config from './config.js';
 import cookies from "koa-cookie";

@@ -5,6 +5,7 @@ import crypto from "crypto";
 import speakingurl from "speakingurl";
 import bluebird from "bluebird";
 import jsonwebtoken from "jsonwebtoken";
+import nodemailer from 'nodemailer';
 
 // import config
 import config from "./config";
@@ -19,10 +20,38 @@ const jwt = {
 	verify: promisify(jsonwebtoken.verify)
 };
 
+const transporter = nodemailer.createTransport({
+  host: 'smtp.gmail.com',
+  port: 465,
+  secure: true,
+  auth: {
+    user: 'info.debak@gmail.com',
+		pass: 'debak123.123.A'
+	}
+});
+
 // functions
 async function generatePagePath(data) {
 	return speakingurl(data);
 };
+
+async function sendMail(emailList, context) {
+	for (let email of emailList) {
+		let mailOptions = {
+			from: '"DEBAK" <info.debak@gmail.com>',
+			to: email,
+			subject: context.subject,
+			text: context.text
+		}
+
+		transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        return console.log(error);
+      }
+      console.log('Message %s sent: %s', info.messageId, info.response);
+    });
+	}
+}
 
 async function validate(data, type, noError = false) {
 	try {
@@ -148,4 +177,5 @@ export default {
 	generateHash,
 	generatePasswordHash,
 	comparePassword,
+	sendMail
 };

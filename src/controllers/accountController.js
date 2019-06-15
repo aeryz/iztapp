@@ -126,7 +126,13 @@ const AccountController = (() => ({
 		wantedEntity.isLocked = true;
 		await DatabaseController.update("account", wantedEntity);
 
-		// send email here
+		await helpers.sendMail(
+			[wantedEntity.email],
+			{
+				subject: "Unlock your account",
+				text: "Your account has been locked because you have entered wrong password 10 times.	Unlock your account by using the link: http://localhost:5000/api/unlock/account/" + wantedEntity.unlockHash
+			}
+		);
 
 		return wantedEntity;
 	},
