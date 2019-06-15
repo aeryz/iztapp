@@ -1,1 +1,7 @@
 {% extends "panel/templates/global.njk" %}
+
+{% block wrapper %}
+{% for key, value in request %}
+	<li>{{ key }}: {{ value }}</li>
+{% endfor %}
+{% endblock %}
