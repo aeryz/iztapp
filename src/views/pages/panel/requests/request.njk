@@ -1,7 +1,13 @@
 {% extends "panel/templates/global.njk" %}
 
 {% block wrapper %}
-{% for key, value in request %}
-	<li>{{ key }}: {{ value }}</li>
-{% endfor %}
+<ul class="list-group list-group-flush">
+	<li class="list-group-item">Type: {{ config.requestTypeStrings[request.type] }}</li>
+	<li class="list-group-item">Creation Date: {{ request.creationDate }}</li>
+	<li class="list-group-item">Request Body</li>
+	{% for key, value in request.body %}
+	<li class="list-group-item">{{ key }}: {{ value }}</li>
+	{% endfor %}
+</ul>
+
 {% endblock %}
