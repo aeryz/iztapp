@@ -335,6 +335,39 @@ router.get("/panel/schedules/weeklySchedules/:id",
 
 // #endregion
 
+// #region Event routes
+
+router.get("/panel/events",
+	async (ctx) => {
+		await ctx.render("panel/events/events");
+	}
+);
+
+router.get("/panel/events/send",
+	async (ctx) => {
+		if (typeof ctx.cookie.eventTitle === "undefined" || ctx.cookie.eventTitle === null) await ctx.redirect("/panel/events");
+		const event = {
+			title: ctx.cookie.eventTitle,
+			context: ctx.cookie.eventContext + "...",
+			date: ctx.cookie.eventDate,
+			time: ctx.cookie.eventTime,
+			link: ctx.cookie.eventLink
+		};
+		const wantedEmailLists = await EmailListController.getEmailLists();
+		await ctx.cookies.set("eventTitle", null);
+		await ctx.cookies.set("eventContext", null);
+		await ctx.cookies.set("eventTime", null);
+		await ctx.cookies.set("eventDate", null);
+		await ctx.cookies.set("eventLink", null);
+		await ctx.render("panel/events/send", {
+			event: event,
+			emailLists: wantedEmailLists
+		});
+	}
+);
+
+// #endregion
+
 // #region 404 routes
 
 router.get("*",

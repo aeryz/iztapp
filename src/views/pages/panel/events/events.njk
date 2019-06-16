@@ -1,0 +1,86 @@
+{% extends "panel/templates/global.njk" %}
+
+{% block wrapper %}
+<button type="button" class="btn btn-dark btn-pull">Pull Events</button>
+
+<small class="pull-information"></small>
+
+<hr>
+
+<div>
+	<table class="table">
+		<thead>
+			<tr>
+				<th scope="col">Title</th>
+				<th scope="col">Option</th>
+			</tr>
+		</thead>
+		<tbody class="events">
+		</tbody>
+	</table>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+	function postData(url = ``, data) {
+		// Default options are marked with *
+		return fetch(url, {
+			method: "POST", // *GET, POST, PUT, DELETE, etc.
+			mode: "cors", // no-cors, cors, *same-origin
+			cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+			credentials: "same-origin", // include, same-origin, *omit
+			headers: {
+				"Content-Type": "application/json; charset=utf-8",
+				// "Content-Type": "application/x-www-form-urlencoded",
+			},
+			redirect: "follow", // manual, *follow, error
+			referrer: "no-referrer", // no-referrer, *client
+			body: JSON.stringify(data), // body data type must match "Content-Type" header
+		})
+			.then(response => response.json()); // parses response to JSON
+	}
+	function getData(url = ``) {
+		// Default options are marked with *
+		return fetch(url, {
+			method: "GET", // *GET, POST, PUT, DELETE, etc.
+			mode: "cors", // no-cors, cors, *same-origin
+			cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+			credentials: "same-origin", // include, same-origin, *omit
+			headers: {
+				"Content-Type": "application/json; charset=utf-8",
+				// "Content-Type": "application/x-www-form-urlencoded",
+			},
+			redirect: "follow", // manual, *follow, error
+			referrer: "no-referrer", // no-referrer, *client
+		})
+			.then(response => response.json()); // parses response to JSON
+	}
+</script>
+<script>
+	$(".btn-pull").on("click", (e) => {
+		e.preventDefault();
+		$(".pull-information").html("Pulling...");
+		postData(`/api/pull/events`, {})
+			.then(function (data) {
+				$(".pull-information").html("Done!");
+				if (data.length) {
+					data.forEach(event => {
+						let addedHtml = `<tr>
+							<td>
+								${event.title}
+							</td>
+							<td>
+								<form action="/api/set/event" method="POST">`;
+						for (let [key, value] of Object.entries(event)) {
+							addedHtml += `<input name="${key}" value="${value}" hidden>`;
+						}
+						addedHtml += `<button type="submit" class="btn btn-success">Send Event</button></form></td>"`;
+						$(".events").append(addedHtml);
+					});
+				}
+			}).catch(error => console.error(error));
+	})
+</script>
+{% endblock %}

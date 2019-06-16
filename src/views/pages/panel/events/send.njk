@@ -1,0 +1,29 @@
+{% extends "panel/templates/global.njk" %}
+
+{% block wrapper %}
+<h1>Event</h1>
+<ul class="list-group list-group-flush">
+	<li class="list-group-item">Title: {{ event.title }}</li>
+	<li class="list-group-item">Context: {{ event.context }}</li>
+	<li class="list-group-item">Date: {{ event.date }}</li>
+	<li class="list-group-item">Time: {{ event.time }}</li>
+	<li class="list-group-item">Link: <a href="{{ event.link }}">{{ event.link }}</a></li>
+</ul>
+<br>
+<form action="/api/send/events" method="POST">
+	<input type="text" name="title" value="{{ event.title }}" hidden>
+	<input type="text" name="context" value="{{ event.context }}" hidden>
+	<input type="text" name="date" value="{{ event.date }}" hidden>
+	<input type="text" name="time" value="{{ event.time }}" hidden>
+	<input type="text" name="link" value="{{ event.link }}" hidden>
+	<div class="form-group">
+		<label for="emailListId">Send to</label>
+		<select class="form-control" id="emailListId" name="emailListId">
+			{% for emailList in emailLists %}
+			<option value="{{ emailList._id }}">{{ emailList.name }}</option>
+			{% endfor %}
+		</select>
+	</div>
+	<button type="submit" class="btn btn-success">Send Event</button>
+</form>
+{% endblock %}

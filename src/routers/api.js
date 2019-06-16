@@ -230,20 +230,25 @@ router.post('/api/remove/email',
 
 router.post('/api/pull/events',
 	async (ctx) => {
-
 		ctx.body = await EventController.pullEvents();
+	}
+)
+
+router.post('/api/set/event',
+	async (ctx) => {
+		await ctx.cookies.set("eventTitle", ctx.request.body.title);
+		await ctx.cookies.set("eventContext", ctx.request.body.context);
+		await ctx.cookies.set("eventTime", ctx.request.body.time);
+		await ctx.cookies.set("eventDate", ctx.request.body.date);
+		await ctx.cookies.set("eventLink", ctx.request.body.link);
+		await ctx.redirect("/panel/events/send");
 	}
 )
 
 router.post('/api/send/events',
 	async (ctx) => {
-
-		if (ctx.request.body.event === null || ctx.request.body.event === "") {
-			throw new Error(config.errors.MISSING_PARAMETER);
-		}
-
 		ctx.body = await EventController.sendEvent(
-			ctx.request.body.event,
+			ctx.request.body,
 			ctx.request.body.emailListId
 		)
 	}
