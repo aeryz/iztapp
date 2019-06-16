@@ -20,10 +20,9 @@ router.use(
 			if (typeof ctx.cookie === "undefined" || ctx.cookie === null) ctx.cookie = {};
 			await next();
 		} catch (err) {
-			console.log(err);
-			ctx.body = {
-				errorCode: err.message
-			};
+			await ctx.render("panel/errors", {
+				message: err.message
+			});
 		}
 	}
 );
