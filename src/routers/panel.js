@@ -220,9 +220,11 @@ router.get("/panel/courses",
 router.get("/panel/courses/add",
 	async (ctx) => {
 		const wantedCourses = await CourseController.getCourses();
+		const wantedWorkers = await WorkerController.getWorkers();
 		await ctx.render("panel/courses/add", {
 			config: config,
-			courses: wantedCourses
+			courses: wantedCourses,
+			workers: wantedWorkers
 		});
 	}
 );
@@ -240,9 +242,11 @@ router.get("/panel/courses/:id",
 	async (ctx) => {
 		const wantedCourse = await CourseController.getCourse({ _id: ctx.params.id });
 		const wantedCourses = await CourseController.getCourses();
+		const wantedWorkers = await WorkerController.getWorkers();
 		await ctx.render("panel/courses/course", {
 			course: wantedCourse,
 			courses: wantedCourses,
+			workers: wantedWorkers,
 			config: config
 		});
 	}
