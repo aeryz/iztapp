@@ -65,6 +65,10 @@ const CourseController = (() => ({
 		// generate page path
 		entity.pagePath = await helpers.generatePagePath(entity.courseCode);
 
+		entity.topics = entity.topics + "";
+		entity.topics = entity.topics.split(",");
+		entity.topics = entity.topics.map(topic => topic.trim());
+
 		const now = new Date().toISOString();
 
 		// set creation date
@@ -142,6 +146,7 @@ const CourseController = (() => ({
 		// generate page path
 		entity.pagePath = await helpers.generatePagePath(entity.courseCode);
 
+		entity.topics = entity.topics + "";
 		entity.topics = entity.topics.split(",");
 		entity.topics = entity.topics.map(topic => topic.trim());
 
@@ -151,6 +156,7 @@ const CourseController = (() => ({
 		wantedEntity.departmentCode = entity.departmentCode;
 		wantedEntity.type = entity.type;
 		wantedEntity.topics = entity.topics;
+		wantedEntity.workers = entity.workers;
 		wantedEntity.lectureHours = entity.lectureHours;
 		wantedEntity.labHours = entity.labHours;
 		wantedEntity.credits = entity.credits;
