@@ -290,7 +290,7 @@ router.get("/panel/workers",
 
 router.get("/panel/workers/:id",
 	async (ctx) => {
-		const wantedWorker = await WorkerController.getWorkers(null, null, {_id: ctx.params.id });
+		const wantedWorker = await WorkerController.getWorkers(null, null, {_id: ctx.params.id })[0];
 		await ctx.render("panel/workers/worker", {
 			worker: wantedWorker,
 		});
