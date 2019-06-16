@@ -142,6 +142,7 @@ const CourseController = (() => ({
 		// generate page path
 		entity.pagePath = await helpers.generatePagePath(entity.courseCode);
 
+		entity.topics = entity.topics + "";
 		entity.topics = entity.topics.split(",");
 		entity.topics = entity.topics.map(topic => topic.trim());
 
