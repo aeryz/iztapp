@@ -6,7 +6,7 @@
 
 <ul class="list-group list-group-flush">
 	<li class="list-group-item"><img src="{{ worker.photoPath }}" alt="worker avatar" height="300px"></li>
-	<li class="list-group-item">Full Name: {{ worker.name }} {{ worker.surname }}</li>
+	<li class="list-group-item">Full Name: {{ worker.name | capitalize }} {{ worker.surname | capitalize }}</li>
 	<li class="list-group-item">Type:
 		{% if worker.isAssistant %}
 		Assistant

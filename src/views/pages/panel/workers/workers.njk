@@ -14,8 +14,8 @@
 	<tbody>
 		{% for worker in workers %}
 		<tr>
-			<td>{{ worker.name }}</td>
-			<td>{{ worker.surname }}</td>
+			<td>{{ worker.name | capitalize }}</td>
+			<td>{{ worker.surname | capitalize }}</td>
 			<td><a href="/panel/workers/{{ worker._id }}">Details</a></td>
 		</tr>
 		{% endfor %}
