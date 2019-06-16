@@ -44,6 +44,13 @@ router.post("/api/login",
 	}
 );
 
+router.get('/api/unlock/account/:hash',
+	async (ctx) => {
+		await AccountController.unlockAccount(ctx.params.hash);
+		ctx.redirect("/panel/login");
+	}
+);
+
 router.use(helper.isLoggedIn);
 
 router.get('/api/logout',
@@ -90,14 +97,6 @@ router.post('/api/delete/account',
 		if (userId === ctx.request.body.id) throw new Error(config.errors.ACCOUNT.CANT_DELETE_OWN);
 		await AccountController.delete(ctx.request.body.id);
 		await ctx.redirect("/panel/accounts");
-	}
-);
-
-router.get('/api/unlock/account/:hash',
-	async (ctx) => {
-		const unlockedAccount = await AccountController.unlockAccount(ctx.params.hash);
-		ctx.body = unlockedAccount;
-		// ctx.redirect("/login");
 	}
 );
 
@@ -247,12 +246,13 @@ router.post('/api/set/event',
 
 router.post('/api/send/events',
 	async (ctx) => {
-		ctx.body = await EventController.sendEvent(
+		await EventController.sendEvent(
 			ctx.request.body,
 			ctx.request.body.emailListId
-		)
+		);
+		await ctx.redirect("/panel/events");
 	}
-)
+);
 
 // #endregion
 
