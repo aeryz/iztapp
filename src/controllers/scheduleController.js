@@ -13,18 +13,12 @@ const ScheduleController = (() => ({
 	async getWeeklySchedule(query) {
 		const wantedEntity = await DatabaseController.findOneByQuery("weeklySchedule", query);
 
-		let realDays = [];
-
-		for (let scheduleId of wantedEntity.days) {
-			if (typeof scheduleId === "undefined" || scheduleId === null) {
-				realDays.push(null);
-				continue;
+		for (let i = 0; i < wantedEntity.days.length; i++) {
+			const dailyScheduleId = wantedEntity.days[i];
+			if (!(typeof dailyScheduleId === "undefined" || dailyScheduleId === null)) {
+				wantedEntity.days[i] = await this.getDailySchedule({ _id: dailyScheduleId });
 			}
-			const dailySchedule = await this.getDailySchedule({ _id: scheduleId });
-			await realDays.push(dailySchedule);
 		}
-
-		wantedEntity.days = realDays;
 
 		return wantedEntity;
 	},
@@ -36,16 +30,12 @@ const ScheduleController = (() => ({
 
 	async getDailySchedule(query) {
 		const wantedEntity = await DatabaseController.findOneByQuery("dailySchedule", query);
-		let realCourses = [];
-		for (let courseId of wantedEntity.courses) {
-			if (typeof courseId === "undefined" || courseId === null) {
-				realCourses.push(null);
-				continue;
+		for (let i = 0; i < wantedEntity.courses.length; i++) {
+			const courseId = wantedEntity.courses[i];
+			if (!(typeof courseId === "undefined" || courseId === null)) {
+				wantedEntity.courses[i] = await CourseController.getCourse({ _id: courseId });
 			}
-			const course = await DatabaseController.findOneByQuery("course", { _id: courseId });
-			await realCourses.push(course);
 		}
-		wantedEntity.courses = realCourses;
 		return wantedEntity;
 	},
 
