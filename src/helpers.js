@@ -15,6 +15,7 @@ import config from "./config";
 // import controllers
 import AccountController from "./controllers/accountController";
 import ScheduleController from "./controllers/scheduleController";
+import { log } from "util";
 
 const client = wordpress.createClient({
 	url: "https://ceng316group05.wordpress.com/",
@@ -250,9 +251,13 @@ async function addEditDaily(title, courses, day) {
 
 		console.log(json);
 
+		console.log(courses)
+
+		console.log(json[0])
+
 		for (let i = 0; i < 8; i++) {
 			if (typeof courses[i] === "undefined" || courses[i] === null) continue;
-			json[0][i + 1][`${day + 1}`] = courses[i].departmentCode + ' ' + courses[i].courseCode
+			json[0][i + 1][`${day + 2}`] = courses[i].departmentCode + ' ' + courses[i].courseCode
 		}
 
 		let htmlContent = ""
