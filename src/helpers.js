@@ -77,7 +77,7 @@ async function updateCourse(course) {
 		let link = ""
 		const title = `${course.departmentCode} ${course.courseCode}`;
 		const data = {
-			content: "<h1>adfafsafdasa</h1>"
+			content: `<ul><li>Course Name: ${course.name}</li><li>Course Description: ${course.description}</li><li>Course Code: ${course.courseCode}</li><li>Course Department Code: ${course.departmentCode}</li><li>Course Topics: ${course.topics}</li><li>Course Type: ${config.scheduleTypeStrings[course.type]}</li><li>Course Credits: ${course.credits}</li><li>Course ECTS: ${course.ects}</li><li>Course Lecture Hours: ${course.lectureHours}</li><li>Course Lab Hours: ${course.labHours}</li></ul>`
 		};
 
 		for (let post of posts) {
