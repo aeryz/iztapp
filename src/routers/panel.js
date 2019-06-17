@@ -30,7 +30,7 @@ router.use(
 			if (typeof ctx.cookie === "undefined" || ctx.cookie === null) ctx.cookie = {};
 			await next();
 		} catch (err) {
-			await ctx.render("panel/errors", {
+			await ctx.render("panel/notLoggedIn", {
 				message: err.message
 			});
 		}
@@ -86,6 +86,14 @@ router.get("/unlock/:hash",
 
 // #region Login/Logout routes
 
+router.get("/panel/login",
+	async (ctx) => {
+		await ctx.render("panel/prelogin/login");
+	}
+);
+
+router.use(helpers.isLoggedIn);
+
 router.get("/",
 	async (ctx) => {
 		ctx.redirect("/panel");
@@ -98,12 +106,6 @@ router.get("/panel",
 		// @ts-ignore
 		if (typeof token === "undefined" || token === null) await ctx.redirect(`/panel/login`);
 		await ctx.render("panel/dashboard");
-	}
-);
-
-router.get("/panel/login",
-	async (ctx) => {
-		await ctx.render("panel/prelogin/login");
 	}
 );
 
