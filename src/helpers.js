@@ -12,20 +12,34 @@ import config from "./config";
 
 // import controllers
 import AccountController from "./controllers/accountController";
+import wordpress from 'wordpress';
+import HtmlTableToJson from 'html-table-to-json';
+import {
+	link
+} from "fs";
+
+const client = wordpress.createClient({
+	url: "https://ceng316group05.wordpress.com/",
+	username: "iztechdebak",
+	password: "debak_iztech"
+});
+
 
 // set promises and jwt
-const { promisify } = bluebird;
+const {
+	promisify
+} = bluebird;
 const jwt = {
 	sign: promisify(jsonwebtoken.sign),
 	verify: promisify(jsonwebtoken.verify)
 };
 
 const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 465,
-  secure: true,
-  auth: {
-    user: 'info.debak@gmail.com',
+	host: 'smtp.gmail.com',
+	port: 465,
+	secure: true,
+	auth: {
+		user: 'info.debak@gmail.com',
 		pass: 'debak123.123.A'
 	}
 });
@@ -34,6 +48,74 @@ const transporter = nodemailer.createTransport({
 async function generatePagePath(data) {
 	return speakingurl(data);
 };
+
+async function publishCourse(course) {
+	let uniq = course.departmentCode + ' ' + course.courseCode;
+	client.newPost({
+		type: "page",
+		title: uniq,
+		content: course.description,
+		status: "publish",
+	}, function (error, data) {
+		console.log("Post sent! The server replied with the following:\n");
+	});
+
+	client.getPost("18", function (error, post) {
+
+		let data = post.content;
+
+		data += '<br><a href="https://ceng316group05.wordpress.com/' + course.departmentCode + ' ' + course.courseCode + '/">' + uniq + '</a>'
+
+		client.editPost(post.id, {
+			content: data
+		}, function (error) {
+			console.log(error);
+		})
+	})
+};
+
+async function deleteCourse(title) {
+	client.getPosts(function (error, posts) {
+
+		let id = ""
+		let link = ""
+
+		for (let post of posts) {
+			if (title === post.title) {
+				id = post.id
+				link = post.link
+			}
+		}
+
+		client.deletePost(id, function (error) {
+			console.log(error);
+		})
+
+		client.getPost('18', function (error, post) {
+			let content = post.content;
+
+			let links = content.split('<br>')
+
+			let html = "";
+
+			for (let l of links) {
+				if (link !== l) {
+					html += l;
+					html += '<br>'
+				}
+			}
+
+			client.editPost("18", {
+				content: data
+			}, function (error) {
+				console.log(error);
+			})
+
+		})
+
+	})
+
+}
 
 async function sendMail(emailList, context) {
 	for (let email of emailList) {
@@ -45,11 +127,11 @@ async function sendMail(emailList, context) {
 		}
 
 		transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        return console.log(error);
-      }
-      console.log('Message %s sent: %s', info.messageId, info.response);
-    });
+			if (error) {
+				return console.log(error);
+			}
+			console.log('Message %s sent: %s', info.messageId, info.response);
+		});
 	}
 }
 
@@ -124,8 +206,7 @@ async function authenticate(id, userAgent) {
 	for (let i = 0; i < 64; i += 2) finalUserAgentHash += userAgentHash[i];
 
 	// @ts-ignore
-	const token = await jwt.sign(
-		{
+	const token = await jwt.sign({
 			t: encryptedId,
 			h: finalUserAgentHash
 		},
@@ -140,9 +221,14 @@ async function authenticate(id, userAgent) {
 }
 
 async function authenticateAdmin(ctx, next) {
-	const { token } = ctx.cookie;
+	const {
+		token
+	} = ctx.cookie;
 	if (typeof token === "undefined" || token === null) throw new Error(config.errors.NOT_LOGGED_IN);
-	const { id, exp } = await verifyToken(token, ctx.userAgent.source);
+	const {
+		id,
+		exp
+	} = await verifyToken(token, ctx.userAgent.source);
 	const wantedAdmin = await AccountController.getAccountById(id)
 	if (wantedAdmin.isLocked === true) throw new Error(config.errors.ACCOUNT.LOCKED_ACCOUNT);
 	if (wantedAdmin.type !== config.accountTypes[2]) throw new Error(config.errors.PERMISSION_DENIED);
@@ -186,5 +272,6 @@ export default {
 	generateHash,
 	generatePasswordHash,
 	comparePassword,
-	sendMail
+	sendMail,
+	publishCourse
 };

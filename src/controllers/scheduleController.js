@@ -16,14 +16,15 @@ const ScheduleController = (() => ({
 		for (let i = 0; i < wantedEntity.days.length; i++) {
 			const dailyScheduleId = wantedEntity.days[i];
 			if (!(typeof dailyScheduleId === "undefined" || dailyScheduleId === null)) {
-				wantedEntity.days[i] = await this.getDailySchedule({ _id: dailyScheduleId });
+				wantedEntity.days[i] = await this.getDailySchedule({
+					_id: dailyScheduleId
+				});
 			}
 		}
 
 		return wantedEntity;
 	},
-
-	async getDailySchedules(limit = 0, skip = 0, query) {
+	dkj async getDailySchedules(limit = 0, skip = 0, query) {
 		const wantedEntities = await DatabaseController.find("dailySchedule", limit, skip, query);
 		return wantedEntities;
 	},
@@ -33,7 +34,9 @@ const ScheduleController = (() => ({
 		for (let i = 0; i < wantedEntity.courses.length; i++) {
 			const courseId = wantedEntity.courses[i];
 			if (!(typeof courseId === "undefined" || courseId === null)) {
-				wantedEntity.courses[i] = await CourseController.getCourse({ _id: courseId });
+				wantedEntity.courses[i] = await CourseController.getCourse({
+					_id: courseId
+				});
 			}
 		}
 		return wantedEntity;
@@ -74,7 +77,9 @@ const ScheduleController = (() => ({
 		entity.type = +entity.type
 		if (Number.isNaN(entity.type) || !config.scheduleTypes.includes(entity.type) || Math.floor(entity.type) !== entity.type) throw new Error(config.errors.WEEKLY_SCHEDULE.VALIDATION.INVALID_TYPE);
 
-		const wantedEntity = await this.getWeeklySchedule({ _id: id });
+		const wantedEntity = await this.getWeeklySchedule({
+			_id: id
+		});
 
 		wantedEntity.semester = entity.semester;
 		wantedEntity.type = entity.type;
@@ -86,7 +91,9 @@ const ScheduleController = (() => ({
 
 	async deleteWeeklySchedule(id) {
 		if (typeof id === "undefined" || id === null) throw new Error(config.errors.MISSING_PARAMETER);
-		const deleteResult = await DatabaseController.delete("weeklySchedule", { _id: id });
+		const deleteResult = await DatabaseController.delete("weeklySchedule", {
+			_id: id
+		});
 		return deleteResult;
 	},
 
@@ -126,7 +133,9 @@ const ScheduleController = (() => ({
 		entity.type = +entity.type
 		if (Number.isNaN(entity.type) || !config.scheduleTypes.includes(entity.type) || Math.floor(entity.type) !== entity.type) throw new Error(config.errors.DAILY_SCHEDULE.VALIDATION.INVALID_TYPE);
 
-		const wantedEntity = await this.getDailySchedule({ _id: id });
+		const wantedEntity = await this.getDailySchedule({
+			_id: id
+		});
 
 		wantedEntity.day = entity.day;
 		wantedEntity.type = entity.type;
@@ -140,7 +149,9 @@ const ScheduleController = (() => ({
 	// ! TODO: Check if this daily schedule is used in somewhere
 	async deleteDailySchedule(id) {
 		if (typeof id === "undefined" || id === null) throw new Error(config.errors.MISSING_PARAMETER);
-		const deleteResult = await DatabaseController.delete("dailySchedule", { _id: id });
+		const deleteResult = await DatabaseController.delete("dailySchedule", {
+			_id: id
+		});
 		return deleteResult;
 	},
 
@@ -158,8 +169,12 @@ const ScheduleController = (() => ({
 		// validate day
 		if (day < config.limits.weeklySchedule.minDayNumber || day > config.limits.weeklySchedule.maxDayNumber) throw new Error(config.errors.WEEKLY_SCHEDULE.VALIDATION.INVALID_DAY);
 
-		const wantedWeeklySchedule = await this.getWeeklySchedule({ _id: weeklyScheduleId });
-		const wantedDailySchedule = await this.getDailySchedule({ _id: dailyScheduleId });
+		const wantedWeeklySchedule = await this.getWeeklySchedule({
+			_id: weeklyScheduleId
+		});
+		const wantedDailySchedule = await this.getDailySchedule({
+			_id: dailyScheduleId
+		});
 
 		if (wantedWeeklySchedule.type !== wantedDailySchedule.type) throw new Error(config.errors.WEEKLY_SCHEDULE.TYPE_MISMATCH);
 
@@ -188,14 +203,18 @@ const ScheduleController = (() => ({
 		// validate day
 		if (day < config.limits.weeklySchedule.minDayNumber || day > config.limits.weeklySchedule.maxDayNumber) throw new Error(config.errors.WEEKLY_SCHEDULE.VALIDATION.INVALID_DAY);
 
-		const wantedEntity = await this.getWeeklySchedule({ _id: weeklyScheduleId });
+		const wantedEntity = await this.getWeeklySchedule({
+			_id: weeklyScheduleId
+		});
 
 		if (typeof wantedEntity.days[day] === "undefined" || wantedEntity.days[day] === null)
 			throw new Error(config.errors.WEEKLY_SCHEDULE.EMPTY_DAY);
 
 		const deleteDailyScheduleId = wantedEntity.days[day];
 		wantedEntity.days[day] = null;
-		const deleteResult = await DatabaseController.delete("dailySchedule", { _id: deleteDailyScheduleId });
+		const deleteResult = await DatabaseController.delete("dailySchedule", {
+			_id: deleteDailyScheduleId
+		});
 
 		if (deleteResult) return wantedEntity;
 		else throw new Error(config.errors.DELETE_FAILURE);
@@ -212,8 +231,12 @@ const ScheduleController = (() => ({
 		dailyScheduleId += "";
 		await helpers.validate(dailyScheduleId, "id");
 
-		const wantedDailySchedule = await this.getDailySchedule({ _id: dailyScheduleId });
-		const wantedCourse = await CourseController.getCourse({ _id: courseId });
+		const wantedDailySchedule = await this.getDailySchedule({
+			_id: dailyScheduleId
+		});
+		const wantedCourse = await CourseController.getCourse({
+			_id: courseId
+		});
 
 		if (wantedCourse.type !== wantedDailySchedule.type) throw new Error(config.errors.DAILY_SCHEDULE.TYPE_MISMATCH);
 		if (wantedDailySchedule.courses.includes(wantedCourse._id)) throw new Error(config.errors.DAILY_SCHEDULE.COURSE_EXISTS);

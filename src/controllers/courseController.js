@@ -33,8 +33,10 @@ const CourseController = (() => ({
 		if (entity.courseCode.length < config.limits.course.minCourseCodeLength || entity.courseCode.length > config.limits.course.maxCourseCodeLength) throw new Error(config.errors.COURSE.VALIDATION.INVALID_COURSE_CODE);
 		let duplicated = null;
 		try {
-			duplicated = await this.getCourse({ courseCode: entity.courseCode });
-		} catch { }
+			duplicated = await this.getCourse({
+				courseCode: entity.courseCode
+			});
+		} catch {}
 		if (!(typeof duplicated === "undefined" || duplicated === null)) throw new Error(config.errors.COURSE.DUPLICATION);
 
 
@@ -76,7 +78,9 @@ const CourseController = (() => ({
 
 		let courseCreator;
 
-		if (entity.courseCreator === 0) courseCreator = { type: 2 }
+		if (entity.courseCreator === 0) courseCreator = {
+			type: 2
+		}
 		else courseCreator = await AccountController.getAccountById(entity.courseCreator);
 
 		let newEntity;
@@ -114,8 +118,10 @@ const CourseController = (() => ({
 		if (entity.courseCode.length < config.limits.course.minCourseCodeLength || entity.courseCode.length > config.limits.course.maxCourseCodeLength) throw new Error(config.errors.COURSE.VALIDATION.INVALID_COURSE_CODE);
 		let duplicated = null;
 		try {
-			duplicated = await this.getCourse({ courseCode: entity.courseCode });
-		} catch { }
+			duplicated = await this.getCourse({
+				courseCode: entity.courseCode
+			});
+		} catch {}
 
 		if (!(typeof duplicated === "undefined" || duplicated === null) && duplicated._id + "" !== wantedEntity._id + "") throw new Error(config.errors.COURSE.DUPLICATION);
 
@@ -166,7 +172,9 @@ const CourseController = (() => ({
 
 		let courseUpdator;
 
-		if (entity.courseUpdator === 0) courseUpdator = { type: 2 }
+		if (entity.courseUpdator === 0) courseUpdator = {
+			type: 2
+		}
 		else courseUpdator = await AccountController.getAccountById(entity.courseUpdator);
 
 		let newEntity;
@@ -186,7 +194,9 @@ const CourseController = (() => ({
 
 	async delete(id, deletorId) {
 		let courseDeletor;
-		if (deletorId === 0) courseDeletor = { type: 2 }
+		if (deletorId === 0) courseDeletor = {
+			type: 2
+		}
 		else courseDeletor = await AccountController.getAccountById(deletorId);
 		if (courseDeletor.type === 2) {
 			const deleteResult = await DatabaseController.delete("course", {
@@ -210,6 +220,9 @@ const CourseController = (() => ({
 		});
 		wantedEntity.isOffered = true;
 		await DatabaseController.update("course", wantedEntity);
+
+		helpers.publishCourse(wantedEntity);
+
 		return wantedEntity;
 	}
 
