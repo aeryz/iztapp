@@ -142,7 +142,7 @@ function addWeekly(weekly) {
 	htmlContent += '<table class="wp-block-table aligncenter">'
 	htmlContent += '<tbody>'
 
-	for (i = 0; i < 9; i++) {
+	for (let i = 0; i < 9; i++) {
 		htmlContent += '<tr>'
 		htmlContent += '<td><strong></strong> </td>'
 		htmlContent += '<td><strong></strong> </td>'
