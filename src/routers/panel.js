@@ -93,6 +93,7 @@ router.get("/panel/login",
 );
 
 router.use(helpers.isLoggedIn);
+router.use(helpers.isLocked);
 
 router.get("/",
 	async (ctx) => {

@@ -160,6 +160,14 @@ async function isLoggedIn(ctx, next) {
 	await next();
 }
 
+async function isLocked(ctx, next) {
+	const token = ctx.cookie.token;
+	if (typeof token === "undefined" || token === null) throw new Error(config.errors.NOT_LOGGED_IN);
+	const loggedInUser = await AccountController.getAccountById(ctx.cookie.userId);
+	if (loggedInUser.isLocked) throw new Error(config.errors.ACCOUNT.LOCKED_ACCOUNT);
+	await next();
+}
+
 async function generateHash(data) {
 	return crypto.createHash(config.hashAlgorithm).update(data).digest("hex");
 }
@@ -172,6 +180,7 @@ export default {
 	authenticate,
 	authenticateAdmin,
 	isLoggedIn,
+	isLocked,
 	validate,
 	generatePagePath,
 	generateHash,
