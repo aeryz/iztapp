@@ -196,8 +196,6 @@ async function deleteWeekly(title) {
 		let link = ""
 
 		for (let post of posts) {
-			console.log(title);
-			console.log(post.title);
 			if (title === post.title) {
 				id = post.id
 				link = post.link
@@ -216,6 +214,8 @@ async function deleteWeekly(title) {
 			let html = "";
 
 			for (let l of links) {
+				console.log(l);
+				console.log(link);
 				if (!l.includes(link)) {
 					html += l;
 					html += '<br>'
