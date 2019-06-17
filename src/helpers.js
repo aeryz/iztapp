@@ -76,7 +76,9 @@ async function updateCourse(course) {
 		let id = ""
 		let link = ""
 		const title = `${course.departmentCode} ${course.courseCode}`;
-		const content = `<h1>aaaaaa</h1>`;
+		const data = {
+			content: "<h1>adfafsafdasa</h1>"
+		};
 
 		for (let post of posts) {
 			console.log(title);
@@ -87,7 +89,7 @@ async function updateCourse(course) {
 			}
 		}
 
-		client.editPost(id, content, function(error) {
+		client.editPost(id, data, function(error) {
 			console.log(error);
 		});
 
