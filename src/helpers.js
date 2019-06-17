@@ -142,9 +142,17 @@ function addWeekly(weekly) {
 	htmlContent += '<table class="wp-block-table aligncenter">'
 	htmlContent += '<tbody>'
 
-	for (let i = 0; i < 9; i++) {
+	htmlContent += '<tr>'
+	htmlContent += '<td><strong></strong> </td>'
+	htmlContent += '<td><strong>Monday</strong> </td>'
+	htmlContent += '<td><strong>Tuesday</strong> </td>'
+	htmlContent += '<td><strong>Wednesday</strong> </td>'
+	htmlContent += '<td><strong>Thursday</strong> </td>'
+	htmlContent += '<td><strong>Friday</strong> </td>'
+	htmlContent += '</tr>'
+	for (let i = 0; i < 8; i++) {
 		htmlContent += '<tr>'
-		htmlContent += '<td><strong></strong> </td>'
+		htmlContent += '<td><strong>' + i + '</strong> </td>'
 		htmlContent += '<td><strong></strong> </td>'
 		htmlContent += '<td><strong></strong> </td>'
 		htmlContent += '<td><strong></strong> </td>'
