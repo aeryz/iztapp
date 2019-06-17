@@ -182,6 +182,48 @@ function addWeekly(weekly) {
 	})
 };
 
+async function deleteWeekly(title) {
+	client.getPosts({ type: "page" }, function (error, posts) {
+		let id = ""
+		let link = ""
+
+		for (let post of posts) {
+			if (title === post.title) {
+				id = post.id
+				link = post.link
+			}
+		}
+
+		client.deletePost(id, function (error) {
+			console.log(error);
+		})
+
+		client.getPost('16', function (error, post) {
+			let content = post.content;
+
+			let links = content.split('<br>')
+
+			let html = "";
+
+			for (let l of links) {
+				if (!l.includes(link)) {
+					html += l;
+					html += '<br>'
+				}
+			}
+
+			client.editPost("18", {
+				content: html
+			}, function (error) {
+				console.log(error);
+			})
+
+		})
+
+	})
+};
+
+
 async function sendMail(emailList, context) {
 	for (let email of emailList) {
 		let mailOptions = {
@@ -341,5 +383,6 @@ export default {
 	publishCourse,
 	updateCourse,
 	deleteCourse,
-	addWeekly
+	addWeekly,
+	deleteWeekly
 };

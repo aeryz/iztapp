@@ -93,6 +93,8 @@ const ScheduleController = (() => ({
 
 	async deleteWeeklySchedule(id) {
 		if (typeof id === "undefined" || id === null) throw new Error(config.errors.MISSING_PARAMETER);
+		const wantedEntity = await this.getWeeklySchedule({_id: id});
+		await helpers.deleteWeekly(`${config.scheduleTypeStrings[wantedEntity.type]}-${wantedEntity.semester}`);
 		const deleteResult = await DatabaseController.delete("weeklySchedule", {
 			_id: id
 		});
