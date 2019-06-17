@@ -61,9 +61,9 @@ const config = {
 		2 // Doktora
 	],
 	scheduleTypeStrings: {
-		0: "Lisans",
-		1: "Yüksek",
-		2: "Doktora"
+		0: "undergraduate",
+		1: "graduate",
+		2: "phd"
 	},
 	requestTypes: [
 		0, // Add
