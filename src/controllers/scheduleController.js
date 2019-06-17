@@ -130,9 +130,11 @@ const ScheduleController = (() => ({
 
 		const newEntity = await DatabaseController.add("dailySchedule", entity);
 
-		await helpers.addEditDaily(`${config.scheduleTypeStrings[newEntity.type]}-${newEntity.semester}`,
-			newEntity.courses,
-			newEntity.day);
+		const wantedEntity = await this.getDailySchedule({_id: newEntity.id});
+
+		await helpers.addEditDaily(`${config.scheduleTypeStrings[wantedEntity.type]}-${wantedEntity.semester}`,
+			wantedEntity.courses,
+			wantedEntity.day);
 
 		return newEntity;
 	},

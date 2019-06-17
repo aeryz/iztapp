@@ -126,9 +126,6 @@
 		}
 		data.courses = courses;
 		if (saveCount{{ i }} == 0) {
-			console.log(JSON.parse(data));
-			console.log(data);
-			console.log(JSON.stringify(data));
 			postData(`/api/add/dailySchedule`, data)
 				.then(function (data) {
 					if (data._id) {
