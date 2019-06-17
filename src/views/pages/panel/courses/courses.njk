@@ -18,7 +18,7 @@
 <table class="table">
 	<thead>
 		<tr>
-			<th scope="col">Course Code</th>
+			<th scope="col">Department-Course Code</th>
 			<th scope="col">Course Name</th>
 			<th scope="col">Option</th>
 		</tr>
@@ -26,7 +26,7 @@
 	<tbody>
 		{% for course in courses %}
 		<tr>
-			<td>{{ course.courseCode }}</td>
+			<td>{{ course.departmentCode }}{{ course.courseCode }}</td>
 			<td>{{ course.name }}</td>
 			<td><a href="/panel/courses/{{ course._id }}">Edit/Delete</a></td>
 		</tr>
