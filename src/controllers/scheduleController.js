@@ -22,6 +22,8 @@ const ScheduleController = (() => ({
 			}
 		}
 
+		console.log(wantedEntity);
+
 		return wantedEntity;
 	},
 	async getDailySchedules(limit = 0, skip = 0, query) {

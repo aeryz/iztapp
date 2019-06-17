@@ -49,7 +49,7 @@
 					{% if weeklySchedule.days[k - 1].courses[i - 1] == null %}
 					<option value="null" selected>Empty</option>
 					{% else %}
-					<option value="{{ weeklySchedule.days[k - 1].courses[i - 1]._id }}" selected>{{  weeklySchedule.days[k - 1].courses[i - 1].courseCode }}</option>
+					<option value="{{ weeklySchedule.days[k - 1].courses[i - 1]._id }}" selected>{{  weeklySchedule.days[k - 1].courses[i - 1].departmentCode }}{{  weeklySchedule.days[k - 1].courses[i - 1].courseCode }}</option>
 					{% endif %}
 					{% for course in courses %}
 					<option value="{{ course._id }}">{{course.departmentCode}}{{ course.courseCode }}</option>
