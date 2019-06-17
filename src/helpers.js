@@ -71,7 +71,7 @@ async function publishCourse(course) {
 };
 
 async function deleteCourse(title) {
-	client.getPosts(function (error, posts) {
+	client.getPosts({type: "page"},function (error, posts) {
 
 		console.log(title);
 		console.log(typeof title);
