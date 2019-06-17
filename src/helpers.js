@@ -134,6 +134,53 @@ async function deleteCourse(title) {
 	})
 };
 
+function addWeekly(weekly) {
+
+	let htmlContent = ""
+
+	htmlContent += '<!-- wp:table {"align":"center"} -->'
+	htmlContent += '<table class="wp-block-table aligncenter">'
+	htmlContent += '<tbody>'
+
+	for (i = 0; i < 9; i++) {
+		htmlContent += '<tr>'
+		htmlContent += '<td><strong></strong> </td>'
+		htmlContent += '<td><strong></strong> </td>'
+		htmlContent += '<td><strong></strong> </td>'
+		htmlContent += '<td><strong></strong> </td>'
+		htmlContent += '<td><strong></strong> </td>'
+		htmlContent += '<td><strong></strong> </td>'
+		htmlContent += '</tr>'
+	}
+
+	htmlContent += '</tbody>'
+	htmlContent += '</table>'
+	htmlContent += '<!-- /wp:table -->'
+
+	let uniq = config.scheduleStrings[weekly.type] + '-' + weekly.semester;
+
+	client.newPost({
+		type: 'page',
+		title: uniq,
+		content: htmlContent
+	}, function (error, data) {
+		console.log(error);
+	})
+
+	client.getPost("16", function (error, post) {
+
+		let data = post.content;
+
+		data += '<br><a href="https://ceng316group05.wordpress.com/' + uniq + '/">' + uniq + '</a>'
+
+		client.editPost(post.id, {
+			content: data
+		}, function (error) {
+			console.log(error);
+		})
+	})
+};
+
 async function sendMail(emailList, context) {
 	for (let email of emailList) {
 		let mailOptions = {
@@ -292,5 +339,6 @@ export default {
 	sendMail,
 	publishCourse,
 	updateCourse,
-	deleteCourse
+	deleteCourse,
+	addWeekly
 };

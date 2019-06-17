@@ -61,6 +61,8 @@ const ScheduleController = (() => ({
 
 		const newEntity = await DatabaseController.add("weeklySchedule", entity);
 
+		await helpers.addWeekly(newEntity);
+
 		return newEntity;
 
 	},
