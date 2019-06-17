@@ -248,6 +248,8 @@ async function addEditDaily(title, courses, day) {
 
 		let json = new HtmlTableToJson(table).results
 
+		console.log(json);
+
 		for (let i = 0; i < 8; i++) {
 			if (typeof courses[i] === "undefined" || courses[i] === null) continue;
 			json[i + 1][`${day + 1}`] = courses[i].departmentCode + ' ' + courses[i].courseCode
