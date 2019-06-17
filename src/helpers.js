@@ -268,5 +268,6 @@ export default {
 	generatePasswordHash,
 	comparePassword,
 	sendMail,
-	publishCourse
+	publishCourse,
+	deleteCourse
 };

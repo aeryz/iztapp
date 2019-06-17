@@ -200,6 +200,8 @@ const CourseController = (() => ({
 		}
 		else courseDeletor = await AccountController.getAccountById(deletorId);
 		if (courseDeletor.type === 2) {
+			const deletedCourse = await this.getCourse({_id: id});
+			await helpers.deleteCourse(`${deletedCourse.departmentCode} ${deletedCourse.courseCode}`);
 			const deleteResult = await DatabaseController.delete("course", {
 				_id: id
 			});
