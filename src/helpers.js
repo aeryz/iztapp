@@ -72,16 +72,10 @@ async function publishCourse(course) {
 
 async function deleteCourse(title) {
 	client.getPosts({type: "page"},function (error, posts) {
-
-		console.log(title);
-		console.log(typeof title);
-
 		let id = ""
 		let link = ""
 
 		for (let post of posts) {
-			console.log(post);
-			console.log(typeof post.title);
 			if (title === post.title) {
 				id = post.id
 				link = post.link
@@ -107,7 +101,7 @@ async function deleteCourse(title) {
 			}
 
 			client.editPost("18", {
-				content: data
+				content: html;
 			}, function (error) {
 				console.log(error);
 			})
