@@ -159,7 +159,8 @@ const config = {
 		DAILY_SCHEDULE: {
 			VALIDATION: {
 				INVALID_TYPE: "Given daily schedule type is not valid. Please enter a valid daily schedule type.",
-				INVALID_DAY: `Given day must be between ${limits.dailySchedule.minDayNumber} and ${limits.dailySchedule.maxDayNumber}.`
+				INVALID_DAY: `Given day must be between ${limits.dailySchedule.minDayNumber} and ${limits.dailySchedule.maxDayNumber}.`,
+				INVALID_SEMESTER: `Given semester must be between ${limits.dailySchedule.minSemesterNumber} and ${limits.dailySchedule.maxSemesterNumber}.`
 			},
 			TYPE_MISMATCH: "Given daily schedule and course types must be the same.",
 			COURSE_EXISTS: "This daily schedule already contains given course."

@@ -31,6 +31,8 @@ const limits = {
 	dailySchedule: {
 		minDayNumber: 0,
 		maxDayNumber: 4,
+		minSemesterNumber: 1,
+		maxSemesterNumber: 12,
 		courseNumber: 8
 	},
 	course: {
