@@ -231,6 +231,57 @@ async function deleteWeekly(title) {
 	})
 };
 
+async function addEditDaily(title, courses, day) {
+	client.getPosts({
+		type: 'page'
+	}, function (error, posts) {
+
+		let post;
+
+		for (let page of posts) {
+			if (title.toLowerCase().includes(page.title.toLowerCase())) {
+				post = page;
+			}
+		}
+
+		let table = post.content;
+
+		let json = new HtmlTableToJson(table).results
+
+		for (let i = 0; i < 8; i++) {
+			if (typeof courses[i] === "undefined" || courses[i] === null) continue;
+			json[i + 1][`${day + 1}`] = courses[i].departmentCode + ' ' + courses[i].courseCode
+		}
+
+		let htmlContent = ""
+
+		htmlContent += '<!-- wp:table {"align":"center"} -->'
+		htmlContent += '<table class="wp-block-table aligncenter">'
+		htmlContent += '<tbody>'
+
+		for (let row of json) {
+			htmlContent += '<tr>'
+			htmlContent += '<td><strong>' + row['1'] + '</strong> </td>'
+			htmlContent += '<td><strong>' + row['2'] + '</strong> </td>'
+			htmlContent += '<td><strong>' + row['3'] + '</strong> </td>'
+			htmlContent += '<td><strong>' + row['4'] + '</strong> </td>'
+			htmlContent += '<td><strong>' + row['5'] + '</strong> </td>'
+			htmlContent += '<td><strong>' + row['6'] + '</strong> </td>'
+			htmlContent += '</tr>'
+		}
+
+		htmlContent += '</tbody>'
+		htmlContent += '</table>'
+		htmlContent += '<!-- /wp:table -->'
+
+		client.editPost(post.id, {
+			content: htmlContent,
+		}, function (error, data) {
+			console.log("Post sent! The server replied with the following:\n");
+		})
+
+	})
+}
 
 async function sendMail(emailList, context) {
 	for (let email of emailList) {
@@ -392,5 +443,6 @@ export default {
 	updateCourse,
 	deleteCourse,
 	addWeekly,
-	deleteWeekly
+	deleteWeekly,
+	addEditDaily
 };

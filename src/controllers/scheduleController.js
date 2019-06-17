@@ -189,9 +189,12 @@ const ScheduleController = (() => ({
 			if (removedDailyScheduleId !== dailyScheduleId) await this.deleteDailySchedule(removedDailyScheduleId);
 		}
 
-		console.log(wantedWeeklySchedule);
 
 		const updatedWeeklySchedule = await DatabaseController.update("weeklySchedule", wantedWeeklySchedule);
+
+		await helpers.addEditDaily(`${config.scheduleTypeStrings[updatedWeeklySchedule.type]}-${updatedWeeklySchedule.semester}`,
+									wantedDailySchedule.courses,
+									wantedDailySchedule.day);
 
 		return updatedWeeklySchedule;
 
