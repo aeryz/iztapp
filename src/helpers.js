@@ -94,7 +94,7 @@ async function deleteCourse(title) {
 			let html = "";
 
 			for (let l of links) {
-				if (link !== l) {
+				if (!l.includes(link)) {
 					html += l;
 					html += '<br>'
 				}
