@@ -261,7 +261,7 @@ async function addEditDaily(title, courses, day) {
 		htmlContent += '<table class="wp-block-table aligncenter">'
 		htmlContent += '<tbody>'
 
-		for (let row of json) {
+		for (let row of json[0]) {
 			htmlContent += '<tr>'
 			htmlContent += '<td><strong>' + row['1'] + '</strong> </td>'
 			htmlContent += '<td><strong>' + row['2'] + '</strong> </td>'
