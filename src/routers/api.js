@@ -316,9 +316,10 @@ router.post('/api/update/weeklySchedule/:id',
 
 router.get('/api/delete/weeklySchedule/:id',
 	async (ctx) => {
-		ctx.body = await ScheduleController.deleteWeeklySchedule(
+		await ScheduleController.deleteWeeklySchedule(
 			ctx.params.id
 		);
+		await ctx.redirect("/panel/schedules/weeklySchedules");
 	}
 );
 

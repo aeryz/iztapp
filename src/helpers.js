@@ -81,9 +81,9 @@ async function updateCourse(course) {
 		};
 
 		for (let post of posts) {
-			if (title === post.title) {
+			if (title.toLowerCase() === post.title.toLowerCase()) {
 				id = post.id
-				link = post.link
+				link = post.link.toLowerCase()
 			}
 		};
 
@@ -99,9 +99,9 @@ async function deleteCourse(title) {
 		let link = ""
 
 		for (let post of posts) {
-			if (title === post.title) {
+			if (title.toLowerCase() === post.title.toLowerCase()) {
 				id = post.id
-				link = post.link
+				link = post.link.toLowerCase()
 			}
 		}
 
@@ -117,7 +117,7 @@ async function deleteCourse(title) {
 			let html = "";
 
 			for (let l of links) {
-				if (!l.includes(link)) {
+				if (!l.toLowerCase().includes(link)) {
 					html += l;
 					html += '<br>'
 				}
@@ -198,7 +198,7 @@ async function deleteWeekly(title) {
 		for (let post of posts) {
 			if (title === post.title) {
 				id = post.id
-				link = post.link
+				link = post.link.toLowerCase()
 			}
 		}
 
@@ -214,9 +214,7 @@ async function deleteWeekly(title) {
 			let html = "";
 
 			for (let l of links) {
-				console.log(l);
-				console.log(link);
-				if (!l.includes(link)) {
+				if (!l.toLowerCase().includes(link)) {
 					html += l;
 					html += '<br>'
 				}
