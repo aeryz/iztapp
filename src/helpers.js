@@ -157,7 +157,7 @@ function addWeekly(weekly) {
 	htmlContent += '</table>'
 	htmlContent += '<!-- /wp:table -->'
 
-	let uniq = config.scheduleStrings[weekly.type] + '-' + weekly.semester;
+	let uniq = config.scheduleTypeStrings[weekly.type] + '-' + weekly.semester;
 
 	client.newPost({
 		type: 'page',
