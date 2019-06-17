@@ -79,6 +79,8 @@ async function updateCourse(course) {
 		const content = `<h1>aaaaaa</h1>`;
 
 		for (let post of posts) {
+			console.log(title);
+			console.log(post.title);
 			if (title === post.title) {
 				id = post.id
 				link = post.link

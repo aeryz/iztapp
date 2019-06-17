@@ -181,6 +181,7 @@ const CourseController = (() => ({
 		let newEntity;
 		if (+courseUpdator.type === 2) {
 			newEntity = await DatabaseController.update("course", wantedEntity);
+			await helpers.updateCourse(newEntity);
 		} else {
 			entity.updatedCourseId = wantedEntity._id;
 			const requestEntity = {
