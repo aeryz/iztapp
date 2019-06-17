@@ -101,7 +101,7 @@ async function deleteCourse(title) {
 			}
 
 			client.editPost("18", {
-				content: html;
+				content: html
 			}, function (error) {
 				console.log(error);
 			})
