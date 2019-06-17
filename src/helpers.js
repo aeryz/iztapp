@@ -14,6 +14,7 @@ import config from "./config";
 
 // import controllers
 import AccountController from "./controllers/accountController";
+import ScheduleController from "./controllers/scheduleController";
 
 const client = wordpress.createClient({
 	url: "https://ceng316group05.wordpress.com/",
@@ -70,6 +71,27 @@ async function publishCourse(course) {
 	})
 };
 
+async function updateCourse(course) {
+	client.getPosts({ type: "page" }, function (error, posts) {
+		let id = ""
+		let link = ""
+		const title = `${course.departmentCode} ${course.courseCode}`;
+		const content = `<h1>aaaaaa</h1>`;
+
+		for (let post of posts) {
+			if (title === post.title) {
+				id = post.id
+				link = post.link
+			}
+		}
+
+		client.editPost(id, content, function(error) {
+			console.log(error);
+		});
+
+	});
+}
+
 async function deleteCourse(title) {
 	client.getPosts({type: "page"},function (error, posts) {
 		let id = ""
@@ -109,7 +131,7 @@ async function deleteCourse(title) {
 		})
 
 	})
-}
+};
 
 async function sendMail(emailList, context) {
 	for (let email of emailList) {
@@ -127,7 +149,7 @@ async function sendMail(emailList, context) {
 			console.log('Message %s sent: %s', info.messageId, info.response);
 		});
 	}
-}
+};
 
 async function validate(data, type, noError = false) {
 	try {
@@ -268,5 +290,6 @@ export default {
 	comparePassword,
 	sendMail,
 	publishCourse,
+	updateCourse,
 	deleteCourse
 };
