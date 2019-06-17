@@ -52,7 +52,7 @@
 					<option value="{{ weeklySchedule.days[k - 1].courses[i - 1]._id }}" selected>{{  weeklySchedule.days[k - 1].courses[i - 1].courseCode }}</option>
 					{% endif %}
 					{% for course in courses %}
-					<option value="{{ course._id }}">{{ course.courseCode }}</option>
+					<option value="{{ course._id }}">{{course.departmentCode}}{{ course.courseCode }}</option>
 					{% endfor %}
 				</select>
 			</div>
