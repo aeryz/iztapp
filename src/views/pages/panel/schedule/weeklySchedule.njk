@@ -103,12 +103,12 @@
 {% for i in range(1, config.limits.weeklySchedule.dayNumber + 1) %}
 <script>
 	let saveCount{{ i }};
-	if (`{{ weeklySchedule.days[i] }}` == "") {
+	if (`{{ weeklySchedule.days[i - 1] }}` == "") {
 		saveCount{{ i }} = 0;
 	} else {
 		saveCount{{ i }} = 1;
 	}
-	let updateLink{{ i }} = "/api/update/dailySchedule/{{ weeklySchedule.days[i]._id }}"
+	let updateLink{{ i }} = "/api/update/dailySchedule/{{ weeklySchedule.days[i - 1]._id }}"
 	$(".btn-save-day-{{ i }}").on("click", (e) => {
 		e.preventDefault();
 		const formElement = document.getElementById("form-day-{{ i }}");
