@@ -162,7 +162,8 @@ function addWeekly(weekly) {
 	client.newPost({
 		type: 'page',
 		title: uniq,
-		content: htmlContent
+		content: htmlContent,
+		status: "publish"
 	}, function (error, data) {
 		console.log(error);
 	})
