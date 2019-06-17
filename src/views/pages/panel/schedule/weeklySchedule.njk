@@ -125,11 +125,12 @@
 			}
 		}
 		data.courses = courses;
-		console.log(data);
 		if (saveCount{{ i }} == 0) {
+			console.log(JSON.parse(data));
+			console.log(data);
+			console.log(JSON.stringify(data));
 			postData(`/api/add/dailySchedule`, data)
 				.then(function (data) {
-					console.log("hello");
 					if (data._id) {
 						alert("Day saved!");
 						$(".btn-save-day-{{ i }}").prop("disabled", true);
