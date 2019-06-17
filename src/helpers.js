@@ -214,7 +214,7 @@ async function deleteWeekly(title) {
 				}
 			}
 
-			client.editPost("18", {
+			client.editPost("16", {
 				content: html
 			}, function (error) {
 				console.log(error);
