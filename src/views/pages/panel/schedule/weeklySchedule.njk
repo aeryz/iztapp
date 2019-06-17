@@ -7,11 +7,11 @@
 	<div class="form-group">
 		<label for="semester">Weekly Schedule Semester</label>
 		<input type="number" class="form-control" id="semester" name="semester" placeholder="Enter semester"
-			value="{{ weeklySchedule.semester }}">
+			value="{{ weeklySchedule.semester }}" required disabled>
 	</div>
 	<div class="form-group">
 		<label for="type">Weekly Schedule Type</label>
-		<select class="form-control" id="type" name="type">
+		<select class="form-control" id="type" name="type" required disabled>
 			{% for type in config.scheduleTypes %}
 			{% if type == course.type %}
 			<option value="{{ course.type }}" selected>{{ config.scheduleTypeStrings[course.type] }}</option>
@@ -21,7 +21,7 @@
 			{% endfor %}
 		</select>
 	</div>
-	<button type="submit" class="btn btn-primary">Update Weekly Schedule</button>
+	<button type="submit" class="btn btn-primary" disabled>Update Weekly Schedule</button>
 </form>
 <hr>
 <form action="/api/delete/weeklySchedule/{{ weeklySchedule._id }}" method="GET">

@@ -9,17 +9,17 @@
 	<div class="form-group">
 		<label for="name">Course Name</label>
 		<input type="text" class="form-control" id="name" name="name" value="{{ course.name }}"
-			placeholder="Enter course name">
+			placeholder="Enter course name" required>
 	</div>
 	<div class="form-group">
 		<label for="description">Course Description</label>
 		<input type="text" class="form-control" id="description" name="description" value="{{ course.description }}"
-			placeholder="Enter course description">
+			placeholder="Enter course description" required>
 	</div>
 	<div class="form-group">
 		<label for="courseCode">Course Code</label>
 		<input type="text" class="form-control" id="courseCode" name="courseCode" value="{{ course.courseCode }}"
-			placeholder="Enter course courseCode">
+			placeholder="Enter course courseCode" required disabled>
 	</div>
 	<div class="form-group">
 		<label>Course Prerequisites</label>
@@ -38,17 +38,17 @@
 	<div class="form-group">
 		<label for="departmentCode">Department Code</label>
 		<input type="text" class="form-control" id="departmentCode" name="departmentCode"
-			value="{{ course.departmentCode }}" placeholder="Enter course departmentCode">
+			value="{{ course.departmentCode }}" placeholder="Enter course departmentCode" required disabled>
 	</div>
 	<div class="form-group">
 		<label for="topics">Course Topics</label>
 		<input type="text" class="form-control" id="topics" name="topics" value="{{ course.topics }}"
-			placeholder="Enter course topics" aria-describedby="topicDescribe">
+			placeholder="Enter course topics" aria-describedby="topicDescribe" required>
 		<small id="topicDescribe" class="form-text text-muted">Please seperate topics with comma (,).</small>
 	</div>
 	<div class="form-group">
 		<label for="type">Course Type</label>
-		<select class="form-control" id="type" name="type">
+		<select class="form-control" id="type" name="type" required>
 			{% for type in config.scheduleTypes %}
 			{% if type == course.type %}
 			<option value="{{ course.type }}" selected>{{ config.scheduleTypeStrings[course.type] }}</option>
@@ -75,22 +75,22 @@
 	<div class="form-group">
 		<label for="credits">Credits</label>
 		<input type="text" class="form-control" id="credits" name="credits" value="{{ course.credits }}"
-			placeholder="Enter course credits">
+			placeholder="Enter course credits" required>
 	</div>
 	<div class="form-group">
 		<label for="ects">ECTS</label>
 		<input type="text" class="form-control" id="ects" name="ects" value="{{ course.ects }}"
-			placeholder="Enter course ects">
+			placeholder="Enter course ects" required>
 	</div>
 	<div class="form-group">
 		<label for="lectureHours">Lecture Hours</label>
 		<input type="text" class="form-control" id="lectureHours" name="lectureHours" value="{{ course.lectureHours }}"
-			placeholder="Enter course lectureHours">
+			placeholder="Enter course lectureHours" required>
 	</div>
 	<div class="form-group">
 		<label for="labHours">Lab Hours</label>
 		<input type="text" class="form-control" id="labHours" name="labHours" value="{{ course.labHours }}"
-			placeholder="Enter course labHours">
+			placeholder="Enter course labHours" required>
 	</div>
 	<button type="button" class="btn btn-primary btn-update">Update Course</button>
 </form>

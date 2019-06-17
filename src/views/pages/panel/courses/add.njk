@@ -17,7 +17,7 @@
 	</div>
 	<div class="form-group">
 		<label for="courseCode">Course Code</label>
-		<input type="text" class="form-control" id="courseCode" name="courseCode" placeholder="Enter course code">
+		<input type="text" class="form-control" id="courseCode" name="courseCode" placeholder="Enter course code" required>
 	</div>
 	<div class="form-group">
 		<label for="departmentCode">Department Code</label>
@@ -40,12 +40,12 @@
 	<div class="form-group">
 		<label for="topics">Course Topics</label>
 		<input type="text" class="form-control" id="topics" name="topics" placeholder="Enter course topics"
-			aria-describedby="topicDescribe">
+			aria-describedby="topicDescribe" required>
 		<small id="topicDescribe" class="form-text text-muted">Please seperate topics with comma (,).</small>
 	</div>
 	<div class="form-group">
 		<label for="type">Course Type</label>
-		<select class="form-control" id="type" name="type">
+		<select class="form-control" id="type" name="type" required>
 			{% for type in config.scheduleTypes %}
 			<option value="{{ type }}">{{ config.scheduleTypeStrings[type] }}</option>
 			{% endfor %}
@@ -67,20 +67,20 @@
 	</div>
 	<div class="form-group">
 		<label for="credits">Credits</label>
-		<input type="text" class="form-control" id="credits" name="credits" placeholder="Enter course credits">
+		<input type="text" class="form-control" id="credits" name="credits" placeholder="Enter course credits" required>
 	</div>
 	<div class="form-group">
 		<label for="ects">ECTS</label>
-		<input type="text" class="form-control" id="ects" name="ects" placeholder="Enter course ects">
+		<input type="text" class="form-control" id="ects" name="ects" placeholder="Enter course ects" required>
 	</div>
 	<div class="form-group">
 		<label for="lectureHours">Lecture Hours</label>
 		<input type="text" class="form-control" id="lectureHours" name="lectureHours"
-			placeholder="Enter course lecture hours">
+			placeholder="Enter course lecture hours" required>
 	</div>
 	<div class="form-group">
 		<label for="labHours">Lab Hours</label>
-		<input type="text" class="form-control" id="labHours" name="labHours" placeholder="Enter course lab hours">
+		<input type="text" class="form-control" id="labHours" name="labHours" placeholder="Enter course lab hours" required>
 	</div>
 	<button type="button" class="btn btn-primary btn-add">Add Course</button>
 </form>

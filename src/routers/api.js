@@ -466,9 +466,12 @@ router.post('/api/update/course/:id',
 
 router.get('/api/delete/course/:id',
 	async (ctx) => {
+		let deletorId = ctx.cookie.userId;
+		const loggedUser = await AccountController.getAccountById(ctx.cookie.userId);
+		if (loggedUser.type === 2) deletorId = 0;
 		await CourseController.delete(
 			ctx.params.id,
-			ctx.cookie.userId
+			deletorId
 		);
 		await ctx.redirect("/panel/courses");
 	}

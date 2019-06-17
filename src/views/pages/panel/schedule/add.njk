@@ -4,16 +4,6 @@
 <h1>Create Weekly Schedule</h1>
 
 <form action="/api/add/weeklySchedule" method="POST">
-	<label for="semester">Semester</label>
-	<input type="number" name="semester" id="semester" required>
-	<label for="type">Type</label>
-	<select name="type" id="type" required>
-		{}
-	</select>
-	<button type="submit">Add</button>
-</form>
-
-<form action="/api/add/weeklySchedule" method="POST">
 	<div class="form-group">
 		<label for="semester">Enter semester</label>
 		<input type="number" class="form-control" id="semester" name="semester"
@@ -21,7 +11,7 @@
 	</div>
 	<div class="form-group">
 		<label for="type">Enter email</label>
-		<select class="form-control" id="type" name="type">
+		<select class="form-control" id="type" name="type" required>
 			<option value="0">ungraduated</option>
 			<option value="1">graduated</option>
 			<option value="2">phd</option>
