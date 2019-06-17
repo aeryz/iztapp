@@ -83,8 +83,8 @@ const ScheduleController = (() => ({
 			_id: id
 		});
 
-		wantedEntity.semester = entity.semester;
-		wantedEntity.type = entity.type;
+		// wantedEntity.semester = entity.semester;
+		// wantedEntity.type = entity.type;
 
 		const updatedEntity = await DatabaseController.update("weeklySchedule", wantedEntity);
 
@@ -94,6 +94,10 @@ const ScheduleController = (() => ({
 	async deleteWeeklySchedule(id) {
 		if (typeof id === "undefined" || id === null) throw new Error(config.errors.MISSING_PARAMETER);
 		const wantedEntity = await this.getWeeklySchedule({_id: id});
+		for (let i = 0; i < wantedEntity.days.length; i++) {
+			if (typeof wantedEntity.days[i] === "undefined" || wantedEntity.days[i] === null) continue;
+			await this.deleteDailySchedule(wantedEntity.days[i]);
+		}
 		await helpers.deleteWeekly(`${config.scheduleTypeStrings[wantedEntity.type]}-${wantedEntity.semester}`);
 		const deleteResult = await DatabaseController.delete("weeklySchedule", {
 			_id: id
@@ -125,6 +129,10 @@ const ScheduleController = (() => ({
 		entity.creationDate = now;
 
 		const newEntity = await DatabaseController.add("dailySchedule", entity);
+
+		await helpers.addEditDaily(`${config.scheduleTypeStrings[newEntity.type]}-${newEntity.semester}`,
+			newEntity.courses,
+			newEntity.day);
 
 		return newEntity;
 	},
@@ -205,10 +213,6 @@ const ScheduleController = (() => ({
 
 
 		const updatedWeeklySchedule = await DatabaseController.update("weeklySchedule", wantedWeeklySchedule);
-
-		await helpers.addEditDaily(`${config.scheduleTypeStrings[updatedWeeklySchedule.type]}-${updatedWeeklySchedule.semester}`,
-									wantedDailySchedule.courses,
-									wantedDailySchedule.day);
 
 		return updatedWeeklySchedule;
 
