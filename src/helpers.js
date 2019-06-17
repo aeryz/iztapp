@@ -60,7 +60,7 @@ async function publishCourse(course) {
 
 		let data = post.content;
 
-		data += '<br><a href="https://ceng316group05.wordpress.com/' + course.departmentCode + ' ' + course.courseCode + '/">' + uniq + '</a>'
+		data += '<br><a href="https://ceng316group05.wordpress.com/' + course.departmentCode + '-' + course.courseCode + '/">' + uniq + '</a>'
 
 		client.editPost(post.id, {
 			content: data
@@ -73,10 +73,15 @@ async function publishCourse(course) {
 async function deleteCourse(title) {
 	client.getPosts(function (error, posts) {
 
+		console.log(title);
+		console.log(typeof title);
+
 		let id = ""
 		let link = ""
 
 		for (let post of posts) {
+			console.log(post);
+			console.log(typeof post.title);
 			if (title === post.title) {
 				id = post.id
 				link = post.link
