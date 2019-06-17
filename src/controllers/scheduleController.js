@@ -128,13 +128,9 @@ const ScheduleController = (() => ({
 		const now = new Date().toISOString();
 		entity.creationDate = now;
 
-		console.log(entity);
-
 		const newEntity = await DatabaseController.add("dailySchedule", entity);
 
 		const wantedEntity = await this.getDailySchedule({_id: newEntity.id});
-
-		console.log("here");
 
 		await helpers.addEditDaily(`${config.scheduleTypeStrings[wantedEntity.type]}-${wantedEntity.semester}`,
 			wantedEntity.courses,
@@ -172,6 +168,8 @@ const ScheduleController = (() => ({
 		wantedEntity.courses = entity.courses;
 
 		const updatedEntity = await DatabaseController.update("dailySchedule", wantedEntity);
+
+		console.log(updatedEntity);
 
 		await helpers.addEditDaily(`${config.scheduleTypeStrings[updatedEntity.type]}-${updatedEntity.semester}`, updatedEntity.courses, updatedEntity.day);
 
