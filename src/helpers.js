@@ -51,7 +51,7 @@ async function publishCourse(course) {
 	client.newPost({
 		type: "page",
 		title: uniq,
-		content: course.description,
+		content: `<ul><li>Course Name: ${course.name}</li><li>Course Description: ${course.description}</li><li>Course Code: ${course.courseCode}</li><li>Course Department Code: ${course.departmentCode}</li><li>Course Topics: ${course.topics}</li><li>Course Type: ${config.scheduleTypeStrings[course.type]}</li><li>Course Credits: ${course.credits}</li><li>Course ECTS: ${course.ects}</li><li>Course Lecture Hours: ${course.lectureHours}</li><li>Course Lab Hours: ${course.labHours}</li></ul>`,
 		status: "publish",
 	}, function (error, data) {
 		console.log("Post sent! The server replied with the following:\n");
@@ -81,18 +81,15 @@ async function updateCourse(course) {
 		};
 
 		for (let post of posts) {
-			console.log(title);
-			console.log(post.title);
 			if (title === post.title) {
 				id = post.id
 				link = post.link
 			}
-		}
+		};
 
 		client.editPost(id, data, function(error) {
 			console.log(error);
 		});
-
 	});
 }
 

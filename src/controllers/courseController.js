@@ -159,8 +159,6 @@ const CourseController = (() => ({
 
 		wantedEntity.name = entity.name;
 		wantedEntity.description = entity.description;
-		wantedEntity.courseCode = entity.courseCode;
-		wantedEntity.departmentCode = entity.departmentCode;
 		wantedEntity.type = entity.type;
 		wantedEntity.topics = entity.topics;
 		wantedEntity.workers = entity.workers;
