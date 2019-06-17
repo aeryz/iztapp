@@ -119,7 +119,7 @@ const ScheduleController = (() => ({
 
 		// validate semester
 		entity.semester = +entity.semester;
-		if (entity.day < config.limits.dailySchedule.minSemesterNumber || entity.day > config.limits.dailySchedule.maxSemesterNumber) throw new Error(config.errors.DAILY_SCHEDULE.VALIDATION.INVALID_SEMESTER);
+		if (entity.semester < config.limits.dailySchedule.minSemesterNumber || entity.semester > config.limits.dailySchedule.maxSemesterNumber) throw new Error(config.errors.DAILY_SCHEDULE.VALIDATION.INVALID_SEMESTER);
 
 		// validate courses
 		if (!Array.isArray(entity.courses)) throw new Error(config.errors.DAILY_SCHEDULE.VALIDATION.INVALID_COURSES);
@@ -140,8 +140,6 @@ const ScheduleController = (() => ({
 			wantedEntity.courses,
 			wantedEntity.day);
 
-		console.log("here");
-
 		return newEntity;
 	},
 
@@ -159,7 +157,7 @@ const ScheduleController = (() => ({
 
 		// validate semester
 		entity.semester = +entity.semester;
-		if (entity.day < config.limits.dailySchedule.minSemesterNumber || entity.day > config.limits.dailySchedule.maxSemesterNumber) throw new Error(config.errors.DAILY_SCHEDULE.VALIDATION.INVALID_SEMESTER);
+		if (entity.semester < config.limits.dailySchedule.minSemesterNumber || entity.semester > config.limits.dailySchedule.maxSemesterNumber) throw new Error(config.errors.DAILY_SCHEDULE.VALIDATION.INVALID_SEMESTER);
 
 		// validate courses
 		if (!Array.isArray(entity.courses)) throw new Error(config.errors.DAILY_SCHEDULE.VALIDATION.INVALID_COURSES);
