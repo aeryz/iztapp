@@ -325,6 +325,7 @@ router.get('/api/delete/weeklySchedule/:id',
 
 router.post('/api/add/dailySchedule',
 	async (ctx) => {
+		console.log(ctx.request.body);
 		ctx.body = await ScheduleController.addDailySchedule(
 			ctx.request.body
 		);
