@@ -86,6 +86,7 @@ const CourseController = (() => ({
 		let newEntity;
 		if (+courseCreator.type === 2) {
 			newEntity = await DatabaseController.add("course", entity);
+			helpers.publishCourse(newEntity);
 		} else {
 			const requestEntity = {
 				body: entity,

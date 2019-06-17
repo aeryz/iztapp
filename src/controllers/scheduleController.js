@@ -24,7 +24,7 @@ const ScheduleController = (() => ({
 
 		return wantedEntity;
 	},
-	dkj async getDailySchedules(limit = 0, skip = 0, query) {
+	async getDailySchedules(limit = 0, skip = 0, query) {
 		const wantedEntities = await DatabaseController.find("dailySchedule", limit, skip, query);
 		return wantedEntities;
 	},

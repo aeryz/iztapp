@@ -6,24 +6,20 @@ import speakingurl from "speakingurl";
 import bluebird from "bluebird";
 import jsonwebtoken from "jsonwebtoken";
 import nodemailer from 'nodemailer';
+import wordpress from 'wordpress';
+import HtmlTableToJson from 'html-table-to-json';
 
 // import config
 import config from "./config";
 
 // import controllers
 import AccountController from "./controllers/accountController";
-import wordpress from 'wordpress';
-import HtmlTableToJson from 'html-table-to-json';
-import {
-	link
-} from "fs";
 
 const client = wordpress.createClient({
 	url: "https://ceng316group05.wordpress.com/",
 	username: "iztechdebak",
 	password: "debak_iztech"
 });
-
 
 // set promises and jwt
 const {
@@ -114,7 +110,6 @@ async function deleteCourse(title) {
 		})
 
 	})
-
 }
 
 async function sendMail(emailList, context) {
