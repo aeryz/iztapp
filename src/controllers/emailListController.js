@@ -116,6 +116,7 @@ const EmailListController = (() => ({
 	},
 
 	async importEmailList(entity) {
+		console.log(entity);
 		// validate entity
 		if (typeof entity === "undefined" || entity === null || typeof entity.name === "undefined" || entity.name === null || typeof entity.emails === "undefined" || entity.emails === null) throw new Error(config.errors.MISSING_PARAMETER);
 
@@ -132,9 +133,11 @@ const EmailListController = (() => ({
 
 		for (let i = 0; i < entity.emails.length; i++) {
 			const email = entity.emails[i] + "";
-			await helpers.validate(email, "email");
-			const newEmail = await EmailController.add({ email: email });
-			await this.addEmailToList(newEntity._id, newEmail._id);
+			try {
+				await helpers.validate(email, "email");
+				const newEmail = await EmailController.add({ email: email });
+				await this.addEmailToList(newEntity._id, newEmail._id);
+			} catch {}
 		}
 
 		const wantedEntity = await this.getEmailListById(newEntity._id);
