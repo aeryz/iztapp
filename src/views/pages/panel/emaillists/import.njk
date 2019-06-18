@@ -3,7 +3,7 @@
 {% block wrapper %}
 <h1>Add Email List</h1>
 
-<form action="/api/add/emailList" method="POST">
+<form action="/api/add/emailList" method="POST" id="form-import">
 	<div class="form-group">
 		<label for="name">Enter list name</label>
 		<input type="text" class="form-control" id="name" name="name" placeholder="Enter list name" required>
@@ -57,7 +57,7 @@
 				return email != null;
 			});
 		}
-		const formElement = document.getElementById("form-add");
+		const formElement = document.getElementById("form-import");
 		const data = {};
 		for (const pair of new FormData(formElement)) {
 			if (pair[0] === "name") data.name = pair[1];
