@@ -226,7 +226,7 @@ router.post('/api/remove/email',
 router.post("/api/import/emailList",
 	async (ctx) => {
 		const newEntity = await EmailListController.importEmailList(ctx.request.body);
-		return newEntity;
+		ctx.body =  newEntity;
 	}
 );
 

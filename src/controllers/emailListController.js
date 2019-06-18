@@ -132,7 +132,6 @@ const EmailListController = (() => ({
 
 		for (let i = 0; i < entity.emails.length; i++) {
 			const email = entity.emails[i] + "";
-			console.log(email);
 			if (email.length === 0) continue;
 			try {
 				await helpers.validate(email, "email");
