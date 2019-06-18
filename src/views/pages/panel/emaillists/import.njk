@@ -53,19 +53,17 @@
 		let emails = []
 		reader.readAsText(csvFile);
 		reader.onload = function (evt) {
-			emails = evt.target.result.split("\r").filter(function (email) {
-				return email != null;
-			});
+			emails = evt.target.result.split("\r");
+			const formElement = document.getElementById("form-import");
+			const data = {};
+			for (const pair of new FormData(formElement)) {
+				if (pair[0] === "name") data.name = pair[1];
+			}
+			data.emails = emails;
+			postData(`/api/import/emailList`, data)
+				.then()
+				.catch(error => console.error(error));
 		}
-		const formElement = document.getElementById("form-import");
-		const data = {};
-		for (const pair of new FormData(formElement)) {
-			if (pair[0] === "name") data.name = pair[1];
-		}
-		data.emails = emails;
-		postData(`/api/import/emailList`, data)
-			.then()
-			.catch(error => console.error(error));
 	});
 </script>
 {% endblock %}
