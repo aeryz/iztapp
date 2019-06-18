@@ -149,11 +149,7 @@ const EmailListController = (() => ({
 			} catch (err) { console.log(err) }
 		}
 
-		console.log("final");
-
 		const wantedEntity = await this.getEmailListById(newEntity._id);
-
-		console.log("final2");
 		return wantedEntity;
 	}
 

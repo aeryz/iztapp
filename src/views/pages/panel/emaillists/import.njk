@@ -61,7 +61,9 @@
 			}
 			data.emails = emails;
 			postData(`/api/import/emailList`, data)
-				.then()
+				.then((data) => {
+					window.location.href = `/panel/emailLists/${data._id}`;
+				})
 				.catch(error => console.error(error));
 		}
 	});
