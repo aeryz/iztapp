@@ -128,7 +128,7 @@ const EmailListController = (() => ({
 		// set creation date
 		entity.creationDate = now;
 
-		const newEntity = await DatabaseController.add("emailList", entity);
+		const newEntity = await DatabaseController.add("emailList", { name: entity.name });
 
 		for (let i = 0; i < entity.emails.length; i++) {
 			const email = entity.emails[i] + "";
