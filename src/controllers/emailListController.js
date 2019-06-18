@@ -136,7 +136,7 @@ const EmailListController = (() => ({
 			try {
 				await helpers.validate(email, "email");
 				const newEmail = await EmailController.add({ email: email });
-				await this.addEmailToList(newEntity._id, newEmail._id);
+				await this.addEmailToList(newEmail._id, newEntity._id);
 			} catch (err) {
 				console.log(err);
 			}
