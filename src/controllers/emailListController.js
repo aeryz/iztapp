@@ -136,12 +136,17 @@ const EmailListController = (() => ({
 			if (email.length === 0) continue;
 			try {
 				await helpers.validate(email, "email");
-				const newEmail = await EmailController.add({ email: email });
-				await this.addEmailToList(newEmail._id, newEntity._id);
-				console.log("here");
-			} catch (err) {
-				console.log(err);
-			}
+				let wantedEmail = null;
+				try {
+					wantedEmail = await DatabaseController.findOneByQuery("email", { email: email });
+				} catch {}
+				if (typeof wantedEmail === "undefined" || wantedEmail === null) {
+					const newEmail = await EmailController.add({ email: email });
+					await this.addEmailToList(newEmail._id, newEntity._id);
+				} else {
+					await this.addEmailToList(wantedEmail._id, newEntity._id)
+				}
+			} catch (err) { console.log(err) }
 		}
 
 		console.log("final");
