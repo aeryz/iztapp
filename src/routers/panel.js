@@ -139,15 +139,6 @@ router.get("/panel/accounts/add",
 	}
 );
 
-router.get("/panel/accounts/search",
-	helpers.authenticateAdmin,
-	async (ctx) => {
-		await ctx.render("panel/accounts/search", {
-			config: config
-		});
-	}
-);
-
 router.get("/panel/accounts/:id",
 	helpers.authenticateAdmin,
 	async (ctx) => {
@@ -196,6 +187,12 @@ router.get("/panel/emailLists/add",
 	}
 );
 
+router.get("/panel/emailLists/import",
+	async (ctx) => {
+		await ctx.render("panel/emaillists/import");
+	}
+);
+
 router.get("/panel/emailLists/:id",
 	async (ctx) => {
 		const wantedEmailList = await EmailListController.getEmailListById(ctx.params.id);
@@ -228,15 +225,6 @@ router.get("/panel/courses/add",
 			config: config,
 			courses: wantedCourses,
 			workers: wantedWorkers
-		});
-	}
-);
-
-router.get("/panel/courses/search",
-	helpers.authenticateAdmin,
-	async (ctx) => {
-		await ctx.render("panel/courses/search", {
-			config: config
 		});
 	}
 );

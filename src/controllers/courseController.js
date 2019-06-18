@@ -18,7 +18,7 @@ const CourseController = (() => ({
 
 	async add(entity) {
 		// validate entity
-		if (typeof entity === "undefined" || entity === null || typeof entity.name === "undefined" || entity.name === null || typeof entity.description === "undefined" || entity.description === null || typeof entity.courseCode === "undefined" || entity.courseCode === null || typeof entity.departmentCode === "undefined" || entity.departmentCode === null || typeof entity.topics === "undefined" || entity.topics === null || typeof entity.type === "undefined" || entity.type === null || typeof entity.workers === "undefined" || entity.workers === null || typeof entity.lectureHours === "undefined" || entity.lectureHours === null || typeof entity.labHours === "undefined" || entity.labHours === null || typeof entity.credits === "undefined" || entity.credits === null || typeof entity.ects === "undefined" || entity.ects === null || typeof entity.prerequisites === "undefined" || entity.prerequisites === null) throw new Error(config.errors.MISSING_PARAMETER);
+		if (typeof entity === "undefined" || entity === null || typeof entity.name === "undefined" || entity.name === null || typeof entity.description === "undefined" || entity.description === null || typeof entity.courseCode === "undefined" || entity.courseCode === null || typeof entity.departmentCode === "undefined" || entity.departmentCode === null || typeof entity.topics === "undefined" || entity.topics === null || typeof entity.isOffered === "undefined" || entity.isOffered === null || typeof entity.type === "undefined" || entity.type === null || typeof entity.workers === "undefined" || entity.workers === null || typeof entity.lectureHours === "undefined" || entity.lectureHours === null || typeof entity.labHours === "undefined" || entity.labHours === null || typeof entity.credits === "undefined" || entity.credits === null || typeof entity.ects === "undefined" || entity.ects === null || typeof entity.prerequisites === "undefined" || entity.prerequisites === null) throw new Error(config.errors.MISSING_PARAMETER);
 
 		// validate name
 		entity.name += "";
@@ -39,7 +39,6 @@ const CourseController = (() => ({
 		} catch {}
 		if (!(typeof duplicated === "undefined" || duplicated === null)) throw new Error(config.errors.COURSE.DUPLICATION);
 
-
 		// validate department code
 		entity.departmentCode += "";
 		if (entity.departmentCode.length < config.limits.course.minDepartmentCodeLength || entity.departmentCode.length > config.limits.course.maxDepartmentCodeLength) throw new Error(config.errors.COURSE.VALIDATION.INVALID_DEPARTMENT_CODE);
@@ -59,6 +58,9 @@ const CourseController = (() => ({
 		// validate credits
 		entity.credits = +entity.credits;
 		if (entity.credits < config.limits.course.minCredits || entity.credits > config.limits.course.maxCredits) throw new Error(config.errors.COURSE.VALIDATION.INVALID_CREDITS);
+
+		// validate is offered
+		if (typeof entity.isOffered !== "boolean") throw new Error(config.errors.COURSE.VALIDATION.INVALID_OFFER);
 
 		// validate ects
 		entity.ects = +entity.ects;
@@ -146,6 +148,9 @@ const CourseController = (() => ({
 		entity.credits = +entity.credits;
 		if (entity.credits < config.limits.course.minCredits || entity.credits > config.limits.course.maxCredits) throw new Error(config.errors.COURSE.VALIDATION.INVALID_CREDITS);
 
+		// validate is offered
+		if (typeof entity.isOffered !== "boolean") throw new Error(config.errors.COURSE.VALIDATION.INVALID_OFFER);
+
 		// validate ects
 		entity.ects = +entity.ects;
 		if (entity.ects < config.limits.course.minEcts || entity.ects > config.limits.course.maxEcts) throw new Error(config.errors.COURSE.VALIDATION.INVALID_ECTS);
@@ -166,6 +171,7 @@ const CourseController = (() => ({
 		wantedEntity.labHours = entity.labHours;
 		wantedEntity.credits = entity.credits;
 		wantedEntity.ects = entity.ects;
+		wantedEntity.isOffered = entity.isOffered;
 		wantedEntity.pagePath = await helpers.generatePagePath(wantedEntity.courseCode);
 		wantedEntity.prerequisites = entity.prerequisites;
 

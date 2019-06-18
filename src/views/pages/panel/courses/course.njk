@@ -73,6 +73,18 @@
 		{% endfor %}
 	</div>
 	<div class="form-group">
+		<label for="status">Status</label>
+		<select class="form-control" id="status" name="isOffered" required>
+			{% if course.isOffered %}
+			<option value="true" selected>Offered</option>
+			<option value="false">Pending</option>
+			{% else %}
+			<option value="true">Offered</option>
+			<option value="false" selected>Pending</option>
+			{% endif %}
+		</select>
+	</div>
+	<div class="form-group">
 		<label for="credits">Credits</label>
 		<input type="text" class="form-control" id="credits" name="credits" value="{{ course.credits }}"
 			placeholder="Enter course credits" required>
@@ -133,6 +145,11 @@
 			}
 			if (pair[0].startsWith("worker")) {
 				workers.push(pair[1]);
+				continue;
+			}
+			if (pair[0] === "isOffered") {
+				if (pair[1] === "true") data[pair[0]] = true;
+				else data[pair[0]] = false;
 				continue;
 			}
 			data[pair[0]] = pair[1];

@@ -145,6 +145,7 @@ const config = {
 				INVALID_LAB_HOURS: `Given lab hours must be between ${limits.course.minLabHours} and ${limits.course.maxLabHours}.`,
 				INVALID_CREDITS: `Given creadits must be between ${limits.course.minCredits} and ${limits.course.maxCredits}.`,
 				INVALID_ECTS: `Given ectes must be between ${limits.course.minEcts} and ${limits.course.maxEcts}.`,
+				INVALID_OFFER: `isOffered value is set wrong`
 			}
 		},
 		WEEKLY_SCHEDULE: {

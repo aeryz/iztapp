@@ -215,11 +215,18 @@ router.post('/api/append/emailList',
 
 router.post('/api/remove/email',
 	async (ctx) => {
-		EmailListController.removeEmailFromList(
+		await EmailListController.removeEmailFromList(
 			ctx.request.body.emailId,
 			ctx.request.body.emailListId
 		);
 		await ctx.redirect(`/panel/emailLists/${ctx.request.body.emailListId}`);
+	}
+);
+
+router.post("/api/import/emailList",
+	async (ctx) => {
+		const newEntity = await EmailListController.importEmailList(ctx.request.body);
+		await ctx.redirect(`/panel/emailLists/${newEntity._id}`);
 	}
 );
 

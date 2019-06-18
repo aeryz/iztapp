@@ -3,7 +3,6 @@ import helpers from "../helpers";
 
 import JSSoup from 'jssoup';
 import request from 'request';
-import LineReaderSync from "line-reader-sync";
 import DatabaseController from "./databaseController";
 
 function getSingleEvent(url) {
@@ -63,7 +62,6 @@ function checkIncludesEvent(url) {
 
 
 const EventController = (() => ({
-
 	async pullEvents() {
 		let promises = [];
 		let events = [];
@@ -110,13 +108,7 @@ const EventController = (() => ({
 			text: event.context + "\n" + event.link + "\n" + event.time + "\n" + event.date
 		});
 
-	},
-
-	async sendEventToImportedEmailList(event, filePath) {
-		// TODO:
 	}
-
-
 }))();
 
 export default EventController;

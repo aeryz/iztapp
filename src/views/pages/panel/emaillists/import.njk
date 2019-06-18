@@ -1,0 +1,71 @@
+{% extends "panel/templates/global.njk" %}
+
+{% block wrapper %}
+<h1>Add Email List</h1>
+
+<form action="/api/add/emailList" method="POST">
+	<div class="form-group">
+		<label for="name">Enter list name</label>
+		<input type="text" class="form-control" id="name" name="name" placeholder="Enter list name" required>
+	</div>
+	<div class="input-group mb-3">
+		<div class="input-group-prepend">
+			<span class="input-group-text">Upload</span>
+		</div>
+		<div class="custom-file">
+			<input type="file" class="custom-file-input" id="emailListFile" required>
+			<label class="custom-file-label" id="emailListFileLabel" for="emailListFile" accept=".csv">Choose file</label>
+		</div>
+	</div>
+	<button type="submit" class="btn btn-primary">Add Email List</button>
+</form>
+
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+	function postData(url = ``, data) {
+		// Default options are marked with *
+		return fetch(url, {
+			method: "POST", // *GET, POST, PUT, DELETE, etc.
+			mode: "cors", // no-cors, cors, *same-origin
+			cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+			credentials: "same-origin", // include, same-origin, *omit
+			headers: {
+				"Content-Type": "application/json; charset=utf-8",
+				// "Content-Type": "application/x-www-form-urlencoded",
+			},
+			redirect: "follow", // manual, *follow, error
+			referrer: "no-referrer", // no-referrer, *clientconst formElement = document.getElementById("form-add");
+			body: JSON.stringify(data), // body data type must match "Content-Type" header
+		})
+			.then(response => response.json()); // parses response to JSON
+	}
+	$("#emailListFile").on("change", () => {
+		const csvFile = $("#emailListFile")[0].files[0];
+		$("#emailListFileLabel").html(csvFile.name);
+	});
+	$(".btn-add").on("click", (e) => {
+		e.preventDefault();
+		const reader = new FileReader();
+		const csvFile = $("#emailListFile")[0].files[0];
+		let emails = []
+		reader.readAsText(csvFile);
+		reader.onload = function (evt) {
+			emails = evt.target.result.split("\r").filter(function (email) {
+				return email != null;
+			});
+		}
+		const formElement = document.getElementById("form-add");
+		const data = {};
+		for (const pair of new FormData(formElement)) {
+			if (pair[0] === "name") data.name = pair[1];
+		}
+		data.emails = emails;
+		postData(`/api/import/emailList`, data)
+			.then()
+			.catch(error => console.error(error));
+	});
+</script>
+{% endblock %}
