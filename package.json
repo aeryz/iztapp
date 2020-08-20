@@ -28,7 +28,7 @@
     }
   },
   "dependencies": {
-    "bcrypt": "^3.0.6",
+    "bcrypt": "^5.0.0",
     "bluebird": "^3.5.3",
     "chalk": "^2.4.2",
     "crypto": "^1.0.1",
