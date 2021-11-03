@@ -51,7 +51,7 @@
     "nunjucks": "^3.2.0",
     "request": "^2.88.0",
     "speakingurl": "^14.0.1",
-    "validator": "^10.11.0",
+    "validator": "^13.7.0",
     "wordpress": "^1.4.1"
   }
 }
